@@ -87,106 +87,53 @@ tech-lead (revisão de PR)
 
 ## Instalação no Claude Code
 
-### Opção 1 — Carregar o orquestrador via CLAUDE.md (recomendado)
+O Claude Code suporta **comandos personalizados** via arquivos `.md` na pasta `.claude/commands/` do repositório. Este projeto já inclui um comando por agente — basta copiar a pasta `.claude/` para o seu projeto e ajustar os caminhos.
 
-Crie ou edite o `CLAUDE.md` na raiz do **seu projeto** (não deste repositório) e referencie o orquestrador:
+### 1. Copiar os comandos
 
-```markdown
-# Instruções do agente
-
-@/caminho/para/AgentsAndSkills/Agents/orquestrador/AGENT.md
-@/caminho/para/AgentsAndSkills/Guardrails/00-core.md
-@/caminho/para/AgentsAndSkills/Guardrails/ia-agentes.md
-@/caminho/para/AgentsAndSkills/Guardrails/processo.md
+```bash
+# Na raiz do seu projeto
+cp -r /caminho/para/AgentsAndSkills/.claude ./
 ```
 
-Com isso, toda conversa no Claude Code dentro do seu projeto parte do comportamento do orquestrador — ele coletará a especificação e acionará os demais agentes automaticamente.
+Abra cada arquivo em `.claude/commands/` e substitua os caminhos relativos pelos caminhos absolutos corretos no seu ambiente. Os arquivos usam referências como:
 
-**Para carregar um agente específico diretamente** (sem o orquestrador), substitua pelo `AGENT.md` desejado:
-
-```markdown
-@/caminho/para/AgentsAndSkills/Agents/dev-backend/AGENT.md
-@/caminho/para/AgentsAndSkills/Guardrails/00-core.md
-@/caminho/para/AgentsAndSkills/Guardrails/backend.md
-@/caminho/para/AgentsAndSkills/Guardrails/dados.md
-@/caminho/para/AgentsAndSkills/Guardrails/seguranca.md
-@/caminho/para/AgentsAndSkills/Guardrails/testes.md
-@/caminho/para/AgentsAndSkills/Guardrails/operacional.md
-@/caminho/para/AgentsAndSkills/Guardrails/processo.md
-@/caminho/para/AgentsAndSkills/Guardrails/ia-agentes.md
+```
+@Agents/orquestrador/AGENT.md
+@Guardrails/00-core.md
 ```
 
-> **Dica:** referencie apenas os guardrails que o agente declara na sua seção "Guardrails carregados" para não poluir o contexto com regras irrelevantes.
+Que devem apontar para o repositório `AgentsAndSkills` no seu disco.
 
----
+### 2. Comandos disponíveis
 
-### Opção 2 — Comandos personalizados (slash commands)
+| Comando | Quando usar |
+|---|---|
+| `/orquestrador` | **Ponto de entrada.** Coleta a especificação, faz perguntas, coordena os demais agentes na sequência correta com TDD |
+| `/arquiteto` | Definir contratos de API, eventos, schemas e arquitetura de serviços |
+| `/tech-lead` | Validar DoR antes de iniciar desenvolvimento; revisar PRs; refinar histórias |
+| `/dev-backend` | Implementar lógica de domínio, endpoints, persistência (NestJS + Prisma) |
+| `/dev-bff` | Implementar camada BFF — agregar e adaptar dados do backend para o frontend |
+| `/dev-frontend` | Implementar componentes React, hooks, estado e testes RTL |
+| `/dev-mensageria` | Implementar producers, consumers e sagas (@nestjs/microservices) |
+| `/dev-qa` | Escrever Gherkin, testes E2E com Playwright e planejar regressão |
 
-O Claude Code suporta comandos personalizados via arquivos `.md` na pasta `.claude/commands/` do seu projeto. Cada arquivo vira um `/comando` que pode ser invocado no chat.
+### 3. Usar os comandos
 
-**Estrutura:**
 ```
-seu-projeto/
-└── .claude/
-    └── commands/
-        ├── arquitetar.md
-        ├── backend.md
-        ├── frontend.md
-        ├── qa.md
-        └── revisar.md
-```
+# Iniciar pelo orquestrador — ele coordena tudo
+/orquestrador quero criar um endpoint de cancelamento de pedido
 
-**Exemplo — `.claude/commands/arquitetar.md`:**
-```markdown
-Você é o agente arquiteto definido em:
-@/caminho/para/AgentsAndSkills/Agents/arquiteto/AGENT.md
-
-Guardrails aplicáveis:
-@/caminho/para/AgentsAndSkills/Guardrails/00-core.md
-@/caminho/para/AgentsAndSkills/Guardrails/backend.md
-@/caminho/para/AgentsAndSkills/Guardrails/frontend.md
-@/caminho/para/AgentsAndSkills/Guardrails/dados.md
-@/caminho/para/AgentsAndSkills/Guardrails/seguranca.md
-@/caminho/para/AgentsAndSkills/Guardrails/operacional.md
-@/caminho/para/AgentsAndSkills/Guardrails/processo.md
-@/caminho/para/AgentsAndSkills/Guardrails/ia-agentes.md
-
-O usuário fornecerá a seguir a demanda de arquitetura. Siga o comportamento
-definido no AGENT.md e utilize as skills disponíveis conforme necessário.
+# Ou acionar um agente diretamente
+/arquiteto preciso definir o contrato do endpoint POST /orders
+/dev-backend implementar o serviço OrderService com validação de estoque
+/dev-qa escrever cenários Gherkin para o fluxo de cancelamento
+/tech-lead revisar o PR #42 — mudança no serviço de pagamento
 ```
 
-Uso no Claude Code:
-```
-/arquitetar preciso definir o contrato do endpoint de cancelamento de pedido
-```
+Cada comando carrega **somente os guardrails do seu agente** — o contexto da janela não é poluído com regras irrelevantes para aquele domínio.
 
-**Exemplo — `.claude/commands/revisar.md`:**
-```markdown
-Você é o agente tech-lead definido em:
-@/caminho/para/AgentsAndSkills/Agents/tech-lead/AGENT.md
-
-Guardrails aplicáveis:
-@/caminho/para/AgentsAndSkills/Guardrails/00-core.md
-@/caminho/para/AgentsAndSkills/Guardrails/backend.md
-@/caminho/para/AgentsAndSkills/Guardrails/frontend.md
-@/caminho/para/AgentsAndSkills/Guardrails/dados.md
-@/caminho/para/AgentsAndSkills/Guardrails/seguranca.md
-@/caminho/para/AgentsAndSkills/Guardrails/testes.md
-@/caminho/para/AgentsAndSkills/Guardrails/operacional.md
-@/caminho/para/AgentsAndSkills/Guardrails/processo.md
-@/caminho/para/AgentsAndSkills/Guardrails/ia-agentes.md
-
-Execute a skill `revisar-pr` com o diff ou PR fornecido pelo usuário a seguir.
-```
-
-Uso:
-```
-/revisar <cole o diff aqui ou informe o PR>
-```
-
----
-
-### Opção 3 — Carregar uma skill diretamente
+### 4. Carregar uma skill diretamente (opcional)
 
 Para executar uma skill pontual sem carregar o agente completo, referencie o `SKILL.md` diretamente no chat:
 
@@ -195,6 +142,16 @@ Leia e siga as instruções de @/caminho/para/AgentsAndSkills/Skills/criar-compo
 
 Preciso criar um componente UserCard que exibe nome, email e foto do usuário.
 ```
+
+### Nota — CLAUDE.md
+
+Se preferir que o orquestrador seja o comportamento padrão de **toda** conversa no projeto (sem precisar digitar o comando), crie ou edite `CLAUDE.md` na raiz do seu projeto:
+
+```markdown
+@/caminho/para/AgentsAndSkills/.claude/commands/orquestrador.md
+```
+
+Com isso, cada nova conversa no Claude Code já parte do comportamento do orquestrador automaticamente.
 
 ---
 

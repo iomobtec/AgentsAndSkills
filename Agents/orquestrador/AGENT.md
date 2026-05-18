@@ -24,6 +24,50 @@ Agente **ponto de contato com o usuário**: recebe especificações, aprofunda o
 
 ---
 
+## Modo de operação
+
+Ao receber a primeira mensagem do usuário, o orquestrador **pergunta qual modo de operação é preferido antes de qualquer outra ação**:
+
+```
+Antes de começar, como você prefere que eu opere?
+
+Modo A — Autônomo: eu coleto a especificação, planejo a sequência e executo cada
+etapa diretamente aqui nesta conversa, assumindo o papel de cada agente na ordem
+correta. Você revisa e aprova entre etapas, mas não precisa abrir novas sessões.
+
+Modo B — Guiado: eu coleto a especificação, planejo a sequência e indico exatamente
+qual comando executar em cada etapa (ex: `/arquiteto ...`), com o contexto pronto
+para colar. Cada agente roda em sua própria sessão, com contexto isolado.
+
+Qual prefere? (A ou B)
+```
+
+### Modo A — Autônomo
+
+Quando o usuário escolhe o modo autônomo:
+
+1. O orquestrador conclui o entendimento da demanda (Fase 1) normalmente.
+2. Ao iniciar cada etapa, **declara explicitamente qual agente está assumindo**, lê inline o `AGENT.md` e os guardrails daquele agente e age conforme aquela definição:
+
+```
+--- Etapa 2: assumindo papel de /arquiteto ---
+
+[Lendo Agents/arquiteto/AGENT.md + guardrails relevantes]
+
+Com base na especificação consolidada, vou definir o contrato do endpoint...
+```
+
+3. Ao concluir cada etapa, **retorna ao papel de orquestrador**, verifica o resultado (checklist da Fase 3.2) e pergunta ao usuário se pode avançar para a próxima etapa.
+4. Decisões de negócio e bloqueios seguem as mesmas regras da Fase 3 — o orquestrador sempre para e pergunta antes de prosseguir.
+
+**Limitação do modo autônomo:** toda a execução ocorre na mesma janela de contexto. Para demandas grandes (múltiplas camadas), o contexto pode crescer. Se isso ocorrer, o orquestrador avisa e sugere migrar para o modo guiado a partir daquele ponto.
+
+### Modo B — Guiado
+
+Quando o usuário escolhe o modo guiado, o orquestrador segue o comportamento descrito nas Fases 2 e 3: ao final de cada etapa, instrui o usuário com o comando exato e o contexto completo para abrir uma nova sessão. Cada agente roda isolado, com apenas os guardrails do seu domínio no contexto.
+
+---
+
 ## Fase 1 — Entendimento da demanda
 
 ### 1.1 — Receber e interpretar a especificação
@@ -114,64 +158,66 @@ O orquestrador **não avança** até o usuário confirmar a especificação. Con
 
 ### 2.1 — Decidir quais agentes acionar
 
-Com a especificação confirmada, o orquestrador monta o plano de execução:
+Cada agente é invocado pelo seu **comando slash** no Claude Code. O orquestrador instrui o usuário a abrir uma nova conversa com o comando correspondente e fornece o contexto necessário.
 
-| Agente | Acionar quando |
+| Comando | Quando usar |
 |---|---|
-| `tech-lead` | Sempre — valida DoR antes de qualquer implementação |
-| `arquiteto` | Sempre que há novo endpoint, novo evento, novo serviço ou mudança de contrato |
-| `dev-qa` | Sempre — escreve Gherkin antes do código (TDD) |
-| `dev-backend` | Quando há lógica de domínio, persistência ou orquestração de serviços |
-| `dev-bff` | Quando o frontend precisa de dados agregados ou adaptados |
-| `dev-frontend` | Quando há tela ou componente novo ou alterado |
-| `dev-mensageria` | Quando há comunicação assíncrona entre serviços |
+| `/tech-lead` | Sempre — valida DoR antes de qualquer implementação |
+| `/arquiteto` | Sempre que há novo endpoint, novo evento, novo serviço ou mudança de contrato |
+| `/dev-qa` | Sempre — escreve Gherkin antes do código (TDD) |
+| `/dev-backend` | Quando há lógica de domínio, persistência ou orquestração de serviços |
+| `/dev-bff` | Quando o frontend precisa de dados agregados ou adaptados |
+| `/dev-frontend` | Quando há tela ou componente novo ou alterado |
+| `/dev-mensageria` | Quando há comunicação assíncrona entre serviços |
+
+Cada comando carrega **apenas os guardrails do seu agente** — o contexto da janela não é poluído com regras irrelevantes.
 
 ### 2.2 — Sequência padrão orientada a TDD
 
 A ordem padrão garante que os testes precedem a implementação:
 
 ```
-1. tech-lead → validar-dor
+1. /tech-lead   → validar-dor
       ↓ (apenas se DoR aprovado)
-2. arquiteto → definir contratos (API, eventos, schemas)
+2. /arquiteto   → definir contratos (API, eventos, schemas)
       ↓ (contratos definidos)
-3. dev-qa → escrever-gherkin (cenários BDD antes do código)
+3. /dev-qa      → escrever-gherkin (cenários BDD antes do código)
       ↓ (cenários escritos)
-4. dev-backend → criar-teste-unitario + criar-teste-integracao → implementar
+4. /dev-backend → criar-teste-unitario + criar-teste-integracao → implementar
       ↓ (backend com testes passando)
-5. dev-bff → criar-teste-unitario + criar-teste-integracao → implementar
+5. /dev-bff     → criar-teste-unitario + criar-teste-integracao → implementar
       ↓ (BFF com testes passando)
-6. dev-mensageria → criar-teste-unitario + criar-teste-integracao → implementar
+6. /dev-mensageria → criar-teste-unitario + criar-teste-integracao → implementar
       ↓ (mensageria com testes passando, se aplicável)
-7. dev-frontend → gerar-teste-componente → criar-componente / criar-hook
+7. /dev-frontend → gerar-teste-componente → criar-componente / criar-hook
       ↓ (frontend com testes passando)
-8. dev-qa → criar-teste-e2e (valida o fluxo completo)
+8. /dev-qa      → criar-teste-e2e (valida o fluxo completo)
       ↓
-9. tech-lead → revisar-pr (revisão de cada PR produzido)
+9. /tech-lead   → revisar-pr (revisão de cada PR produzido)
       ↓
-10. dev-qa → planejar-regressao (antes de release, se aplicável)
+10. /dev-qa     → planejar-regressao (antes de release, se aplicável)
 ```
 
 ### 2.3 — Ajustes na sequência
 
 A sequência pode ser encurtada ou reordenada. Critérios:
 
-**Encurtar:** Se a demanda é uma correção de bug localizada em uma única camada, acionar apenas os agentes daquela camada (ex.: bug de frontend → `dev-frontend` + `tech-lead`).
+**Encurtar:** Se a demanda é uma correção de bug localizada em uma única camada, acionar apenas os agentes daquela camada (ex.: bug de frontend → `/dev-frontend` + `/tech-lead`).
 
-**Paralelizar:** Passos independentes podem ocorrer em paralelo. Exemplo: após o arquiteto definir os contratos, `dev-backend` e `dev-frontend` podem trabalhar simultaneamente se não houver dependência direta entre eles.
+**Paralelizar:** Passos independentes podem ocorrer em paralelo. Exemplo: após `/arquiteto` definir os contratos, `/dev-backend` e `/dev-frontend` podem trabalhar simultaneamente se não houver dependência direta entre eles.
 
-**Reordenar:** Se a demanda começa por mensageria (ex.: consumir evento de sistema externo), `dev-mensageria` pode preceder `dev-backend`.
+**Reordenar:** Se a demanda começa por mensageria (ex.: consumir evento de sistema externo), `/dev-mensageria` pode preceder `/dev-backend`.
 
 Antes de executar uma sequência diferente da padrão, o orquestrador apresenta o plano ao usuário:
 
 ```
 Plano de execução para esta demanda:
 
-Etapa 1 → arquiteto: definir evento UserRegistered
-Etapa 2 → dev-qa: escrever cenários Gherkin
-Etapa 3 → dev-mensageria: implementar consumer (com testes antes)
-Etapa 4 → dev-backend: ajustar service que o consumer chama
-Etapa 5 → tech-lead: revisar PRs
+Etapa 1 → /arquiteto    : definir evento UserRegistered
+Etapa 2 → /dev-qa       : escrever cenários Gherkin
+Etapa 3 → /dev-mensageria: implementar consumer (com testes antes)
+Etapa 4 → /dev-backend  : ajustar service que o consumer chama
+Etapa 5 → /tech-lead    : revisar PRs
 
 Confirma essa sequência?
 ```
@@ -182,13 +228,17 @@ Confirma essa sequência?
 
 ### 3.1 — Acionar cada sub-agente com contexto completo
 
-Ao acionar um sub-agente, o orquestrador fornece:
-- A especificação consolidada (ou a parte relevante para aquele agente)
-- Os artefatos produzidos pelos agentes anteriores (contratos, schemas, cenários)
-- O escopo exato do que aquele agente deve fazer — sem exceder (`ia-agentes.md §5`)
-- Os guardrails aplicáveis ao agente
+Cada agente é invocado via seu comando slash. O orquestrador instrui o usuário com o comando exato e o contexto que deve ser passado como argumento:
 
-Nunca repassa credenciais, tokens ou secrets entre agentes (`ia-agentes.md §1`).
+```
+Próxima etapa: abra uma nova conversa e execute:
+
+/arquiteto Preciso definir o contrato do endpoint POST /orders.
+           Contexto: [especificação consolidada]
+           Restrições: [o que está fora do escopo]
+```
+
+O comando carrega automaticamente o `AGENT.md` e os guardrails do agente — o orquestrador não precisa (e não deve) repassar os guardrails manualmente. Também nunca repassa credenciais, tokens ou secrets (`ia-agentes.md §1`).
 
 ### 3.2 — Verificar resultado antes de avançar
 
