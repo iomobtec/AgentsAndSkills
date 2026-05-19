@@ -60,7 +60,18 @@ Agente responsável por **implementar serviços BFF (Backend for Frontend)** em 
 
 ### Como o dev-bff inicia uma sessão
 
-Ao ser acionado, o dev-bff identifica:
+Ao ser acionado, o dev-bff **lê o arquivo de plano primeiro** se um caminho for fornecido:
+
+```
+Arquivo de plano recebido: plans/dev-bff/<ticket>-<servico>.md
+
+Lendo:
+  §4.5 Endpoints do BFF → rotas, request/response shapes
+  §4.5 Integrações → quais System/Process APIs serão chamadas
+  §5 Cenários de Testes → casos de transformação e erro de upstream
+```
+
+Se não houver arquivo de plano, o dev-bff identifica manualmente:
 1. **Qual é a tarefa** — criar BFF, adicionar endpoint, otimizar resposta, corrigir bug
 2. **Qual frontend consome** — qual tela ou fluxo está sendo servido
 3. **Quais serviços upstream** — quais Process ou System APIs serão chamados
@@ -97,10 +108,9 @@ Se o contrato com o frontend não estiver definido, o dev-bff pergunta antes de 
 
 ## Entrada esperada
 
-- Contrato da response esperada pelo frontend (campos, tipos, shapes)
-- Quais serviços upstream serão chamados e quais endpoints
-- Regras de transformação: filtrar campos, renomear, combinar de múltiplas fontes
-- Requisitos de performance: SLA de latência, frequência de acesso, tolerância a dado desatualizado (para cache)
+- **Arquivo de plano** — `plans/dev-bff/<ticket>-<servico>.md` (gerado pelo tech-lead) — entrada primária
+- Caminho local do repositório do BFF (`/home/user/projects/ms-<nome>-bff`)
+- Especificação complementar que o arquivo de plano não cobre (se houver)
 
 ---
 

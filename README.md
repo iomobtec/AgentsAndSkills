@@ -19,7 +19,7 @@ AgentsAndSkills/
 │   ├── dev-qa/                # Gherkin, E2E com Playwright, regressão
 │   └── dev-devops/            # Pipelines CI/CD GitHub Actions *(fora do fluxo do orquestrador)*
 │
-├── Skills/                    # 34 skills reutilizáveis entre agentes (SKILL.md)
+├── Skills/                    # 39 skills reutilizáveis entre agentes (SKILL.md)
 │   ├── criar-system-api/
 │   ├── criar-componente/
 │   ├── escrever-gherkin/
@@ -74,26 +74,29 @@ Usuário → orquestrador (coleta spec, faz perguntas)
     ↓
 arquiteto — Fase 0 (define ambiente: broker, cloud, banco, orquestração, org GitHub)
     ↓
-arquiteto (define microserviços → emite tabela de repositórios a criar)
+arquiteto (define microserviços → emite tabela de repositórios a criar
+         → gerar-plano-tarefa: plans/arquitetura/<ticket>.md por serviço)
     ↓
 orquestrador — Fase 2.5 (aguarda usuário criar repos no GitHub, clonar e confirmar caminhos locais)
     ↓
-tech-lead (valida DoR)
+tech-lead (valida DoR → gerar-plano-tarefa: plans/<agente>/<ticket>.md por agente de dev)
+    ↓
+orquestrador — Fase 2.6 (confirma que arquivos de plano estão gerados e revisados)
     ↓
 arquiteto (define contratos, APIs, eventos, templates Docker)
     ↓
-dev-qa (escreve Gherkin antes do código)
+dev-backend / dev-bff / dev-mensageria (lê plans/<agente>/<ticket>.md → testes → implementação
+                                       + Dockerfile + docker-compose + ci-cd-staging.yml + ci-cd-production.yml)
     ↓
-dev-backend / dev-bff / dev-mensageria (testes → implementação + Dockerfile + docker-compose + ci-cd-staging.yml + ci-cd-production.yml)
+dev-frontend (lê plans/dev-frontend/<ticket>.md → testes → implementação
+             + Dockerfile multi-stage + docker-compose + ci-cd-staging.yml + ci-cd-production.yml)
     ↓
-dev-frontend (testes → implementação + Dockerfile multi-stage + docker-compose + ci-cd-staging.yml + ci-cd-production.yml)
-    ↓
-dev-qa (E2E — roda contra ambiente Docker)
+dev-qa (lê plans/dev-qa/<ticket>.md → Gherkin → E2E com Playwright)
     ↓
 tech-lead (revisão de PR — inclui checklist Docker e pipeline)
 ```
 
-> Cada serviço vive em seu **próprio repositório** no GitHub. O orquestrador não libera os agentes de desenvolvimento enquanto os repos não forem clonados e os caminhos locais confirmados.
+> Cada serviço vive em seu **próprio repositório** no GitHub. O orquestrador não libera os agentes de desenvolvimento enquanto os repos não forem clonados, os caminhos locais confirmados e os arquivos de plano gerados pelo tech-lead.
 
 ---
 

@@ -70,7 +70,20 @@ O dev-qa complementa — não substitui — os testes das camadas inferiores. Um
 
 ### Como o dev-qa inicia uma sessão
 
-Ao ser acionado, o dev-qa identifica:
+Ao ser acionado, o dev-qa **lê o arquivo de plano primeiro** se um caminho for fornecido:
+
+```
+Arquivo de plano recebido: plans/dev-qa/<ticket>-<funcionalidade>.md
+
+Lendo:
+  §2 Regras de Negócio → o que o sistema deve garantir
+  §3 Critérios de Aceitação → base para os cenários Gherkin
+  §5 Cenários de Testes → estrutura dos testes E2E a implementar
+```
+
+Os cenários em §5 do arquivo de plano tornam-se diretamente os cenários Gherkin em `escrever-gherkin` e os specs Playwright em `criar-teste-e2e`.
+
+Se não houver arquivo de plano, o dev-qa identifica manualmente:
 1. **O que validar** — nova história, release, fluxo sem cobertura, ou regressão
 2. **Qual o contexto de qualidade atual** — há E2E existentes? Qual a cobertura dos fluxos críticos?
 3. **Qual a janela de tempo** — sprint normal, teste pré-release, ou hotfix urgente
@@ -116,7 +129,7 @@ O dev-qa escala quando identifica:
 
 ## Entrada esperada
 
-- História de usuário com critérios de aceite (para `escrever-gherkin` e `criar-teste-e2e`)
+- **Arquivo de plano** — `plans/dev-qa/<ticket>-<funcionalidade>.md` (gerado pelo tech-lead) — entrada primária para `escrever-gherkin` e `criar-teste-e2e`
 - Lista de serviços / PRs alterados (para `planejar-regressao`)
 - Acesso ao ambiente de staging com dados de teste configurados
 - URL base do ambiente de teste (`E2E_BASE_URL`)

@@ -50,12 +50,25 @@ Agente responsável por **implementar serviços backend em Node.js**: System API
 
 ### Como o dev-backend inicia uma sessão
 
-Ao ser acionado, o dev-backend identifica:
+Ao ser acionado, o dev-backend **lê o arquivo de plano primeiro** se um caminho for fornecido:
+
+```
+Arquivo de plano recebido: plans/dev-backend/<ticket>-<servico>.md
+
+Lendo:
+  §2 Regras de Negócio → o que o sistema deve fazer
+  §3 Critérios de Aceitação → o que será validado
+  §4.5 Arquitetura Definida → tabelas, endpoints, integrações
+  §5 Cenários de Testes → casos que guiam os testes unitários e de integração
+  §6 Decisão de Arquitetura → qual projeto criar ou alterar
+```
+
+Se não houver arquivo de plano, o dev-backend identifica manualmente:
 1. **Qual é a tarefa** — criar serviço, adicionar endpoint, corrigir bug, escrever teste
 2. **Qual serviço é o alvo** — System API ou Process API, nome do serviço
 3. **Se há especificação do arquiteto** — contrato de API, schema de evento, modelo de dados
 
-Se a especificação estiver incompleta, o dev-backend pergunta antes de implementar:
+Se a especificação estiver incompleta (com ou sem arquivo de plano), o dev-backend pergunta antes de implementar:
 
 ```
 ⚠️ Preciso de mais informações antes de implementar.
@@ -94,10 +107,9 @@ Se a especificação estiver incompleta, o dev-backend pergunta antes de impleme
 
 ## Entrada esperada
 
-- Especificação do endpoint ou feature (pode vir do arquiteto ou do ticket)
-- Contrato de API (request/response shapes)
-- Regras de negócio e critérios de aceite
-- Nome do serviço e camada (System ou Process)
+- **Arquivo de plano** — `plans/dev-backend/<ticket>-<servico>.md` (gerado pelo tech-lead) — entrada primária
+- Caminho local do repositório do serviço (`/home/user/projects/ms-<nome>-system`)
+- Especificação complementar que o arquivo de plano não cobre (se houver)
 
 **Informações que aceleram a entrega:**
 - Schema Prisma atual (para migrations incrementais)

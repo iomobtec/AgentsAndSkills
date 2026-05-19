@@ -63,6 +63,7 @@ Agente responsável pela **qualidade técnica e alinhamento de processo** da squ
 | `avaliar-impacto` | Identificar serviços e contratos afetados por uma mudança |
 | `mapear-contrato` | Verificar se mudança de API é breaking change e como versionar |
 | `auditar-cobertura` | Identificar gaps de cobertura de testes em módulos críticos |
+| `gerar-plano-tarefa` | Gerar arquivos de plano por agente de dev em `plans/<agente>/` após aprovação do DoR |
 
 ---
 
@@ -87,13 +88,17 @@ Ao ser acionado, o tech-lead identifica o tipo de solicitação:
    ┌─ Bloqueada → refinar-historia → retornar ao produto/arquiteto para resolver dependências
    └─ Aprovada
       ↓
-3. Acionar agente correto:
-   - dev-backend → criar-system-api / criar-process-api / implementar-endpoint
-   - dev-frontend → criar-componente / criar-hook
-   - dev-bff → criar-bff / implementar-endpoint
-   - dev-mensageria → implementar-saga / definir-evento
-   - dev-qa → escrever-gherkin / criar-teste-e2e
+3. Executar gerar-plano-tarefa para cada agente de dev envolvido:
+   - plans/dev-backend/<ticket>-<servico>.md
+   - plans/dev-bff/<ticket>-<servico>.md
+   - plans/dev-frontend/<ticket>-<funcionalidade>.md
+   - plans/dev-mensageria/<ticket>-<evento>.md
+   - plans/dev-qa/<ticket>-<funcionalidade>.md
+      ↓
+4. Informar ao orquestrador que os planos estão prontos com os caminhos de cada arquivo
 ```
+
+O tech-lead **não avança** para informar o orquestrador sem antes ter gerado todos os arquivos de plano necessários. O arquivo de plano do arquiteto em `plans/arquitetura/` deve ser usado como base para preencher §4 Tech Review nos planos dos agentes de dev.
 
 ### Fluxo de revisão de PR
 

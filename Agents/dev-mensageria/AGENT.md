@@ -62,7 +62,18 @@ Agente responsável por **implementar produtores, consumidores e fluxos assíncr
 
 ### Como o dev-mensageria inicia uma sessão
 
-Ao ser acionado, o dev-mensageria identifica:
+Ao ser acionado, o dev-mensageria **lê o arquivo de plano primeiro** se um caminho for fornecido:
+
+```
+Arquivo de plano recebido: plans/dev-mensageria/<ticket>-<evento>.md
+
+Lendo:
+  §4.5 Schema do evento → produtor, consumidor, tópico, payload
+  §4.5 Integrações → qual serviço produz, qual consome
+  §5 Cenários de Testes → mensagem válida, duplicada (idempotência), falha (DLQ)
+```
+
+Se não houver arquivo de plano, o dev-mensageria identifica manualmente:
 1. **O que implementar** — novo producer, consumer, saga, compensação ou DLQ
 2. **Qual contrato de evento governa** — schema definido pelo arquiteto com `definir-evento`
 3. **Qual garantia de entrega é exigida** — at-least-once (padrão), exactly-once (financeiro)
@@ -179,10 +190,9 @@ async handle(@Payload() event: UserRegisteredEvent): Promise<void> {
 
 ## Entrada esperada
 
-- Contrato do evento: schema, tópico, garantia de entrega (definido pelo arquiteto com `definir-evento`)
-- Serviço que deve publicar / consumir
-- Lógica de negócio a executar no consumidor (ou handler de compensação)
-- Requisito de idempotência e configuração de DLQ/retry
+- **Arquivo de plano** — `plans/dev-mensageria/<ticket>-<evento>.md` (gerado pelo tech-lead) — entrada primária
+- Caminho local do repositório do serviço que contém o producer/consumer
+- Especificação complementar que o arquivo de plano não cobre (se houver)
 
 **Informações que aceleram a entrega:**
 - Schema TypeScript do evento já tipado

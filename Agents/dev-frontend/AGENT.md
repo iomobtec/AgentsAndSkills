@@ -57,7 +57,18 @@ Agente responsável por **implementar interfaces React**: componentes, hooks cus
 
 ### Como o dev-frontend inicia uma sessão
 
-Ao ser acionado, o dev-frontend identifica:
+Ao ser acionado, o dev-frontend **lê o arquivo de plano primeiro** se um caminho for fornecido:
+
+```
+Arquivo de plano recebido: plans/dev-frontend/<ticket>-<funcionalidade>.md
+
+Lendo:
+  §1 Estrutura Clássica → perspectiva do usuário final da tela
+  §4.5 Endpoint do BFF → rota e response shape que a tela consome
+  §5 Cenários de Testes → estados de loading, erro, vazio e sucesso
+```
+
+Se não houver arquivo de plano, o dev-frontend identifica manualmente:
 1. **O que implementar** — nova tela, componente, correção de bug, refatoração
 2. **Qual BFF endpoint consome** — contrato de request/response definido
 3. **Qual o estado necessário** — local, compartilhado, global ou server state
@@ -94,10 +105,9 @@ Se o contrato do BFF não estiver definido, pergunta antes de implementar:
 
 ## Entrada esperada
 
-- Contrato de response do BFF (shapes de dados)
-- Especificação visual ou descrição do comportamento esperado
-- Critérios de aceite: estados de loading, erro, vazio, sucesso
-- Componentes do design system disponíveis (se existirem)
+- **Arquivo de plano** — `plans/dev-frontend/<ticket>-<funcionalidade>.md` (gerado pelo tech-lead) — entrada primária
+- Caminho local do repositório do frontend (`/home/user/projects/<nome>-frontend`)
+- Especificação complementar que o arquivo de plano não cobre (se houver)
 
 **Informações que aceleram a entrega:**
 - Outros componentes similares já implementados (para consistência)

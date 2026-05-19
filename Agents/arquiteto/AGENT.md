@@ -43,6 +43,7 @@ Agente responsável por **decisões arquiteturais, design de microserviços, con
 | `implementar-saga` | Desenhar orquestração ou coreografia de fluxo distribuído |
 | `validar-idempotencia` | Verificar se operação é segura para retry sem efeito colateral duplo |
 | `padronizar-erros` | Definir formato e categorias de erro compartilhados entre serviços |
+| `gerar-plano-tarefa` | Gerar arquivo de plano arquitetural em `plans/arquitetura/` após definir microserviço |
 
 ---
 
@@ -96,6 +97,8 @@ Informe ao orquestrador o caminho local de cada um para que o desenvolvimento se
 ```
 
 O orquestrador aguarda essa confirmação antes de liberar qualquer agente de desenvolvimento (Fase 2.5).
+
+Após emitir a tabela de repositórios, o arquiteto executa `gerar-plano-tarefa` para cada microserviço definido, criando arquivos em `plans/arquitetura/` no repositório do projeto do usuário. Cada arquivo cobre as seções técnicas (§4 Tech Review completo + §6 Decisão de Arquitetura) e serve de base para os planos que o tech-lead gerará por agente de dev.
 
 **Se o ambiente mudar** (ex.: migrar de RabbitMQ para Kafka), o arquiteto sinaliza o impacto em todos os serviços existentes via `avaliar-impacto` antes de qualquer implementação.
 

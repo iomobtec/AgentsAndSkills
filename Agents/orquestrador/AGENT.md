@@ -287,19 +287,59 @@ O orquestrador **não avança** para a Fase 3 sem a confirmação dos caminhos l
 
 ---
 
+## Fase 2.6 — Confirmação dos planos de tarefa
+
+Após o tech-lead validar o DoR e gerar os arquivos de plano, o orquestrador **pausa** e verifica que os arquivos estão prontos antes de liberar qualquer agente de desenvolvimento.
+
+### 2.6.1 — Verificar arquivos gerados
+
+O orquestrador solicita a confirmação dos caminhos dos planos gerados:
+
+```
+O tech-lead gerou os planos de tarefa. Confirme os arquivos disponíveis:
+
+| Agente | Arquivo do plano |
+|--------|------------------|
+| dev-backend | plans/dev-backend/<ticket>-<servico>.md |
+| dev-bff | plans/dev-bff/<ticket>-<servico>.md |
+| dev-frontend | plans/dev-frontend/<ticket>-<funcionalidade>.md |
+| dev-mensageria | plans/dev-mensageria/<ticket>-<evento>.md |
+| dev-qa | plans/dev-qa/<ticket>-<funcionalidade>.md |
+
+Os arquivos acima estão criados e revisados? (confirme para prosseguir para a Fase 3)
+```
+
+### 2.6.2 — Bloqueio se planos não foram gerados
+
+O orquestrador **não avança** sem os arquivos de plano confirmados:
+
+```
+⚠️ Aguardando planos de tarefa antes de iniciar o desenvolvimento.
+
+  Motivo: cada agente de dev recebe o caminho do arquivo de plano como instrução
+  principal. Sem o arquivo, o agente não tem contexto suficiente para implementar.
+
+  Ação necessária: tech-lead deve executar gerar-plano-tarefa e confirmar os caminhos.
+```
+
+---
+
 ## Fase 3 — Execução coordenada
 
 ### 3.1 — Acionar cada sub-agente com contexto completo
 
-Cada agente é invocado via seu comando slash. O orquestrador instrui o usuário com o comando exato e o contexto que deve ser passado como argumento:
+Cada agente é invocado via seu comando slash. O orquestrador instrui o usuário com o comando exato, o contexto necessário **e o caminho do arquivo de plano que o agente deve seguir**:
 
 ```
 Próxima etapa: abra uma nova conversa e execute:
 
-/arquiteto Preciso definir o contrato do endpoint POST /orders.
-           Contexto: [especificação consolidada]
-           Restrições: [o que está fora do escopo]
+/dev-backend Implementar cancelamento de pedido conforme plano:
+             Arquivo: plans/dev-backend/US-001-cancelamento-orders-system.md
+             Repositório local: /home/user/projects/ms-orders-system
+             Contexto adicional: [qualquer detalhe que o arquivo não cobre]
 ```
+
+O agente de dev **lê o arquivo de plano primeiro** e segue as seções na ordem: §2 regras de negócio → §3 critérios de aceitação → §4.5 arquitetura → §5 cenários de teste → implementação.
 
 O comando carrega automaticamente o `AGENT.md` e os guardrails do agente — o orquestrador não precisa (e não deve) repassar os guardrails manualmente. Também nunca repassa credenciais, tokens ou secrets (`ia-agentes.md §1`).
 
