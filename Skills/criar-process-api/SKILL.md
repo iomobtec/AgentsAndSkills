@@ -12,6 +12,8 @@ Inicializa um **novo serviço de Process API** em NestJS: estrutura de pastas, c
 - Quando o arquiteto define novo serviço de orquestração de fluxo entre Systems
 - Process API: não tem banco de dados próprio, orquestra chamadas a outros serviços, implementa regras de fluxo (não de domínio)
 
+> **Repositório dedicado:** este serviço deve ser inicializado **dentro do repositório GitHub clonado** pelo orquestrador na Fase 2.5. Nunca criar em subpasta de monorepo — cada serviço tem seu próprio repo.
+
 ---
 
 ## Diferença em relação à System API

@@ -12,6 +12,8 @@ Inicializa um **novo serviço de System API** em NestJS: estrutura de pastas, co
 - Quando o arquiteto define um novo serviço de domínio com persistência própria
 - System API: fonte da verdade de uma entidade, tem banco de dados próprio, expõe CRUD e regras de domínio
 
+> **Repositório dedicado:** este serviço deve ser inicializado **dentro do repositório GitHub clonado** pelo orquestrador na Fase 2.5. Nunca criar em subpasta de monorepo — cada serviço tem seu próprio repo.
+
 ---
 
 ## Pré-requisitos

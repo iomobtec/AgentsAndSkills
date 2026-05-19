@@ -16,7 +16,8 @@ AgentsAndSkills/
 │   ├── dev-bff/               # BFF — adapter entre frontend e backend
 │   ├── dev-frontend/          # React 18+, hooks, estado, testes RTL
 │   ├── dev-mensageria/        # Producers, consumers, sagas (NestJS microservices)
-│   └── dev-qa/                # Gherkin, E2E com Playwright, regressão
+│   ├── dev-qa/                # Gherkin, E2E com Playwright, regressão
+│   └── dev-devops/            # Pipelines CI/CD GitHub Actions *(fora do fluxo do orquestrador)*
 │
 ├── Skills/                    # 34 skills reutilizáveis entre agentes (SKILL.md)
 │   ├── criar-system-api/
@@ -34,14 +35,16 @@ AgentsAndSkills/
 │   ├── testes.md              # Nomenclatura, mocks, independência
 │   ├── operacional.md         # PR quality, testes antes do PR, Docker obrigatório
 │   ├── processo.md            # Git flow, DoR/DoD, conventional commits
-│   └── ia-agentes.md         # Comportamento de agentes em cadeia
+│   ├── ia-agentes.md         # Comportamento de agentes em cadeia
+│   └── devops.md              # Secrets em CI, rastreabilidade de imagens, gate de produção
 │
 └── Guidelines/                # Guias de referência de engenharia
     ├── arquitetura/
     ├── backend/
     ├── frontend/
     ├── testes/
-    └── infraestrutura/        # Docker: Dockerfile, docker-compose, templates por tipo de serviço
+    ├── infraestrutura/        # Docker: Dockerfile, docker-compose, templates por tipo de serviço
+    └── devops/                # GitHub Actions: CI/CD, environments, secrets, estratégia de deploy
 ```
 
 ---
@@ -69,7 +72,11 @@ Regras idempotentes e auditáveis. Quando um agente bloqueia algo, cita o arquiv
 ```
 Usuário → orquestrador (coleta spec, faz perguntas)
     ↓
-arquiteto — Fase 0 (define ambiente: broker, cloud, banco, orquestração)
+arquiteto — Fase 0 (define ambiente: broker, cloud, banco, orquestração, org GitHub)
+    ↓
+arquiteto (define microserviços → emite tabela de repositórios a criar)
+    ↓
+orquestrador — Fase 2.5 (aguarda usuário criar repos no GitHub, clonar e confirmar caminhos locais)
     ↓
 tech-lead (valida DoR)
     ↓
@@ -77,14 +84,16 @@ arquiteto (define contratos, APIs, eventos, templates Docker)
     ↓
 dev-qa (escreve Gherkin antes do código)
     ↓
-dev-backend / dev-bff / dev-mensageria (testes → implementação + Dockerfile + docker-compose)
+dev-backend / dev-bff / dev-mensageria (testes → implementação + Dockerfile + docker-compose + ci-cd-staging.yml + ci-cd-production.yml)
     ↓
-dev-frontend (testes → implementação + Dockerfile multi-stage + docker-compose)
+dev-frontend (testes → implementação + Dockerfile multi-stage + docker-compose + ci-cd-staging.yml + ci-cd-production.yml)
     ↓
 dev-qa (E2E — roda contra ambiente Docker)
     ↓
-tech-lead (revisão de PR — inclui checklist Docker)
+tech-lead (revisão de PR — inclui checklist Docker e pipeline)
 ```
+
+> Cada serviço vive em seu **próprio repositório** no GitHub. O orquestrador não libera os agentes de desenvolvimento enquanto os repos não forem clonados e os caminhos locais confirmados.
 
 ---
 
@@ -120,6 +129,7 @@ Que devem apontar para o repositório `AgentsAndSkills` no seu disco.
 | `/dev-frontend` | Implementar componentes React, hooks, estado e testes RTL |
 | `/dev-mensageria` | Implementar producers, consumers e sagas (@nestjs/microservices) |
 | `/dev-qa` | Escrever Gherkin, testes E2E com Playwright e planejar regressão |
+| `/dev-devops` | Criar pipelines CI/CD GitHub Actions, configurar environments e auditar workflows |
 
 ### 3. Usar os comandos
 
@@ -358,6 +368,17 @@ globs: ["**/Dockerfile", "**/docker-compose*.yml", "**/.dockerignore"]
 [cole os templates de Guidelines/infraestrutura/README.md]
 ```
 
+**`.cursor/rules/devops.mdc`:**
+```
+---
+description: Regras de CI/CD e pipelines
+globs: ["**/.github/workflows/*.yml", "**/.github/workflows/*.yaml"]
+---
+
+[cole o conteúdo de Guardrails/devops.md]
+[cole os templates de Guidelines/devops/README.md]
+```
+
 ### Opção 2 — `.cursorrules` (legado)
 
 Crie `.cursorrules` na raiz do projeto com o conteúdo dos guardrails mais relevantes concatenados.
@@ -409,8 +430,9 @@ Os guardrails e agentes foram escritos para **Node.js + React**. Para adaptar:
 | `dev-frontend` | React, hooks, estado, testes RTL | criar-componente, criar-hook, organizar-estado, revisar-frontend |
 | `dev-mensageria` | Producers, consumers, sagas, idempotência | — (usa skills de arquiteto e dev-backend) |
 | `dev-qa` | Gherkin, E2E Playwright, regressão | criar-teste-e2e, escrever-gherkin, planejar-regressao |
+| `dev-devops` | Pipelines CI/CD GitHub Actions, environments, secrets *(fora do fluxo do orquestrador)* | criar-pipeline-servico, criar-pipeline-frontend, configurar-environments-github, auditar-pipeline |
 
-## Skills disponíveis (34)
+## Skills disponíveis (38)
 
 | Categoria | Skills |
 |---|---|
@@ -420,3 +442,4 @@ Os guardrails e agentes foram escritos para **Node.js + React**. Para adaptar:
 | Frontend | `criar-componente` `criar-hook` `organizar-estado` `revisar-frontend` |
 | Testes | `criar-teste-unitario` `criar-teste-integracao` `gerar-teste-componente` `criar-teste-e2e` `auditar-cobertura` |
 | QA / Processo | `escrever-gherkin` `planejar-regressao` `validar-dor` `refinar-historia` `revisar-pr` |
+| DevOps | `criar-pipeline-servico` `criar-pipeline-frontend` `configurar-environments-github` `auditar-pipeline` |

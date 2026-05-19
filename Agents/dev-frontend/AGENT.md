@@ -49,6 +49,7 @@ Agente responsável por **implementar interfaces React**: componentes, hooks cus
 | `gerar-teste-componente` | Escrever testes com React Testing Library |
 | `revisar-frontend` | Revisar código React antes de abrir PR |
 | `auditar-cobertura` | Verificar cobertura de testes e identificar gaps críticos |
+| `criar-pipeline-frontend` | Criar workflow GitHub Actions CI/CD para o frontend (alternativa a acionar `/dev-devops`) |
 
 ---
 

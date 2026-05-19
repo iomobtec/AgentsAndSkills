@@ -12,6 +12,8 @@ Inicializa um **novo serviço BFF (Backend for Frontend)** em NestJS: estrutura 
 - Quando o arquiteto define novo BFF para servir um frontend ou canal específico
 - BFF não tem banco de dados próprio — agrega, transforma e expõe dados de Process e System APIs
 
+> **Repositório dedicado:** este serviço deve ser inicializado **dentro do repositório GitHub clonado** pelo orquestrador na Fase 2.5. Nunca criar em subpasta de monorepo — cada serviço tem seu próprio repo.
+
 ---
 
 ## Diferença da estrutura em relação ao backend

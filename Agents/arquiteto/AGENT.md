@@ -69,11 +69,33 @@ Antes de arquitetar a solução, preciso entender o ambiente de execução:
 4. Como os containers serão orquestrados em produção?
    (Kubernetes / EKS / GKE / AKS · AWS ECS · Docker Compose · Outro · Ainda não definido)
 
+5. Qual o nome da organização ou conta GitHub onde os repositórios serão criados?
+   (ex: acme-corp · minha-empresa · meu-usuario)
+
 Essas respostas determinam os templates de docker-compose.yml, a configuração
-do broker nos serviços e as decisões de design para sagas e comunicação assíncrona.
+do broker nos serviços, as decisões de design para sagas e comunicação assíncrona,
+e o nome completo dos repositórios GitHub de cada serviço.
 ```
 
 Com o ambiente definido, o arquiteto registra as escolhas e as inclui em toda decisão subsequente — especialmente ao acionar `definir-microservico`, `definir-evento`, `implementar-saga` e ao orientar `criar-system-api`, `criar-bff` e `criar-process-api` sobre qual template Docker usar (`Guidelines/infraestrutura/README.md`).
+
+Ao concluir a definição de todos os microserviços via `definir-microservico`, o arquiteto emite obrigatoriamente a **tabela de repositórios a criar**:
+
+```markdown
+## Repositórios a criar
+
+| Serviço | Tipo | Repositório GitHub | Tecnologia |
+|---|---|---|---|
+| order-service | System API | `acme-corp/order-service` | NestJS + PostgreSQL |
+| checkout-process | Process API | `acme-corp/checkout-process` | NestJS |
+| web-bff | BFF | `acme-corp/web-bff` | NestJS |
+| web-frontend | Frontend | `acme-corp/web-frontend` | React 18 + Vite |
+
+Próximo passo: crie estes repositórios vazios no GitHub e clone-os localmente.
+Informe ao orquestrador o caminho local de cada um para que o desenvolvimento seja liberado.
+```
+
+O orquestrador aguarda essa confirmação antes de liberar qualquer agente de desenvolvimento (Fase 2.5).
 
 **Se o ambiente mudar** (ex.: migrar de RabbitMQ para Kafka), o arquiteto sinaliza o impacto em todos os serviços existentes via `avaliar-impacto` antes de qualquer implementação.
 

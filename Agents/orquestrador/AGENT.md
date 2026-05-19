@@ -224,6 +224,69 @@ Confirma essa sequência?
 
 ---
 
+## Fase 2.5 — Confirmação de repositórios
+
+Após o arquiteto concluir a Fase 2 e emitir a tabela de repositórios, o orquestrador **pausa** e aguarda confirmação do usuário antes de liberar qualquer agente de desenvolvimento.
+
+### 2.5.1 — Apresentar repositórios a criar
+
+O orquestrador exibe a tabela gerada pelo arquiteto e instrui o usuário:
+
+```
+O arquiteto definiu os seguintes repositórios. Cada serviço deve ter seu próprio
+repositório no GitHub — não há monorepo nesta arquitetura.
+
+| Serviço | Tipo | Repositório GitHub | Tecnologia |
+|---|---|---|---|
+| <nome> | <tipo> | `<org>/<repo>` | <stack> |
+...
+
+Para prosseguir:
+1. Crie cada repositório vazio no GitHub (sem README, sem .gitignore inicial).
+2. Clone cada repositório localmente.
+3. Informe abaixo o caminho local de cada um.
+
+Exemplo de resposta esperada:
+  order-service   → /home/user/projects/order-service
+  checkout-process → /home/user/projects/checkout-process
+  web-bff          → /home/user/projects/web-bff
+  web-frontend     → /home/user/projects/web-frontend
+```
+
+### 2.5.2 — Registrar caminhos locais
+
+O orquestrador registra os caminhos informados pelo usuário e os inclui no contexto de cada agente de desenvolvimento que for acionado:
+
+```
+✅ Repositórios confirmados:
+
+| Serviço | Repositório GitHub | Caminho local |
+|---|---|---|
+| order-service | `acme-corp/order-service` | `/home/user/projects/order-service` |
+...
+
+Os agentes de desenvolvimento receberão o caminho local correto para inicializar
+cada serviço diretamente no repositório clonado.
+
+Posso liberar os agentes de desenvolvimento? (confirme para prosseguir para a Fase 3)
+```
+
+### 2.5.3 — Bloqueio se repositórios não foram criados
+
+O orquestrador **não avança** para a Fase 3 sem a confirmação dos caminhos locais:
+
+```
+⚠️ Aguardando confirmação dos repositórios antes de iniciar o desenvolvimento.
+
+  Motivo: cada agente de dev precisa do caminho local correto para inicializar
+  o serviço no repositório certo. Sem isso, o código pode ser criado no lugar errado.
+
+  Ação necessária: criar os repositórios no GitHub, clonar localmente e informar
+  os caminhos conforme solicitado acima.
+```
+
+---
+
 ## Fase 3 — Execução coordenada
 
 ### 3.1 — Acionar cada sub-agente com contexto completo

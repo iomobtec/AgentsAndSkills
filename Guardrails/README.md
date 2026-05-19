@@ -36,17 +36,18 @@ Pedido pontual do desenvolvedor             (menos restritiva — pode ser bloqu
 
 Cada agent carrega apenas os guardrails relevantes ao seu escopo. `00-core.md` e `ia-agentes.md` são **sempre** carregados por todos os agents.
 
-| Agente | core | back | front | dados | seg | test | ops | proc | ia |
-|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| `arquiteto`      | X | X | X | X | X |   | X | X | X |
-| `dev-backend`    | X | X |   | X | X | X | X | X | X |
-| `dev-bff`        | X | X |   |   | X | X | X | X | X |
-| `dev-frontend`   | X |   | X |   | X | X | X | X | X |
-| `dev-mensageria` | X | X |   |   | X | X | X | X | X |
-| `dev-qa`         | X |   |   |   | X | X |   | X | X |
-| `tech-lead`      | X | X | X | X | X | X | X | X | X |
+| Agente | core | back | front | dados | seg | test | ops | proc | ia | dops |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| `arquiteto`      | X | X | X | X | X |   | X | X | X |   |
+| `dev-backend`    | X | X |   | X | X | X | X | X | X |   |
+| `dev-bff`        | X | X |   |   | X | X | X | X | X |   |
+| `dev-frontend`   | X |   | X |   | X | X | X | X | X |   |
+| `dev-mensageria` | X | X |   |   | X | X | X | X | X |   |
+| `dev-qa`         | X |   |   |   | X | X |   | X | X |   |
+| `tech-lead`      | X | X | X | X | X | X | X | X | X |   |
+| `dev-devops`     | X |   |   |   | X |   | X | X | X | X |
 
-**Legenda das colunas:** core = `00-core.md` · back = `backend.md` · front = `frontend.md` · dados = `dados.md` · seg = `seguranca.md` · test = `testes.md` · ops = `operacional.md` · proc = `processo.md` · ia = `ia-agentes.md`
+**Legenda das colunas:** core = `00-core.md` · back = `backend.md` · front = `frontend.md` · dados = `dados.md` · seg = `seguranca.md` · test = `testes.md` · ops = `operacional.md` · proc = `processo.md` · ia = `ia-agentes.md` · dops = `devops.md`
 
 ---
 
@@ -139,6 +140,7 @@ Não edite o conteúdo "rapidinho" sem PR. A integridade do GuardRails depende d
 | [`dados.md`](dados.md) | Persistência, queries, migrations | dev-backend, arquiteto |
 | [`seguranca.md`](seguranca.md) | LGPD, secrets, AuthN/Z | Todos os agents |
 | [`testes.md`](testes.md) | Cobertura, padrões, mocks | dev-backend, dev-bff, dev-frontend, dev-qa |
-| [`operacional.md`](operacional.md) | Logging, monitoramento, deploy |  dev-backend, dev-bff, dev-frontend, arquiteto |
+| [`operacional.md`](operacional.md) | PR quality, testes antes do PR, Docker obrigatório | dev-backend, dev-bff, dev-frontend, dev-mensageria, arquiteto, dev-devops |
 | [`processo.md`](processo.md) | Git Flow, DoR/DoD, code review | Todos os agents |
 | [`ia-agentes.md`](ia-agentes.md) | Comportamento dos agents | Todos os agents |
+| [`devops.md`](devops.md) | Secrets em CI/CD, rastreabilidade de imagens, gate de produção | dev-devops |

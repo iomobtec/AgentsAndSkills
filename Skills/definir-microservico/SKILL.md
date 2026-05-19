@@ -89,6 +89,15 @@ Para cada operação exposta:
 └── tsconfig.json
 ```
 
+### Passo 7 — Registrar repositório GitHub
+
+Cada microserviço vive em seu **próprio repositório** — nunca em subpasta de monorepo. Definir:
+
+- **Nome do repositório:** `<org>/<nome-do-servico>` (ex.: `acme-corp/order-service`)
+- **Caminho local (após clone):** caminho absoluto ou relativo onde o desenvolvedor clonou o repo vazio
+
+Esses dois valores compõem a saída da especificação e são exigidos pelo orquestrador na Fase 2.5 antes de liberar os agentes de desenvolvimento.
+
 ---
 
 ## Saída produzida
@@ -98,6 +107,8 @@ Para cada operação exposta:
 
 **Camada:** System | Process | BFF
 **Responsabilidade:** <frase única>
+**Repositório GitHub:** `<org>/<nome-do-servico>`
+**Caminho local:** `<caminho absoluto onde o repo vazio foi clonado>`
 
 ---
 
@@ -143,11 +154,13 @@ Erros: 400 (validação), 409 (conflito), 422 (regra de negócio)
 
 ---
 
-### Próximos passos para o dev-backend
+### Próximos passos
 
-1. Inicializar repositório com estrutura padrão
-2. Criar migration inicial
-3. Implementar endpoints na ordem: <lista priorizanda>
-4. Configurar validação com class-validator
-5. Cobrir com testes unitários antes do PR
+1. Criar repositório `<org>/<nome-do-servico>` no GitHub (repositório vazio, sem código inicial)
+2. Clonar localmente e informar o caminho ao orquestrador para liberação dos agentes de dev
+3. Dev-backend: inicializar estrutura NestJS com `criar-system-api` / `criar-process-api`
+4. Criar migration inicial (se System API)
+5. Implementar endpoints na ordem: <lista priorizada>
+6. Configurar validação com class-validator
+7. Cobrir com testes unitários antes do PR
 ```

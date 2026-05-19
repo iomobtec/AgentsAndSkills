@@ -54,6 +54,7 @@ Agente responsável por **implementar produtores, consumidores e fluxos assíncr
 | `criar-teste-unitario` | Testar lógica de producer/consumer isolada do broker |
 | `criar-teste-integracao` | Testar fluxo completo de produção e consumo com broker real ou mock |
 | `auditar-cobertura` | Verificar cobertura de testes na camada de mensageria |
+| `criar-pipeline-servico` | Criar workflow GitHub Actions CI/CD para o worker (alternativa a acionar `/dev-devops`) |
 
 ---
 

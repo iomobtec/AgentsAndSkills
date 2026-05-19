@@ -52,6 +52,7 @@ Agente responsável por **implementar serviços BFF (Backend for Frontend)** em 
 | `criar-teste-integracao` | Escrever testes de integração com mock HTTP dos serviços upstream |
 | `auditar-cobertura` | Verificar cobertura de testes e identificar gaps críticos |
 | `mapear-contrato` | Formalizar o contrato entre BFF e frontend |
+| `criar-pipeline-servico` | Criar workflow GitHub Actions CI/CD para o BFF (alternativa a acionar `/dev-devops`) |
 
 ---
 

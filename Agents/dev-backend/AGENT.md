@@ -42,6 +42,7 @@ Agente responsável por **implementar serviços backend em Node.js**: System API
 | `revisar-backend` | Revisar código backend antes de abrir PR |
 | `auditar-cobertura` | Verificar cobertura de testes e identificar gaps críticos |
 | `validar-idempotencia` | Verificar e garantir idempotência em endpoint ou handler de evento |
+| `criar-pipeline-servico` | Criar workflow GitHub Actions CI/CD para o serviço (alternativa a acionar `/dev-devops`) |
 
 ---
 
