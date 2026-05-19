@@ -29,7 +29,10 @@ Estabelece a fundação visual do produto: identidade estética, paleta de cores
 ### Passo 1 — Verificar se ui-ux-pro-max está disponível
 
 ```bash
-python3 skills/ui-ux-pro-max/scripts/search.py --help 2>/dev/null && echo "disponível" || echo "não instalado"
+# Linux / macOS
+python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py --help 2>/dev/null && echo "disponível" || echo "não instalado"
+# Windows (PowerShell)
+python "$HOME\ui-ux-pro-max\skills\ui-ux-pro-max\scripts\search.py" --help 2>$null; if ($?) { "disponível" } else { "não instalado" }
 ```
 
 **Se disponível:** usar o CLI nos passos seguintes para consultar o banco de dados de estilos, paletas e tipografia.
@@ -89,7 +92,7 @@ Confirma essa direção antes de eu gerar os tokens?
 
 **Com ui-ux-pro-max:**
 ```bash
-python3 skills/ui-ux-pro-max/scripts/search.py "[palavra-chave]" --domain color -n 3
+python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py "[palavra-chave]" --domain color -n 3
 ```
 
 **Manual:** Definir escala de 9 tons para a cor brand (50→900) + neutros + semânticos (success, warning, error, info). Sempre verificar contraste para os pares de uso primários (ver `ux.md §1.1` e template em `Guidelines/ux/README.md §1`).
@@ -105,7 +108,7 @@ python3 skills/ui-ux-pro-max/scripts/search.py "[palavra-chave]" --domain color 
 
 **Com ui-ux-pro-max:**
 ```bash
-python3 skills/ui-ux-pro-max/scripts/search.py "[estilo]" --domain typography -n 3
+python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py "[estilo]" --domain typography -n 3
 ```
 
 **Critérios de seleção:**
@@ -140,7 +143,7 @@ Usar o template completo de `Guidelines/ux/README.md §1`. O arquivo deve ser au
 
 ```bash
 # Com ui-ux-pro-max (gera e persiste automaticamente)
-python3 skills/ui-ux-pro-max/scripts/search.py "[tipo de produto]" --design-system -p "[Nome]"
+python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py "[tipo de produto]" --design-system -p "[Nome]"
 # Cria: design-system/MASTER.md + design-system/pages/
 ```
 

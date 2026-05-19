@@ -332,19 +332,19 @@ interface [ComponentName]Props {
 
 ```bash
 # Gerar design system completo para o projeto
-python3 skills/ui-ux-pro-max/scripts/search.py "fintech dashboard" --design-system -p "MeuProjeto"
+python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py "fintech dashboard" --design-system -p "MeuProjeto"
 # Cria: design-system/MASTER.md + design-system/pages/
 
 # Buscar por domínio específico
-python3 skills/ui-ux-pro-max/scripts/search.py "azul confiança" --domain color -n 5
-python3 skills/ui-ux-pro-max/scripts/search.py "Inter" --domain typography
-python3 skills/ui-ux-pro-max/scripts/search.py "dashboard" --domain style
+python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py "azul confiança" --domain color -n 5
+python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py "Inter" --domain typography
+python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py "dashboard" --domain style
 
 # Stack específica
-python3 skills/ui-ux-pro-max/scripts/search.py "card component" --stack react
+python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py "card component" --stack react
 
 # Persistir spec de página específica (sobrepõe MASTER.md para aquela página)
-python3 skills/ui-ux-pro-max/scripts/search.py "checkout" --design-system -p "MeuProjeto" --persist
+python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py "checkout" --design-system -p "MeuProjeto" --persist
 ```
 
 **Hierarquia de precedência:** `plans/dev-frontend/<ticket>-ui-spec.md` > `design-system/pages/<page>.md` > `design-system/MASTER.md`
@@ -353,15 +353,11 @@ python3 skills/ui-ux-pro-max/scripts/search.py "checkout" --design-system -p "Me
 
 ## 5. Verificação com web-interface-guidelines
 
-```bash
-# Instalar o comando slash (uma vez por projeto)
-mkdir -p .claude/commands
-curl -o .claude/commands/revisar-interface.md \
-  https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md
+A skill `revisar-interface` busca as diretrizes de `vercel-labs/web-interface-guidelines` automaticamente via `WebFetch` a cada execução — nenhuma instalação necessária. Basta invocar a skill normalmente:
 
-# Usar no Claude Code
-/revisar-interface src/components/**/*.tsx
-/revisar-interface src/pages/checkout.tsx
+```
+revisar-interface src/components/**/*.tsx
+revisar-interface src/pages/checkout.tsx
 ```
 
 Output esperado — agrupado por arquivo, formato `file:line`:
@@ -373,6 +369,8 @@ src/components/Button.tsx:55 - animation missing prefers-reduced-motion
 ## src/components/Card.tsx
 ✓ pass
 ```
+
+Se o repositório estiver indisponível, a skill registra um aviso no relatório e opera com a checklist interna derivada de `ux.md`.
 
 ---
 

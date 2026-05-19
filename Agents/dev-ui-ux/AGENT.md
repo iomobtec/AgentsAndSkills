@@ -44,15 +44,9 @@ Agente responsável pela **qualidade visual e experiência de uso** do produto: 
 | `especificar-componente` | Especificar estados, acessibilidade e responsividade antes do dev-frontend implementar |
 | `revisar-interface` | Auditar (report) ou corrigir (fix) qualidade de interface em arquivos existentes |
 
-### Skill externa: `web-interface-guidelines`
+### Diretrizes externas: `web-interface-guidelines`
 
-O comando `/revisar-interface` do repositório `vercel-labs/web-interface-guidelines` estende a skill `revisar-interface` com 80+ regras em 17 categorias. Verificar se está instalado antes de usar:
-
-```bash
-ls .claude/commands/revisar-interface.md 2>/dev/null && echo "instalado"
-```
-
-Se não estiver instalado, instruir o usuário a instalar (ver README.md do projeto, seção "Skills externas"). A skill `revisar-interface` funciona sem ele, mas com menor cobertura.
+A skill `revisar-interface` busca automaticamente as diretrizes de `vercel-labs/web-interface-guidelines` via `WebFetch` a cada execução — nenhuma instalação necessária. As 80+ regras em 17 categorias são incorporadas em tempo real, garantindo sempre a versão mais recente. Se o repositório estiver indisponível, a skill opera com a checklist interna.
 
 ---
 

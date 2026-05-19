@@ -57,26 +57,21 @@ Categorias de verificação:
 6. Performance Visual (HIGH) — `ux.md §6`
 7. Aderência ao design system (MEDIUM) — `design-system/MASTER.md`
 
-### Passo 2 — Verificar com web-interface-guidelines (se instalado)
+### Passo 2 — Buscar diretrizes externas (web-interface-guidelines)
 
-```bash
-# Verificar se o comando está instalado
-ls .claude/commands/revisar-interface.md 2>/dev/null && echo "instalado" || echo "não instalado"
-```
-
-**Se instalado:** executar `/revisar-interface <glob>` e incorporar o output ao relatório.
-
-**Se não instalado:** informar ao usuário e executar a checklist interna completa (Passo 3).
+Usar `WebFetch` para buscar a versão mais recente das diretrizes em tempo real — nenhuma instalação manual necessária:
 
 ```
-ℹ️ O comando `web-interface-guidelines` não está instalado neste projeto.
-   Para instalá-lo e ter cobertura adicional de 80+ regras, execute:
-   
-   mkdir -p .claude/commands
-   curl -o .claude/commands/revisar-interface.md \
-     https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md
-   
-   Continuando com a checklist interna...
+URL: https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md
+```
+
+**Se o fetch tiver sucesso:** incorporar as regras obtidas à auditoria. As 80+ regras em 17 categorias do documento externo complementam a checklist interna (Passo 3) — executar ambas e consolidar os achados.
+
+**Se o fetch falhar** (sem conectividade, URL indisponível): registrar no relatório e prosseguir apenas com a checklist interna.
+
+```
+⚠️ web-interface-guidelines indisponível (sem conectividade ou repositório fora do ar).
+   Executando checklist interna — cobertura pode ser menor que o habitual.
 ```
 
 ### Passo 3 — Checklist interna de auditoria

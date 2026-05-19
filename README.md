@@ -413,34 +413,9 @@ Crie `.cursorrules` na raiz do projeto com o conteúdo dos guardrails mais relev
 
 ---
 
-## Skills externas (instalação opcional)
+## Ferramentas externas (sem instalação obrigatória)
 
-Algumas skills do sistema usam ferramentas externas que precisam ser instaladas no **projeto do usuário**. Sem elas as skills funcionam em modo reduzido; com elas têm cobertura máxima.
-
-### `web-interface-guidelines` — comando slash de auditoria de UI
-
-80+ regras de qualidade de interface em 17 categorias (acessibilidade, animação, formulários, performance, tipografia…). Usado pela skill `revisar-interface`.
-
-O comando é instalado no diretório global do Claude Code (`~/.claude/commands/` no Linux/macOS, `$HOME\.claude\commands\` no Windows), tornando-o disponível em qualquer projeto.
-
-**Linux / macOS:**
-```bash
-curl -o ~/.claude/commands/revisar-interface.md \
-  https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md
-```
-
-**Windows (PowerShell):**
-```powershell
-Invoke-WebRequest `
-  -Uri "https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md" `
-  -OutFile "$HOME\.claude\commands\revisar-interface.md"
-```
-
-Após instalado, disponível como `/revisar-interface <glob>` no Claude Code.
-
-**Sem instalação:** a skill `revisar-interface` usa a checklist interna derivada de `ux.md` — menor cobertura, sem necessidade de dependência externa.
-
----
+As skills deste sistema que dependem de diretrizes externas as buscam automaticamente via `WebFetch` no momento do uso — sempre na versão mais recente, sem nenhuma instalação manual.
 
 ### `ui-ux-pro-max` — CLI de design system
 
@@ -462,30 +437,24 @@ npm install -g uipro-cli
 
 **Linux / macOS:**
 ```bash
-git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
-mkdir -p skills/ui-ux-pro-max
-cp -r ui-ux-pro-max-skill/skills/ui-ux-pro-max/scripts ./skills/ui-ux-pro-max/
-rm -rf ui-ux-pro-max-skill
+git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill ~/ui-ux-pro-max
 ```
 
 **Windows (PowerShell):**
 ```powershell
-git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
-New-Item -ItemType Directory -Force -Path "skills\ui-ux-pro-max" | Out-Null
-Copy-Item -Recurse "ui-ux-pro-max-skill\skills\ui-ux-pro-max\scripts" "skills\ui-ux-pro-max\"
-Remove-Item -Recurse -Force "ui-ux-pro-max-skill"
+git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill "$HOME\ui-ux-pro-max"
 ```
 
 #### Verificar instalação
 
 **Linux / macOS:**
 ```bash
-python3 skills/ui-ux-pro-max/scripts/search.py --help
+python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py --help
 ```
 
 **Windows (PowerShell):**
 ```powershell
-python skills\ui-ux-pro-max\scripts\search.py --help
+python "$HOME\ui-ux-pro-max\skills\ui-ux-pro-max\scripts\search.py" --help
 ```
 
 **Sem instalação:** a skill `criar-design-system` executa o processo manual guiado por perguntas, gerando o `design-system/MASTER.md` sem consultar o banco de dados externo.
