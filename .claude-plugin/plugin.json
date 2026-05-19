@@ -1,0 +1,9 @@
+{
+  "name": "agents-and-skills",
+  "description": "Sistema de agentes de IA especializados para desenvolvimento de software: orquestrador, arquiteto, tech-lead, dev-backend, dev-bff, dev-frontend, dev-mensageria, dev-qa, dev-ui-ux, dev-security e dev-devops. Inclui 55 skills reutilizáveis, 12 guardrails por domínio e 5 checklists de referência rápida.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Pedro Andriow",
+    "email": "pedro@iomob.com"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "agents-and-skills",
+  "version": "1.0.0",
+  "description": "Sistema de agentes de IA especializados para desenvolvimento de software com TDD, arquitetura, segurança e qualidade",
+  "owner": {
+    "name": "Pedro Andriow",
+    "email": "pedro@iomob.com"
+  },
+  "plugins": [
+    {
+      "name": "agents-and-skills",
+      "description": "11 agentes especializados (orquestrador, arquiteto, tech-lead, dev-backend, dev-bff, dev-frontend, dev-mensageria, dev-qa, dev-ui-ux, dev-security, dev-devops), 55 skills reutilizáveis e 12 guardrails para desenvolvimento full-stack com TDD",
+      "source": ".",
+      "category": "development"
+    }
+  ]
+}
