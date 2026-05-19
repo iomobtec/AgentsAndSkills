@@ -164,6 +164,7 @@ Cada agente é invocado pelo seu **comando slash** no Claude Code. O orquestrado
 |---|---|
 | `/tech-lead` | Sempre — valida DoR antes de qualquer implementação |
 | `/arquiteto` | Sempre que há novo endpoint, novo evento, novo serviço ou mudança de contrato |
+| `/dev-ui-ux` | Sempre que há tela ou componente novo — define design system e especificações antes do dev-frontend |
 | `/dev-qa` | Sempre — escreve Gherkin antes do código (TDD) |
 | `/dev-backend` | Quando há lógica de domínio, persistência ou orquestração de serviços |
 | `/dev-bff` | Quando o frontend precisa de dados agregados ou adaptados |
@@ -177,25 +178,31 @@ Cada comando carrega **apenas os guardrails do seu agente** — o contexto da ja
 A ordem padrão garante que os testes precedem a implementação:
 
 ```
-1. /tech-lead   → validar-dor
+1. /tech-lead      → validar-dor + gerar-plano-tarefa (inclui plans/dev-ui-ux/ se há UI)
       ↓ (apenas se DoR aprovado)
-2. /arquiteto   → definir contratos (API, eventos, schemas)
+2. /arquiteto      → definir contratos (API, eventos, schemas, BFF)
       ↓ (contratos definidos)
-3. /dev-qa      → escrever-gherkin (cenários BDD antes do código)
+3. /dev-ui-ux      → criar-design-system (se MASTER.md não existe)
+                   → especificar-componente → plans/dev-frontend/<ticket>-<comp>-spec.md
+      ↓ (specs visuais prontas — apenas se há componentes/telas novas)
+4. /dev-qa         → escrever-gherkin (cenários BDD incluindo estados visuais)
       ↓ (cenários escritos)
-4. /dev-backend → criar-teste-unitario + criar-teste-integracao → implementar
+5. /dev-backend    → criar-teste-unitario + criar-teste-integracao → implementar
       ↓ (backend com testes passando)
-5. /dev-bff     → criar-teste-unitario + criar-teste-integracao → implementar
+6. /dev-bff        → criar-teste-unitario + criar-teste-integracao → implementar
       ↓ (BFF com testes passando)
-6. /dev-mensageria → criar-teste-unitario + criar-teste-integracao → implementar
+7. /dev-mensageria → criar-teste-unitario + criar-teste-integracao → implementar
       ↓ (mensageria com testes passando, se aplicável)
-7. /dev-frontend → gerar-teste-componente → criar-componente / criar-hook
+8. /dev-frontend   → gerar-teste-componente → criar-componente / criar-hook
+                   (segue plans/dev-frontend/<ticket>-<comp>-spec.md como instrução principal)
       ↓ (frontend com testes passando)
-8. /dev-qa      → criar-teste-e2e (valida o fluxo completo)
+9. /dev-ui-ux      → revisar-interface (modo report/fix no PR de frontend)
+      ↓ (qualidade visual aprovada)
+10. /dev-qa        → criar-teste-e2e (valida o fluxo completo)
       ↓
-9. /tech-lead   → revisar-pr (revisão de cada PR produzido)
+11. /tech-lead     → revisar-pr (revisão de cada PR produzido)
       ↓
-10. /dev-qa     → planejar-regressao (antes de release, se aplicável)
+12. /dev-qa        → planejar-regressao (antes de release, se aplicável)
 ```
 
 ### 2.3 — Ajustes na sequência
@@ -204,7 +211,7 @@ A sequência pode ser encurtada ou reordenada. Critérios:
 
 **Encurtar:** Se a demanda é uma correção de bug localizada em uma única camada, acionar apenas os agentes daquela camada (ex.: bug de frontend → `/dev-frontend` + `/tech-lead`).
 
-**Paralelizar:** Passos independentes podem ocorrer em paralelo. Exemplo: após `/arquiteto` definir os contratos, `/dev-backend` e `/dev-frontend` podem trabalhar simultaneamente se não houver dependência direta entre eles.
+**Paralelizar:** Passos independentes podem ocorrer em paralelo. Exemplo: após `/arquiteto` definir os contratos e `/dev-ui-ux` finalizar as specs, `/dev-backend` e `/dev-frontend` podem trabalhar simultaneamente. O `/dev-ui-ux` pode preparar specs enquanto `/dev-backend` implementa.
 
 **Reordenar:** Se a demanda começa por mensageria (ex.: consumir evento de sistema externo), `/dev-mensageria` pode preceder `/dev-backend`.
 

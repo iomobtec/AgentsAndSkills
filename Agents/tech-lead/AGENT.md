@@ -89,6 +89,7 @@ Ao ser acionado, o tech-lead identifica o tipo de solicitação:
    └─ Aprovada
       ↓
 3. Executar gerar-plano-tarefa para cada agente de dev envolvido:
+   - plans/dev-ui-ux/<ticket>-<funcionalidade>.md  ← se há tela/componente novo
    - plans/dev-backend/<ticket>-<servico>.md
    - plans/dev-bff/<ticket>-<servico>.md
    - plans/dev-frontend/<ticket>-<funcionalidade>.md
@@ -114,6 +115,16 @@ O tech-lead **não avança** para informar o orquestrador sem antes ter gerado t
    └─ Aprovado → confirmar merge
 ```
 
+### Verificação de qualidade de UI no fluxo de PR
+
+Todo PR de frontend deve ter passado pela revisão do `dev-ui-ux` antes de chegar ao tech-lead. O tech-lead verifica:
+
+- O relatório de `revisar-interface` foi executado e entregue pelo `dev-ui-ux`?
+- Violações CRITICAL foram resolvidas?
+- A implementação segue a spec em `plans/dev-frontend/<ticket>-<componente>-spec.md`?
+
+Se o PR de frontend chegar sem revisão do `dev-ui-ux`, devolver com solicitação de auditoria antes de revisar.
+
 ### Verificação Docker no fluxo de PR
 
 Todo PR de serviço (backend, BFF, mensageria, frontend) deve incluir os arquivos Docker antes de ser aprovado. O tech-lead verifica via checklist `operacional.md §4.5`:
@@ -125,6 +136,13 @@ Todo PR de serviço (backend, BFF, mensageria, frontend) deve incluir os arquivo
 - `docker compose up --build` executável sem erro
 
 Se qualquer item faltar, o PR é devolvido com o item específico de `operacional.md §4.5` que está ausente.
+
+### Quando escalar para o dev-ui-ux
+
+O tech-lead aciona o dev-ui-ux quando:
+- PR de frontend não passou por revisão de interface e há componentes novos
+- `auditar-cobertura` identifica falta de specs visuais para componentes críticos
+- Violação de acessibilidade CRITICAL identificada no PR que não é de lógica de negócio
 
 ### Quando escalar para o arquiteto
 

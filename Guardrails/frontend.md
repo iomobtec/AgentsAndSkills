@@ -1,6 +1,8 @@
 # GuardRails — Frontend (React)
 
-Regras específicas para desenvolvimento de interfaces com **React** e TypeScript. Complementa `00-core.md` — não substitui. Carregado por: `dev-e2e`, `arquiteto`, `revisor`.
+Regras específicas para desenvolvimento de interfaces com **React** e TypeScript. Complementa `00-core.md` — não substitui. Carregado por: `dev-frontend`, `dev-ui-ux`, `tech-lead`, `arquiteto`.
+
+> **Regras visuais e de qualidade de interface** (acessibilidade, animação, touch, tipografia, formulários, performance visual) estão em `Guardrails/ux.md`. Este arquivo cobre exclusivamente padrões de código React/TypeScript.
 
 ---
 
@@ -70,11 +72,9 @@ function processData(data: unknown) {
 
 ---
 
-## §5 — Elementos interativos devem ser acessíveis
+## §5 — Elementos interativos devem ser semânticamente corretos
 
-**Regra:** Todo elemento interativo deve ser operável por teclado e ter rótulo descritivo para leitores de tela. Botões têm texto visível ou `aria-label`. Inputs têm `<label>` associado ou `aria-label`. Ações de clique ficam em `<button>` ou `<a>` — nunca em `<div>` ou `<span>` sem `role`.
-
-**Motivo:** Acessibilidade não é opcional — é requisito de produto. Elemento sem label quebraacessibilidade e é reprovado em auditoria de qualidade.
+**Regra:** Ações de clique ficam em `<button>`. Navegação fica em `<a>`. Nunca em `<div>` ou `<span>` sem `role` e `keyboard handler`. Para regras completas de acessibilidade (ARIA, contraste, formulários, animação, touch), ver `Guardrails/ux.md §1–§2`.
 
 ### §5.1 — Padrões bloqueados
 
@@ -86,7 +86,9 @@ function processData(data: unknown) {
 <button onClick={handleClose}><XIcon /></button>
 
 // ✅ button com aria-label quando sem texto visível
-<button onClick={handleClose} aria-label="Fechar modal"><XIcon /></button>
+<button onClick={handleClose} aria-label="Fechar modal">
+  <XIcon aria-hidden="true" />
+</button>
 
 // ✅ div com role quando realmente necessário
 <div role="button" tabIndex={0} onClick={handleSelect} onKeyDown={handleKeyDown}>

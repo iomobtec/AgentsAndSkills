@@ -17,31 +17,35 @@ AgentsAndSkills/
 │   ├── dev-frontend/          # React 18+, hooks, estado, testes RTL
 │   ├── dev-mensageria/        # Producers, consumers, sagas (NestJS microservices)
 │   ├── dev-qa/                # Gherkin, E2E com Playwright, regressão
+│   ├── dev-ui-ux/             # Design system, especificação de componentes, auditoria de interface
 │   └── dev-devops/            # Pipelines CI/CD GitHub Actions *(fora do fluxo do orquestrador)*
 │
-├── Skills/                    # 39 skills reutilizáveis entre agentes (SKILL.md)
+├── Skills/                    # 42 skills reutilizáveis entre agentes (SKILL.md)
 │   ├── criar-system-api/
-│   ├── criar-componente/
-│   ├── escrever-gherkin/
+│   ├── criar-design-system/
+│   ├── especificar-componente/
+│   ├── revisar-interface/
 │   └── ...
 │
 ├── Guardrails/                # Regras que todo agente deve seguir
 │   ├── README.md              # Como aplicar, hierarquia, matriz agente × guardrail
 │   ├── 00-core.md             # Universais — carregados por todos
 │   ├── backend.md             # Node.js, NestJS, floating promises, env vars
-│   ├── frontend.md            # React, TypeScript, acessibilidade, estado
+│   ├── frontend.md            # React, TypeScript, estado (padrões de código)
+│   ├── ux.md                  # Acessibilidade WCAG AA, animação, touch, tipografia, formulários
 │   ├── dados.md               # Migrations, queries, paginação, transações
 │   ├── seguranca.md           # LGPD, secrets, autenticação
 │   ├── testes.md              # Nomenclatura, mocks, independência
 │   ├── operacional.md         # PR quality, testes antes do PR, Docker obrigatório
 │   ├── processo.md            # Git flow, DoR/DoD, conventional commits
-│   ├── ia-agentes.md         # Comportamento de agentes em cadeia
+│   ├── ia-agentes.md          # Comportamento de agentes em cadeia
 │   └── devops.md              # Secrets em CI, rastreabilidade de imagens, gate de produção
 │
 └── Guidelines/                # Guias de referência de engenharia
     ├── arquitetura/
     ├── backend/
     ├── frontend/
+    ├── ux/                    # Design system, tokens, acessibilidade, especificação de componentes
     ├── testes/
     ├── infraestrutura/        # Docker: Dockerfile, docker-compose, templates por tipo de serviço
     └── devops/                # GitHub Actions: CI/CD, environments, secrets, estratégia de deploy
@@ -79,21 +83,29 @@ arquiteto (define microserviços → emite tabela de repositórios a criar
     ↓
 orquestrador — Fase 2.5 (aguarda usuário criar repos no GitHub, clonar e confirmar caminhos locais)
     ↓
-tech-lead (valida DoR → gerar-plano-tarefa: plans/<agente>/<ticket>.md por agente de dev)
+tech-lead (valida DoR → gerar-plano-tarefa: plans/<agente>/<ticket>.md por agente de dev,
+          incluindo plans/dev-ui-ux/ quando há telas novas)
     ↓
 orquestrador — Fase 2.6 (confirma que arquivos de plano estão gerados e revisados)
     ↓
-arquiteto (define contratos, APIs, eventos, templates Docker)
+arquiteto (define contratos, APIs, eventos, BFF, templates Docker)
     ↓
+dev-ui-ux (lê plans/dev-ui-ux/<ticket>.md → criar-design-system → especificar-componente
+          → gera plans/dev-frontend/<ticket>-<componente>-spec.md)
+    ↓  [em paralelo com dev-backend]
 dev-backend / dev-bff / dev-mensageria (lê plans/<agente>/<ticket>.md → testes → implementação
                                        + Dockerfile + docker-compose + ci-cd-staging.yml + ci-cd-production.yml)
     ↓
-dev-frontend (lê plans/dev-frontend/<ticket>.md → testes → implementação
+dev-qa (lê plans/dev-qa/<ticket>.md → Gherkin incluindo estados visuais)
+    ↓
+dev-frontend (lê plans/dev-frontend/<ticket>-<componente>-spec.md → testes → implementação
              + Dockerfile multi-stage + docker-compose + ci-cd-staging.yml + ci-cd-production.yml)
     ↓
-dev-qa (lê plans/dev-qa/<ticket>.md → Gherkin → E2E com Playwright)
+dev-ui-ux (revisar-interface: auditoria de acessibilidade e qualidade visual no PR)
     ↓
-tech-lead (revisão de PR — inclui checklist Docker e pipeline)
+dev-qa (E2E com Playwright)
+    ↓
+tech-lead (revisão de PR — inclui checklist Docker, pipeline e confirmação de revisão de interface)
 ```
 
 > Cada serviço vive em seu **próprio repositório** no GitHub. O orquestrador não libera os agentes de desenvolvimento enquanto os repos não forem clonados, os caminhos locais confirmados e os arquivos de plano gerados pelo tech-lead.
@@ -131,6 +143,7 @@ Que devem apontar para o repositório `AgentsAndSkills` no seu disco.
 | `/dev-bff` | Implementar camada BFF — agregar e adaptar dados do backend para o frontend |
 | `/dev-frontend` | Implementar componentes React, hooks, estado e testes RTL |
 | `/dev-mensageria` | Implementar producers, consumers e sagas (@nestjs/microservices) |
+| `/dev-ui-ux` | Criar design system, especificar componentes antes da implementação, auditar qualidade de interface |
 | `/dev-qa` | Escrever Gherkin, testes E2E com Playwright e planejar regressão |
 | `/dev-devops` | Criar pipelines CI/CD GitHub Actions, configurar environments e auditar workflows |
 
@@ -388,6 +401,85 @@ Crie `.cursorrules` na raiz do projeto com o conteúdo dos guardrails mais relev
 
 ---
 
+## Skills externas (instalação opcional)
+
+Algumas skills do sistema usam ferramentas externas que precisam ser instaladas no **projeto do usuário**. Sem elas as skills funcionam em modo reduzido; com elas têm cobertura máxima.
+
+### `web-interface-guidelines` — comando slash de auditoria de UI
+
+80+ regras de qualidade de interface em 17 categorias (acessibilidade, animação, formulários, performance, tipografia…). Usado pela skill `revisar-interface`.
+
+O comando é instalado no diretório global do Claude Code (`~/.claude/commands/` no Linux/macOS, `$HOME\.claude\commands\` no Windows), tornando-o disponível em qualquer projeto.
+
+**Linux / macOS:**
+```bash
+curl -o ~/.claude/commands/revisar-interface.md \
+  https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md
+```
+
+**Windows (PowerShell):**
+```powershell
+Invoke-WebRequest `
+  -Uri "https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md" `
+  -OutFile "$HOME\.claude\commands\revisar-interface.md"
+```
+
+Após instalado, disponível como `/revisar-interface <glob>` no Claude Code.
+
+**Sem instalação:** a skill `revisar-interface` usa a checklist interna derivada de `ux.md` — menor cobertura, sem necessidade de dependência externa.
+
+---
+
+### `ui-ux-pro-max` — CLI de design system
+
+Banco de dados com 67 estilos visuais, 161 paletas, 57 pares tipográficos e 99 guidelines UX. Usado pela skill `criar-design-system` para consultar combinações por tipo de produto e stack.
+
+**Pré-requisito:** Python 3.x — verificar com `python3 --version` (Linux/macOS) ou `python --version` (Windows).
+
+#### Opção 1 — via npm (recomendado)
+
+```bash
+# Linux / macOS
+npm install -g uipro-cli
+
+# Windows (PowerShell)
+npm install -g uipro-cli
+```
+
+#### Opção 2 — instalação manual
+
+**Linux / macOS:**
+```bash
+git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+mkdir -p skills/ui-ux-pro-max
+cp -r ui-ux-pro-max-skill/skills/ui-ux-pro-max/scripts ./skills/ui-ux-pro-max/
+rm -rf ui-ux-pro-max-skill
+```
+
+**Windows (PowerShell):**
+```powershell
+git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+New-Item -ItemType Directory -Force -Path "skills\ui-ux-pro-max" | Out-Null
+Copy-Item -Recurse "ui-ux-pro-max-skill\skills\ui-ux-pro-max\scripts" "skills\ui-ux-pro-max\"
+Remove-Item -Recurse -Force "ui-ux-pro-max-skill"
+```
+
+#### Verificar instalação
+
+**Linux / macOS:**
+```bash
+python3 skills/ui-ux-pro-max/scripts/search.py --help
+```
+
+**Windows (PowerShell):**
+```powershell
+python skills\ui-ux-pro-max\scripts\search.py --help
+```
+
+**Sem instalação:** a skill `criar-design-system` executa o processo manual guiado por perguntas, gerando o `design-system/MASTER.md` sem consultar o banco de dados externo.
+
+---
+
 ## Customização
 
 ### Adicionar um novo guardrail
@@ -430,17 +522,19 @@ Os guardrails e agentes foram escritos para **Node.js + React**. Para adaptar:
 | `tech-lead` | Valida DoR, revisa PR, facilita refinamento | validar-dor, refinar-historia, revisar-pr, gerar-plano-tarefa |
 | `dev-backend` | System API e Process API (NestJS + Prisma) | criar-system-api, criar-process-api, configurar-prisma, configurar-auth |
 | `dev-bff` | BFF — adapter entre frontend e serviços | criar-bff, revisar-bff, otimizar-performance |
+| `dev-ui-ux` | Design system, especificação de componentes, auditoria de interface | criar-design-system, especificar-componente, revisar-interface |
 | `dev-frontend` | React, hooks, estado, testes RTL | criar-componente, criar-hook, organizar-estado, revisar-frontend |
 | `dev-mensageria` | Producers, consumers, sagas, idempotência | — (usa skills de arquiteto e dev-backend) |
 | `dev-qa` | Gherkin, E2E Playwright, regressão | criar-teste-e2e, escrever-gherkin, planejar-regressao |
 | `dev-devops` | Pipelines CI/CD GitHub Actions, environments, secrets *(fora do fluxo do orquestrador)* | criar-pipeline-servico, criar-pipeline-frontend, configurar-environments-github, auditar-pipeline |
 
-## Skills disponíveis (39)
+## Skills disponíveis (42)
 
 | Categoria | Skills |
 |---|---|
 | Arquitetura | `revisar-arquitetura` `definir-microservico` `planejar-api` `mapear-contrato` `definir-evento` `avaliar-impacto` `avaliar-dependencias` `gerar-diagrama` `implementar-saga` `validar-idempotencia` `padronizar-erros` |
 | Planejamento | `gerar-plano-tarefa` |
+| UI/UX | `criar-design-system` `especificar-componente` `revisar-interface` |
 | Backend | `criar-system-api` `criar-process-api` `implementar-endpoint` `configurar-prisma` `configurar-auth` `revisar-backend` |
 | BFF | `criar-bff` `revisar-bff` `otimizar-performance` |
 | Frontend | `criar-componente` `criar-hook` `organizar-estado` `revisar-frontend` |
