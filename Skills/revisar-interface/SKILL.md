@@ -3,7 +3,8 @@
 Auditoria e correção de qualidade de interface: acessibilidade (WCAG 2.1 AA), animação, tipografia, formulários, performance visual e aderência ao design system. Opera em dois modos distintos — **nunca inferir o modo**; sempre perguntar ou derivar explicitamente da solicitação.
 
 **Agente:** dev-ui-ux  
-**Guardrails aplicáveis:** `ux.md` (todos os §)
+**Guardrails aplicáveis:** `ux.md` (todos os §)  
+**Referências rápidas:** `References/accessibility-checklist.md`, `References/performance-checklist.md`
 
 ---
 

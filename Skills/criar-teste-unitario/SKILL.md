@@ -3,7 +3,8 @@
 Escreve **testes unitários Jest** para services, utils e regras de negócio em Node.js/NestJS: mocka dependências externas na fronteira, cobre casos de sucesso e de erro, e segue as convenções de nomenclatura do projeto.
 
 **Agente:** dev-backend  
-**Guardrails aplicáveis:** `00-core.md`, `testes.md`
+**Guardrails aplicáveis:** `00-core.md`, `testes.md`  
+**Referências rápidas:** `References/testing-patterns.md`
 
 ---
 

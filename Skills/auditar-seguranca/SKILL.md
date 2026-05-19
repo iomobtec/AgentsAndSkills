@@ -3,7 +3,8 @@
 **Agente:** `dev-security`, `tech-lead`  
 **Quando usar:** Após `dev-qa` concluir os testes E2E e antes da revisão de PR do `tech-lead`. Também usado em re-auditoria após correção de achados CRITICAL/HIGH.  
 **Baseado em:** OWASP Top 10 2025 (`https://owasp.org/Top10/2025/`) + `Guardrails/appsec.md`  
-**Output:** Relatório de segurança estruturado com achados classificados por severidade.
+**Output:** Relatório de segurança estruturado com achados classificados por severidade.  
+**Referências rápidas:** `References/security-checklist.md`
 
 ---
 

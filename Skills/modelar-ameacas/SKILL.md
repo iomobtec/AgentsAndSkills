@@ -2,7 +2,8 @@
 
 **Agente:** `dev-security`, `arquiteto`  
 **Quando usar:** Após o arquiteto definir os componentes de um microsserviço (endpoints, eventos, dados, integrações). Executar antes do início do desenvolvimento para identificar controles obrigatórios por camada.  
-**Output:** `plans/dev-security/<ticket>-threat-model.md`
+**Output:** `plans/dev-security/<ticket>-threat-model.md`  
+**Referências rápidas:** `References/security-checklist.md`
 
 ---
 

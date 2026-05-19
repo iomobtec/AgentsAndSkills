@@ -3,7 +3,8 @@
 Aplica estratégias de **melhoria de performance em serviços BFF e backend Node.js**: cache de resposta, paralelização de chamadas upstream, redução de payload, compressão e identificação de gargalos de latência.
 
 **Agente:** dev-bff  
-**Guardrails aplicáveis:** `00-core.md`, `backend.md`, `dados.md`
+**Guardrails aplicáveis:** `00-core.md`, `backend.md`, `dados.md`  
+**Referências rápidas:** `References/performance-checklist.md`
 
 ---
 

@@ -2,7 +2,8 @@
 
 **Agente:** `dev-backend`, `dev-bff`, `dev-security`  
 **Quando usar:** Antes de abrir PR de backend ou BFF. O próprio agente de dev executa este checklist como parte do DoD — não precisa esperar o `dev-security` para validar o básico.  
-**Output:** Checklist preenchido + lista de itens a corrigir antes do PR (se houver).
+**Output:** Checklist preenchido + lista de itens a corrigir antes do PR (se houver).  
+**Referências rápidas:** `References/security-checklist.md`
 
 ---
 

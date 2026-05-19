@@ -3,7 +3,8 @@
 Registrar decisões técnicas e arquiteturais como ADRs (Architecture Decision Records) — documentos imutáveis que preservam o contexto de "por que fizemos dessa forma", não apenas "o que fizemos".
 
 **Agente:** `arquiteto`, `tech-lead`  
-**Quando usar:** Ao tomar qualquer decisão arquitetural; ao adotar nova dependência significativa; ao definir padrão que todos os devs devem seguir; ao escolher entre duas abordagens igualmente válidas
+**Quando usar:** Ao tomar qualquer decisão arquitetural; ao adotar nova dependência significativa; ao definir padrão que todos os devs devem seguir; ao escolher entre duas abordagens igualmente válidas  
+**Referências rápidas:** `References/adr-template.md`
 
 ---
 

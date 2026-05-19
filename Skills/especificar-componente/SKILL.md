@@ -3,7 +3,8 @@
 Produz a especificação completa de um componente React antes de qualquer linha de código ser escrita: estados visuais, dados esperados, requisitos de acessibilidade, responsividade e tokens do design system. O arquivo gerado é a instrução principal que o `dev-frontend` segue para implementar.
 
 **Agente:** dev-ui-ux  
-**Guardrails aplicáveis:** `ux.md §1`, `ux.md §2`, `ux.md §4`, `ux.md §5`
+**Guardrails aplicáveis:** `ux.md §1`, `ux.md §2`, `ux.md §4`, `ux.md §5`  
+**Referências rápidas:** `References/accessibility-checklist.md`
 
 ---
 

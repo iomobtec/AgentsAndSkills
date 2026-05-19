@@ -3,7 +3,8 @@
 Escreve **testes de ponta a ponta (E2E)** que validam fluxos completos de usuário percorrendo frontend, BFF e serviços backend. Usa Playwright como ferramenta principal: navega na UI real, interage como usuário e verifica resultados visíveis.
 
 **Agente:** dev-qa  
-**Guardrails aplicáveis:** `00-core.md`, `testes.md`, `seguranca.md`, `processo.md`
+**Guardrails aplicáveis:** `00-core.md`, `testes.md`, `seguranca.md`, `processo.md`  
+**Referências rápidas:** `References/testing-patterns.md`
 
 ---
 

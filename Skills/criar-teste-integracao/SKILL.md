@@ -3,7 +3,8 @@
 Escreve **testes de integração** para controllers NestJS: sobe a aplicação em memória, executa requests HTTP reais contra o app, usa banco de dados de teste real (ou in-memory) e valida o comportamento fim a fim de cada endpoint.
 
 **Agente:** dev-backend  
-**Guardrails aplicáveis:** `00-core.md`, `testes.md`, `seguranca.md`
+**Guardrails aplicáveis:** `00-core.md`, `testes.md`, `seguranca.md`  
+**Referências rápidas:** `References/testing-patterns.md`
 
 ---
 
