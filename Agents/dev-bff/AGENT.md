@@ -109,7 +109,8 @@ O dev-bff sempre entrega:
 1. **Endpoint implementado** — controller, service de agregação, DTOs de response
 2. **Clients HTTP** para cada serviço upstream chamado
 3. **Testes** — unitários da transformação, integração com mock HTTP
-4. **Checklist de DoD** — confirmação de que está pronto para PR
+4. **Arquivos Docker** — `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `.env.example` atualizados (`operacional.md §4`)
+5. **Checklist de DoD** — confirmação de que está pronto para PR
 
 ---
 

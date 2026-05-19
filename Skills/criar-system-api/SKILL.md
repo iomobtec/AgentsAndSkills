@@ -216,12 +216,24 @@ model <Dominio> {
 }
 ```
 
-### Passo 9 — Validar que o projeto sobe
+### Passo 9 — Criar arquivos Docker
+
+Seguindo `operacional.md §4` e o template em `Guidelines/infraestrutura/README.md` (seção System API):
+
+**`Dockerfile`** — multi-stage build, imagem base versionada, `USER node` antes do `CMD`.
+
+**`.dockerignore`** — excluir `node_modules`, `.env*`, `dist`, `.git`, `coverage`.
+
+**`docker-compose.yml`** — serviço `app` + serviço `db` (PostgreSQL com versão fixa), `healthcheck` no banco, `depends_on: condition: service_healthy`, variáveis via `env_file`.
+
+Broker de mensageria: incluir no `docker-compose.yml` apenas se o serviço for produtor ou consumidor — usar o template correto para o broker definido pelo arquiteto (Kafka, RabbitMQ ou LocalStack para SQS).
+
+### Passo 10 — Validar que o projeto sobe
 
 ```bash
 npx prisma migrate dev --name init
 npm run build
-npm run start:dev
+docker compose up --build   # valida que o ambiente completo sobe
 ```
 
 ---
@@ -235,6 +247,9 @@ npm run start:dev
 - `src/config/env.config.ts` com validação de env vars
 - `src/prisma/prisma.service.ts`
 - `.env.example` com todas as variáveis necessárias
+- `Dockerfile` multi-stage
+- `.dockerignore`
+- `docker-compose.yml` com banco e healthcheck
 - Jest configurado e pronto para `npm test`
 
 ---
@@ -247,3 +262,7 @@ npm run start:dev
 - [ ] `npm test` roda sem falha (mesmo que vazio)
 - [ ] `.env.example` documenta todas as variáveis sem valores reais (`seguranca.md §2`)
 - [ ] Nenhum valor real de credencial em arquivo commitado (`seguranca.md §2`)
+- [ ] `Dockerfile` com multi-stage, imagem versionada, `USER node` (`operacional.md §4.1`)
+- [ ] `.dockerignore` presente (`operacional.md §4.2`)
+- [ ] `docker-compose.yml` com banco, `healthcheck` e `depends_on: condition: service_healthy` (`operacional.md §4.3`)
+- [ ] `docker compose up --build` executa sem erro

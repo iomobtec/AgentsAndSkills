@@ -197,7 +197,8 @@ O dev-mensageria sempre entrega:
 2. **Deduplicação** — estratégia implementada quando garantia é at-least-once
 3. **Handler de DLQ** — ao menos um log de alerta com contexto suficiente para reprocessamento manual
 4. **Testes unitários** do handler isolado do broker
-5. **Checklist de DoD** — confirmação de que está pronto para PR
+5. **Arquivos Docker** — `Dockerfile`, `.dockerignore`, `docker-compose.yml` com o broker correto (Kafka/RabbitMQ/LocalStack) conforme ambiente definido pelo arquiteto (`operacional.md §4`, `Guidelines/infraestrutura/README.md`)
+6. **Checklist de DoD** — confirmação de que está pronto para PR
 
 ---
 

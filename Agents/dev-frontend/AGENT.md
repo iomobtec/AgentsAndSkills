@@ -111,7 +111,8 @@ O dev-frontend sempre entrega:
 1. **Componente implementado** com TypeScript tipado
 2. **Hook** de dados ou lógica extraído quando necessário
 3. **Testes** com React Testing Library
-4. **Checklist de DoD** — confirmação de que está pronto para PR
+4. **Arquivos Docker** — `Dockerfile` multi-stage com Nginx, `.dockerignore`, `docker-compose.yml` e `.env.example` (`operacional.md §4`, `Guidelines/infraestrutura/README.md`)
+5. **Checklist de DoD** — confirmação de que está pronto para PR
 
 ---
 

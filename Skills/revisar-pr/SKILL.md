@@ -54,9 +54,17 @@ Se o PR não tem descrição, devolver antes de revisar:
 - [ ] Sem console.log de debug
 - [ ] Sem código comentado sem justificativa
 - [ ] PR tem descrição preenchida
+
+## Checklist Docker (operacional.md §4) — para PRs de serviço
+
+- [ ] `Dockerfile` presente com build multi-stage, imagem base versionada, `USER node`
+- [ ] `.dockerignore` presente e exclui `node_modules`, `.env*`, `dist`, `.git`
+- [ ] `docker-compose.yml` cobre serviço + dependências com `healthcheck` e `depends_on: condition: service_healthy`
+- [ ] `.env.example` atualizado com todas as variáveis do serviço
+- [ ] `docker compose up --build` executável sem etapas manuais
 ```
 
-Qualquer item marcado como falso é **bloqueador** antes de revisar o código.
+Qualquer item marcado como falso é **bloqueador** antes de revisar o código. O checklist Docker aplica-se a PRs de serviços (backend, BFF, mensageria, frontend) — não a PRs de biblioteca, migration isolada ou apenas testes.
 
 ### Passo 3 — Revisar por camada
 

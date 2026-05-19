@@ -60,3 +60,9 @@ Ao clicar [Guide dos Testes](./testes/README.md)
 - **Cobertura Adequada:** Todos os engenheiros devem se esforçar para alcançar uma cobertura de código adequada (mínimo 80%) em todos os níveis de teste. Isso reduz riscos e facilita a manutenção.
  
 Ao seguir essas diretrizes, todos os engenheiros contribuem para a construção de um sólido conjunto de testes, fortalecendo a robustez e confiabilidade do software em todas as fases do desenvolvimento.
+
+### Infraestrutura — Containers Docker
+
+Todo serviço entregue deve incluir `Dockerfile`, `docker-compose.yml` e `.env.example`. O critério de entrega é: `docker compose up --build` sobe o ambiente completo sem etapas manuais. Veja:
+
+[Guide de infraestrutura e containers](./infraestrutura/README.md)

@@ -234,11 +234,21 @@ Seguir `configurar-auth` — idêntico ao backend. O BFF é o ponto de entrada d
 
 Para testes de integração, usar `nock` para interceptar HTTP aos upstreams — ver `criar-teste-integracao`.
 
-### Passo 9 — Validar que o projeto sobe
+### Passo 9 — Criar arquivos Docker
+
+Seguindo `operacional.md §4` e o template em `Guidelines/infraestrutura/README.md` (seção BFF):
+
+**`Dockerfile`** — multi-stage build, imagem base versionada, `USER node` antes do `CMD`.
+
+**`.dockerignore`** — excluir `node_modules`, `.env*`, `dist`, `.git`, `coverage`.
+
+**`docker-compose.yml`** — apenas o serviço `bff`, com `env_file`. Sem banco (BFF não tem banco próprio). Upstream APIs configuradas via variáveis de ambiente.
+
+### Passo 10 — Validar que o projeto sobe
 
 ```bash
 npm run build
-npm run start:dev
+docker compose up --build   # valida que o container sobe corretamente
 ```
 
 ---
@@ -253,3 +263,7 @@ npm run start:dev
 - [ ] JWT guard global registrado no `AppModule`
 - [ ] `npm test` roda sem falha
 - [ ] `.env.example` documenta todas as variáveis, sem valores reais (`seguranca.md §2`)
+- [ ] `Dockerfile` com multi-stage, imagem versionada, `USER node` (`operacional.md §4.1`)
+- [ ] `.dockerignore` presente (`operacional.md §4.2`)
+- [ ] `docker-compose.yml` presente com `env_file` (`operacional.md §4.3`)
+- [ ] `docker compose up --build` executa sem erro

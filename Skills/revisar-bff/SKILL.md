@@ -195,4 +195,8 @@ app.enableCors({ origin: env.ALLOWED_ORIGINS });
 - [x] Dados sensíveis não expostos ao frontend
 - [x] Chamadas independentes em paralelo
 - [x] CORS configurado com origins explícitas
+- [x] `Dockerfile` multi-stage presente (`operacional.md §4.1`)
+- [x] `.dockerignore` presente (`operacional.md §4.2`)
+- [x] `docker-compose.yml` presente com `env_file` (`operacional.md §4.3`)
+- [x] `docker compose up --build` executa sem erro
 ```

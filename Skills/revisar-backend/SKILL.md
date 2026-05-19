@@ -178,4 +178,8 @@ Verificar `padronizar-erros`:
 - [x] Sem secret exposto
 - [x] Sem console.log
 - [x] Paginação nas listas
+- [x] `Dockerfile` multi-stage presente (`operacional.md §4.1`)
+- [x] `.dockerignore` presente (`operacional.md §4.2`)
+- [x] `docker-compose.yml` com banco e healthcheck (`operacional.md §4.3`)
+- [x] `docker compose up --build` executa sem erro
 ```

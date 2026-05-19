@@ -100,6 +100,23 @@ e o carrinho é esvaziado"
   - História depende de migração de banco ainda não planejada
 ```
 
+### Passo 4b — Verificar prontidão de ambiente Docker
+
+Para histórias que criam novo serviço (System API, Process API, BFF, worker de mensageria):
+
+```
+✅ Satisfeito quando:
+  - Arquiteto já definiu o ambiente de execução (broker, banco, orquestração)
+  - Template Docker correto para o broker foi identificado (Guidelines/infraestrutura/README.md)
+
+⛔ Bloqueado quando:
+  - Ambiente de execução não foi definido pelo arquiteto (Fase 0 do arquiteto ausente)
+  - Broker de mensageria necessário não tem template de docker-compose disponível
+    → Resolver: acionar arquiteto para completar a Fase 0 de descoberta de ambiente
+```
+
+Este passo é verificado **apenas para histórias de novo serviço**. Para histórias que modificam serviços existentes, verificar se os arquivos Docker já existem no repositório.
+
 ### Passo 5 — Emitir o resultado da validação
 
 ```markdown

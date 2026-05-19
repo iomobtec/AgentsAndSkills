@@ -186,11 +186,21 @@ it('should return result when system-a responds', async () => {
 });
 ```
 
-### Passo 8 — Validar que o projeto sobe
+### Passo 8 — Criar arquivos Docker
+
+Seguindo `operacional.md §4` e o template em `Guidelines/infraestrutura/README.md` (seção System API — sem o serviço `db`, pois Process API não tem banco próprio):
+
+**`Dockerfile`** — multi-stage build, imagem base versionada, `USER node` antes do `CMD`.
+
+**`.dockerignore`** — excluir `node_modules`, `.env*`, `dist`, `.git`, `coverage`.
+
+**`docker-compose.yml`** — apenas o serviço `app`, com `env_file`. Sem banco. Se a Process API faz parte de um ambiente local com Systems, documentar no README como subir os Systems necessários.
+
+### Passo 9 — Validar que o projeto sobe
 
 ```bash
 npm run build
-npm run start:dev
+docker compose up --build   # valida que o container sobe corretamente
 ```
 
 ---
@@ -202,6 +212,9 @@ npm run start:dev
 - `src/config/env.config.ts` com URLs dos Systems como variáveis validadas
 - Exception filter, ValidationPipe e logging configurados
 - `.env.example` com todas as variáveis necessárias
+- `Dockerfile` multi-stage
+- `.dockerignore`
+- `docker-compose.yml` (sem banco)
 - Jest configurado com `nock` para mock de HTTP
 
 ---
@@ -214,3 +227,7 @@ npm run start:dev
 - [ ] URLs dos Systems em variáveis de ambiente (não hardcoded)
 - [ ] `npm test` roda sem falha
 - [ ] Nenhuma credencial real em arquivo commitado (`seguranca.md §2`)
+- [ ] `Dockerfile` com multi-stage, imagem versionada, `USER node` (`operacional.md §4.1`)
+- [ ] `.dockerignore` presente (`operacional.md §4.2`)
+- [ ] `docker-compose.yml` presente com `env_file` (`operacional.md §4.3`)
+- [ ] `docker compose up --build` executa sem erro

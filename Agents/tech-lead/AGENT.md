@@ -109,6 +109,18 @@ Ao ser acionado, o tech-lead identifica o tipo de solicitação:
    └─ Aprovado → confirmar merge
 ```
 
+### Verificação Docker no fluxo de PR
+
+Todo PR de serviço (backend, BFF, mensageria, frontend) deve incluir os arquivos Docker antes de ser aprovado. O tech-lead verifica via checklist `operacional.md §4.5`:
+
+- `Dockerfile` com multi-stage, imagem base versionada, `USER node`
+- `.dockerignore` excluindo `node_modules`, `.env`, `dist`, `.git`
+- `docker-compose.yml` com `healthcheck` em todas as dependências
+- `.env.example` atualizado
+- `docker compose up --build` executável sem erro
+
+Se qualquer item faltar, o PR é devolvido com o item específico de `operacional.md §4.5` que está ausente.
+
 ### Quando escalar para o arquiteto
 
 O tech-lead escala para o arquiteto quando identifica:
@@ -117,6 +129,7 @@ O tech-lead escala para o arquiteto quando identifica:
 - Migration destrutiva sem estratégia expand-contract definida
 - Decisão de design com impacto em múltiplos serviços ou na topologia de eventos
 - Solicitação de exceção formal a um guardrail (processo em `Guardrails/README.md §6`)
+- Novo serviço sem ambiente de execução (broker, banco) definido pelo arquiteto
 
 ### Quando escalar para o dev-qa
 

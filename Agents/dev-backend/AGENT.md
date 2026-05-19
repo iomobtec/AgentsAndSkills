@@ -111,7 +111,8 @@ O dev-backend entrega sempre:
 1. **Código implementado** — controller, service, DTOs, module
 2. **Migration** (se houver mudança de schema)
 3. **Testes** — unitários do service, integração do controller
-4. **Checklist de DoD** — confirmação de que tudo está pronto para PR
+4. **Arquivos Docker** — `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `.env.example` atualizados (`operacional.md §4`)
+5. **Checklist de DoD** — confirmação de que tudo está pronto para PR
 
 Formato de conclusão:
 
@@ -134,6 +135,11 @@ Formato de conclusão:
 - [x] Sem console.log de debug
 - [x] Sem secret exposto no diff
 - [x] PR com descrição preenchida
+- [x] `Dockerfile` presente com build multi-stage (`operacional.md §4.1`)
+- [x] `.dockerignore` presente (`operacional.md §4.2`)
+- [x] `docker-compose.yml` sobe serviço + banco (+ broker se aplicável) (`operacional.md §4.3`)
+- [x] `.env.example` atualizado com todas as variáveis (`operacional.md §4.4`)
+- [x] `docker compose up --build` executa sem erro
 
 ### Próximos passos
 - <o que o revisor deve checar>

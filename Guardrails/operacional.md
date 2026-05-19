@@ -176,7 +176,153 @@ Se for solicitado a fazer qualquer um desses, agent recusa citando este parágra
 
 ---
 
-## §4 — Padrão geral de recusa para violação deste guardrail
+## §4 — Todo serviço deve ter imagem Docker pronta para execução
+
+**Regra:** Toda entrega de serviço (backend, BFF, worker de mensageria) deve incluir um `Dockerfile` funcional e um `docker-compose.yml` que sobe o serviço junto com todas as suas dependências (banco de dados, broker, serviços de suporte). O serviço é considerado entregue somente quando `docker compose up` inicia o ambiente completo sem etapas manuais adicionais.
+
+**Motivo:** Serviço sem container é serviço que só roda na máquina de quem desenvolveu. Docker elimina divergência de ambiente entre dev, CI e produção, permite que qualquer desenvolvedor da squad rode o serviço em segundos e garante que a imagem de produção seja testável localmente.
+
+---
+
+### §4.1 — Dockerfile com build multi-stage obrigatório
+
+O `Dockerfile` deve usar multi-stage build com pelo menos dois estágios: `builder` (compilação) e `runner` (runtime). Isso garante que a imagem final não carregue dependências de build, ferramentas de compilação ou código-fonte TypeScript.
+
+```dockerfile
+# Estágio 1 — build
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# Estágio 2 — runtime
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY --from=builder /app/dist ./dist
+USER node
+EXPOSE 3000
+CMD ["node", "dist/main.js"]
+```
+
+**Regras obrigatórias dentro do Dockerfile:**
+
+- Imagem base com **versão fixa** (`node:20-alpine`) — nunca `node:latest` ou `node:alpine` sem versão.
+- `npm ci` (não `npm install`) para builds reproduzíveis.
+- `USER node` antes do `CMD` — o processo final **não roda como root**.
+- `EXPOSE` declarado para documentação explícita de porta.
+
+---
+
+### §4.2 — `.dockerignore` obrigatório
+
+O repositório deve conter `.dockerignore` na raiz do serviço. No mínimo:
+
+```
+node_modules
+dist
+.env
+.env.*
+.git
+*.log
+coverage
+```
+
+**Motivo:** sem `.dockerignore`, o `COPY . .` envia `node_modules` para o contexto de build — aumentando o tempo de build e o risco de dependências locais contaminarem a imagem.
+
+---
+
+### §4.3 — `docker-compose.yml` cobre o ambiente completo
+
+O `docker-compose.yml` deve subir o serviço **e todas as suas dependências** na versão correta. O desenvolvedor não pode precisar instalar banco, broker ou qualquer outra dependência manualmente para rodar o serviço.
+
+```yaml
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: app_dev
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+```
+
+**Regras obrigatórias no `docker-compose.yml`:**
+
+- `depends_on` com `condition: service_healthy` para dependências com banco ou broker — nunca depender de timing (`sleep`).
+- `healthcheck` declarado em todos os serviços que outros serviços dependem.
+- Variáveis de ambiente via `env_file` apontando para `.env` — **nunca** valores reais hardcodados no compose.
+- Volume nomeado para persistência de dados em desenvolvimento.
+- Imagens de dependências (banco, broker) com **versão fixa** — nunca `postgres:latest`.
+
+---
+
+### §4.4 — `.env.example` documenta todas as variáveis necessárias
+
+O repositório deve conter `.env.example` com todas as variáveis de ambiente utilizadas pelo serviço — sem valores reais, apenas a chave e uma descrição comentada:
+
+```
+# Banco de dados
+DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+
+# Servidor
+PORT=3000
+NODE_ENV=development
+
+# JWT
+JWT_SECRET=troque-por-string-aleatoria-de-32-caracteres-minimo
+JWT_EXPIRES_IN=1h
+```
+
+**Motivo:** `.env.example` é o contrato de configuração do serviço. Sem ele, o desenvolvedor precisa ler o código para descobrir quais variáveis são necessárias — o que é lento, propenso a erro e impede onboarding rápido.
+
+---
+
+### §4.5 — Checklist de entrega com Docker
+
+Antes de considerar um serviço pronto para PR, o agente verifica:
+
+- [ ] `Dockerfile` existe e usa multi-stage build
+- [ ] Imagem base com versão fixa (não `:latest`)
+- [ ] `USER node` antes do `CMD` — não roda como root
+- [ ] `.dockerignore` existe e exclui `node_modules`, `.env`, `dist`, `.git`
+- [ ] `docker-compose.yml` existe e inclui todas as dependências
+- [ ] Dependências no compose têm `healthcheck` e versão fixa
+- [ ] `depends_on` usa `condition: service_healthy`
+- [ ] `.env.example` documenta todas as variáveis com descrição
+- [ ] `docker compose up --build` executa sem erro em ambiente limpo
+- [ ] `docker compose up` sobe o serviço sem etapas manuais adicionais
+
+Se qualquer item falhar, o PR não é aberto (`operacional.md §2`).
+
+---
+
+## §5 — Padrão geral de recusa para violação deste guardrail
 
 ```
 ⛔ Pedido bloqueado pelo GuardRails/operacional.md §<n> — <título>
