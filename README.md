@@ -32,7 +32,7 @@ AgentsAndSkills/
 │   ├── dados.md               # Migrations, queries, paginação, transações
 │   ├── seguranca.md           # LGPD, secrets, autenticação
 │   ├── testes.md              # Nomenclatura, mocks, independência
-│   ├── operacional.md         # Logging, CI, branch atualizada
+│   ├── operacional.md         # PR quality, testes antes do PR, Docker obrigatório
 │   ├── processo.md            # Git flow, DoR/DoD, conventional commits
 │   └── ia-agentes.md         # Comportamento de agentes em cadeia
 │
@@ -40,7 +40,8 @@ AgentsAndSkills/
     ├── arquitetura/
     ├── backend/
     ├── frontend/
-    └── testes/
+    ├── testes/
+    └── infraestrutura/        # Docker: Dockerfile, docker-compose, templates por tipo de serviço
 ```
 
 ---
@@ -68,19 +69,21 @@ Regras idempotentes e auditáveis. Quando um agente bloqueia algo, cita o arquiv
 ```
 Usuário → orquestrador (coleta spec, faz perguntas)
     ↓
+arquiteto — Fase 0 (define ambiente: broker, cloud, banco, orquestração)
+    ↓
 tech-lead (valida DoR)
     ↓
-arquiteto (define contratos, APIs, eventos)
+arquiteto (define contratos, APIs, eventos, templates Docker)
     ↓
 dev-qa (escreve Gherkin antes do código)
     ↓
-dev-backend / dev-bff / dev-mensageria (testes → implementação)
+dev-backend / dev-bff / dev-mensageria (testes → implementação + Dockerfile + docker-compose)
     ↓
-dev-frontend (testes → implementação)
+dev-frontend (testes → implementação + Dockerfile multi-stage + docker-compose)
     ↓
-dev-qa (E2E)
+dev-qa (E2E — roda contra ambiente Docker)
     ↓
-tech-lead (revisão de PR)
+tech-lead (revisão de PR — inclui checklist Docker)
 ```
 
 ---
@@ -233,6 +236,19 @@ Quando um pedido violar uma regra, recuse e cite a regra pelo nome e seção.
 
 ---
 
+## Regras obrigatórias — Docker (operacional.md §4)
+
+1. Todo serviço entrega `Dockerfile` com multi-stage build (builder + runner)
+2. Imagem base com versão fixa — nunca `:latest`
+3. Container não roda como root — `USER node` antes do `CMD`
+4. `.dockerignore` obrigatório — exclui `node_modules`, `.env*`, `dist`, `.git`
+5. `docker-compose.yml` sobe o serviço + todas as dependências (banco, broker)
+6. `healthcheck` em todas as dependências; `depends_on: condition: service_healthy`
+7. `.env.example` documenta todas as variáveis sem valores reais
+8. `docker compose up --build` deve funcionar sem etapas manuais
+
+---
+
 ## Processo
 
 1. Branch: `<tipo>/<ticket>-<descrição>` (feat/, fix/, chore/, refactor/, test/)
@@ -331,6 +347,17 @@ globs: ["**/*.tsx", "**/*.jsx", "**/hooks/*.ts"]
 [cole o conteúdo de Guardrails/frontend.md]
 ```
 
+**`.cursor/rules/infra.mdc`:**
+```
+---
+description: Regras de containers Docker
+globs: ["**/Dockerfile", "**/docker-compose*.yml", "**/.dockerignore"]
+---
+
+[cole o conteúdo de Guardrails/operacional.md §4]
+[cole os templates de Guidelines/infraestrutura/README.md]
+```
+
 ### Opção 2 — `.cursorrules` (legado)
 
 Crie `.cursorrules` na raiz do projeto com o conteúdo dos guardrails mais relevantes concatenados.
@@ -359,7 +386,14 @@ Os guardrails e agentes foram escritos para **Node.js + React**. Para adaptar:
 
 1. Atualize `Guardrails/backend.md` com as convenções da nova stack
 2. Atualize os `SKILL.md` de criação de serviço (`criar-system-api`, `criar-bff`, etc.)
-3. Mantenha os guardrails de processo, segurança e testes — são agnósticos de linguagem
+3. Atualize os templates Docker em `Guidelines/infraestrutura/README.md` para a nova imagem base
+4. Mantenha os guardrails de processo, segurança e testes — são agnósticos de linguagem
+
+### Adicionar suporte a novo broker de mensageria
+
+1. Adicione o template de `docker-compose.yml` com o novo broker em `Guidelines/infraestrutura/README.md`
+2. Atualize a Fase 0 do arquiteto (`Agents/arquiteto/AGENT.md`) para listar o novo broker nas opções
+3. Atualize `Skills/definir-evento/SKILL.md` com as configurações específicas do broker
 
 ---
 
