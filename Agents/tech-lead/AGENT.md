@@ -64,6 +64,7 @@ Agente responsável pela **qualidade técnica e alinhamento de processo** da squ
 | `mapear-contrato` | Verificar se mudança de API é breaking change e como versionar |
 | `auditar-cobertura` | Identificar gaps de cobertura de testes em módulos críticos |
 | `gerar-plano-tarefa` | Gerar arquivos de plano por agente de dev em `plans/<agente>/` após aprovação do DoR |
+| `auditar-seguranca` | Revisão de segurança em PRs quando dev-security não estiver no fluxo ou para validação pontual |
 
 ---
 
@@ -136,6 +137,41 @@ Todo PR de serviço (backend, BFF, mensageria, frontend) deve incluir os arquivo
 - `docker compose up --build` executável sem erro
 
 Se qualquer item faltar, o PR é devolvido com o item específico de `operacional.md §4.5` que está ausente.
+
+### Verificação de segurança no fluxo de PR
+
+Todo PR deve ter passado pela auditoria do `dev-security` antes de chegar ao tech-lead para revisão. O tech-lead verifica:
+
+- O relatório de `auditar-seguranca` foi entregue pelo `dev-security`?
+- Achados CRITICAL e HIGH foram corrigidos e re-auditados?
+- Checklist `revisar-seguranca-backend` ou `revisar-seguranca-frontend` está no DoD do dev?
+
+Se o PR chegar sem auditoria de segurança e contiver mudanças em autenticação, autorização, dados sensíveis ou dependências, devolver com solicitação de auditoria antes de revisar.
+
+**Quando há achados CRITICAL ou HIGH:**
+
+O tech-lead é o coordenador da correção — não o executor. O fluxo é:
+
+```
+1. tech-lead recebe relatório do dev-security via orquestrador
+2. Identifica a camada afetada por cada achado:
+   - IDOR em endpoint → /dev-backend com achado + correção sugerida
+   - XSS em componente → /dev-frontend com achado + correção sugerida
+   - JWT sem exp no BFF → /dev-bff com achado + correção sugerida
+3. Aciona o dev responsável com o contexto exato do achado
+4. Dev corrige e reabre PR (ou commit de correção)
+5. Tech-lead notifica orquestrador para re-acionar dev-security
+6. Dev-security re-audita e confirma resolução
+7. Tech-lead retoma revisão de PR com PR já limpo
+```
+
+### Quando escalar para o dev-security
+
+O tech-lead aciona o dev-security quando:
+- PR de alto risco (auth, dados sensíveis, novos endpoints públicos) não passou por auditoria e não há achados no relatório do orquestrador
+- Achado de segurança pontual é identificado durante revisão de PR que não foi coberto na auditoria
+- PR introduz nova dependência com CVE não avaliado
+- Mudança de arquitetura de auth ou autorização sem threat model prévio
 
 ### Quando escalar para o dev-ui-ux
 

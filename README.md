@@ -18,9 +18,10 @@ AgentsAndSkills/
 │   ├── dev-mensageria/        # Producers, consumers, sagas (NestJS microservices)
 │   ├── dev-qa/                # Gherkin, E2E com Playwright, regressão
 │   ├── dev-ui-ux/             # Design system, especificação de componentes, auditoria de interface
+│   ├── dev-security/          # Modelagem de ameaças, auditoria OWASP Top 10, revisão de dependências CVE
 │   └── dev-devops/            # Pipelines CI/CD GitHub Actions *(fora do fluxo do orquestrador)*
 │
-├── Skills/                    # 42 skills reutilizáveis entre agentes (SKILL.md)
+├── Skills/                    # 47 skills reutilizáveis entre agentes (SKILL.md)
 │   ├── criar-system-api/
 │   ├── criar-design-system/
 │   ├── especificar-componente/
@@ -34,7 +35,8 @@ AgentsAndSkills/
 │   ├── frontend.md            # React, TypeScript, estado (padrões de código)
 │   ├── ux.md                  # Acessibilidade WCAG AA, animação, touch, tipografia, formulários
 │   ├── dados.md               # Migrations, queries, paginação, transações
-│   ├── seguranca.md           # LGPD, secrets, autenticação
+│   ├── appsec.md              # OWASP Top 10, injeção, auth, controle de acesso, XSS, SSRF, CVEs
+│   ├── seguranca.md           # LGPD, secrets, migrations, boas práticas mínimas de codificação segura
 │   ├── testes.md              # Nomenclatura, mocks, independência
 │   ├── operacional.md         # PR quality, testes antes do PR, Docker obrigatório
 │   ├── processo.md            # Git flow, DoR/DoD, conventional commits
@@ -47,6 +49,7 @@ AgentsAndSkills/
     ├── frontend/
     ├── ux/                    # Design system, tokens, acessibilidade, especificação de componentes
     ├── testes/
+    ├── security/              # OWASP Top 10, STRIDE, autenticação, headers, CVEs, checklist por camada
     ├── infraestrutura/        # Docker: Dockerfile, docker-compose, templates por tipo de serviço
     └── devops/                # GitHub Actions: CI/CD, environments, secrets, estratégia de deploy
 ```
@@ -90,22 +93,30 @@ orquestrador — Fase 2.6 (confirma que arquivos de plano estão gerados e revis
     ↓
 arquiteto (define contratos, APIs, eventos, BFF, templates Docker)
     ↓
+dev-security (modelar-ameacas: STRIDE por componente → plans/dev-security/<ticket>-threat-model.md
+             → controles obrigatórios incorporados nos planos dos dev agents)
+    ↓
 dev-ui-ux (lê plans/dev-ui-ux/<ticket>.md → criar-design-system → especificar-componente
           → gera plans/dev-frontend/<ticket>-<componente>-spec.md)
     ↓  [em paralelo com dev-backend]
 dev-backend / dev-bff / dev-mensageria (lê plans/<agente>/<ticket>.md → testes → implementação
+                                       + revisar-seguranca-backend (DoD)
                                        + Dockerfile + docker-compose + ci-cd-staging.yml + ci-cd-production.yml)
     ↓
 dev-qa (lê plans/dev-qa/<ticket>.md → Gherkin incluindo estados visuais)
     ↓
 dev-frontend (lê plans/dev-frontend/<ticket>-<componente>-spec.md → testes → implementação
+             + revisar-seguranca-frontend (DoD)
              + Dockerfile multi-stage + docker-compose + ci-cd-staging.yml + ci-cd-production.yml)
     ↓
 dev-ui-ux (revisar-interface: auditoria de acessibilidade e qualidade visual no PR)
     ↓
 dev-qa (E2E com Playwright)
     ↓
-tech-lead (revisão de PR — inclui checklist Docker, pipeline e confirmação de revisão de interface)
+dev-security (auditar-seguranca + revisar-dependencias-cve: auditoria OWASP pré-merge
+             → CRITICAL/HIGH: tech-lead aciona dev para correção → re-auditoria)
+    ↓
+tech-lead (revisão de PR — inclui checklist Docker, pipeline, revisão de interface e confirmação de segurança)
 ```
 
 > Cada serviço vive em seu **próprio repositório** no GitHub. O orquestrador não libera os agentes de desenvolvimento enquanto os repos não forem clonados, os caminhos locais confirmados e os arquivos de plano gerados pelo tech-lead.
@@ -144,6 +155,7 @@ Que devem apontar para o repositório `AgentsAndSkills` no seu disco.
 | `/dev-frontend` | Implementar componentes React, hooks, estado e testes RTL |
 | `/dev-mensageria` | Implementar producers, consumers e sagas (@nestjs/microservices) |
 | `/dev-ui-ux` | Criar design system, especificar componentes antes da implementação, auditar qualidade de interface |
+| `/dev-security` | Modelar ameaças (STRIDE), auditar segurança OWASP pré-merge, revisar dependências CVE |
 | `/dev-qa` | Escrever Gherkin, testes E2E com Playwright e planejar regressão |
 | `/dev-devops` | Criar pipelines CI/CD GitHub Actions, configurar environments e auditar workflows |
 

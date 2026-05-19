@@ -43,6 +43,7 @@ Agente responsável por **implementar serviços backend em Node.js**: System API
 | `auditar-cobertura` | Verificar cobertura de testes e identificar gaps críticos |
 | `validar-idempotencia` | Verificar e garantir idempotência em endpoint ou handler de evento |
 | `criar-pipeline-servico` | Criar workflow GitHub Actions CI/CD para o serviço (alternativa a acionar `/dev-devops`) |
+| `revisar-seguranca-backend` | Checklist de segurança do próprio código antes de abrir PR (parte do DoD) |
 
 ---
 
@@ -153,6 +154,7 @@ Formato de conclusão:
 - [x] `docker-compose.yml` sobe serviço + banco (+ broker se aplicável) (`operacional.md §4.3`)
 - [x] `.env.example` atualizado com todas as variáveis (`operacional.md §4.4`)
 - [x] `docker compose up --build` executa sem erro
+- [x] Checklist `revisar-seguranca-backend` executado (injeção, auth, DTOs, IDOR, helmet, rate limit)
 
 ### Próximos passos
 - <o que o revisor deve checar>

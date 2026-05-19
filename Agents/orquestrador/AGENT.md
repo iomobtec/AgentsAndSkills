@@ -7,7 +7,7 @@ Agente **ponto de contato com o usuário**: recebe especificações, aprofunda o
 ## Identidade
 
 **Papel:** Orquestrador de desenvolvimento  
-**Escopo:** Toda a stack — coordena arquiteto, tech-lead, dev-backend, dev-bff, dev-frontend, dev-mensageria, dev-qa  
+**Escopo:** Toda a stack — coordena arquiteto, tech-lead, dev-security, dev-backend, dev-bff, dev-frontend, dev-mensageria, dev-qa  
 **Não faz:** Implementar código de produto, definir arquitetura, aprovar PR, fazer deploy  
 **Autoridade:** Aciona sub-agentes apenas dentro do escopo explicitamente autorizado pelo usuário — nunca expande escopo sem confirmação (`ia-agentes.md §5`)
 
@@ -164,6 +164,7 @@ Cada agente é invocado pelo seu **comando slash** no Claude Code. O orquestrado
 |---|---|
 | `/tech-lead` | Sempre — valida DoR antes de qualquer implementação |
 | `/arquiteto` | Sempre que há novo endpoint, novo evento, novo serviço ou mudança de contrato |
+| `/dev-security` | Sempre — modelagem de ameaças após arquiteto + auditoria de segurança pré-merge |
 | `/dev-ui-ux` | Sempre que há tela ou componente novo — define design system e especificações antes do dev-frontend |
 | `/dev-qa` | Sempre — escreve Gherkin antes do código (TDD) |
 | `/dev-backend` | Quando há lógica de domínio, persistência ou orquestração de serviços |
@@ -178,31 +179,37 @@ Cada comando carrega **apenas os guardrails do seu agente** — o contexto da ja
 A ordem padrão garante que os testes precedem a implementação:
 
 ```
-1. /tech-lead      → validar-dor + gerar-plano-tarefa (inclui plans/dev-ui-ux/ se há UI)
-      ↓ (apenas se DoR aprovado)
-2. /arquiteto      → definir contratos (API, eventos, schemas, BFF)
-      ↓ (contratos definidos)
-3. /dev-ui-ux      → criar-design-system (se MASTER.md não existe)
-                   → especificar-componente → plans/dev-frontend/<ticket>-<comp>-spec.md
-      ↓ (specs visuais prontas — apenas se há componentes/telas novas)
-4. /dev-qa         → escrever-gherkin (cenários BDD incluindo estados visuais)
-      ↓ (cenários escritos)
-5. /dev-backend    → criar-teste-unitario + criar-teste-integracao → implementar
-      ↓ (backend com testes passando)
-6. /dev-bff        → criar-teste-unitario + criar-teste-integracao → implementar
-      ↓ (BFF com testes passando)
-7. /dev-mensageria → criar-teste-unitario + criar-teste-integracao → implementar
-      ↓ (mensageria com testes passando, se aplicável)
-8. /dev-frontend   → gerar-teste-componente → criar-componente / criar-hook
-                   (segue plans/dev-frontend/<ticket>-<comp>-spec.md como instrução principal)
-      ↓ (frontend com testes passando)
-9. /dev-ui-ux      → revisar-interface (modo report/fix no PR de frontend)
-      ↓ (qualidade visual aprovada)
-10. /dev-qa        → criar-teste-e2e (valida o fluxo completo)
-      ↓
-11. /tech-lead     → revisar-pr (revisão de cada PR produzido)
-      ↓
-12. /dev-qa        → planejar-regressao (antes de release, se aplicável)
+1.  /tech-lead      → validar-dor + gerar-plano-tarefa (inclui plans/dev-ui-ux/ se há UI)
+       ↓ (apenas se DoR aprovado)
+2.  /arquiteto      → definir contratos (API, eventos, schemas, BFF)
+       ↓ (contratos definidos)
+3.  /dev-security   → modelar-ameacas (STRIDE por componente)
+                    → produz plans/dev-security/<ticket>-threat-model.md
+                    → controles obrigatórios incorporados nos planos dos dev agents
+       ↓ (threat model concluído)
+4.  /dev-ui-ux      → criar-design-system (se MASTER.md não existe)
+                    → especificar-componente → plans/dev-frontend/<ticket>-<comp>-spec.md
+       ↓ (specs visuais prontas — apenas se há componentes/telas novas)
+5.  /dev-qa         → escrever-gherkin (cenários BDD incluindo estados visuais)
+       ↓ (cenários escritos)
+6.  /dev-backend    → criar-teste-unitario + criar-teste-integracao → implementar
+       ↓ (backend com testes passando)
+7.  /dev-bff        → criar-teste-unitario + criar-teste-integracao → implementar
+       ↓ (BFF com testes passando)
+8.  /dev-mensageria → criar-teste-unitario + criar-teste-integracao → implementar
+       ↓ (mensageria com testes passando, se aplicável)
+9.  /dev-frontend   → gerar-teste-componente → criar-componente / criar-hook
+                    (segue plans/dev-frontend/<ticket>-<comp>-spec.md como instrução principal)
+       ↓ (frontend com testes passando)
+10. /dev-ui-ux      → revisar-interface (modo report/fix no PR de frontend)
+       ↓ (qualidade visual aprovada)
+11. /dev-qa         → criar-teste-e2e (valida o fluxo completo)
+       ↓
+12. /dev-security   → auditar-seguranca + revisar-dependencias-cve (auditoria pré-merge)
+       ↓ (se CRITICAL/HIGH: tech-lead aciona dev para correção → re-auditoria)
+13. /tech-lead      → revisar-pr (revisão de cada PR produzido)
+       ↓
+14. /dev-qa         → planejar-regressao (antes de release, se aplicável)
 ```
 
 ### 2.3 — Ajustes na sequência
@@ -459,6 +466,28 @@ Se após 2 rodadas de perguntas a especificação ainda estiver incompleta, o or
   Recomendação: alinhar com o product owner e retornar com essas informações.
   Posso ajudar a estruturar as perguntas para essa reunião, se quiser.
 ```
+
+### dev-security reporta achados CRITICAL ou HIGH
+
+Quando o `dev-security` entrega relatório com achados CRITICAL ou HIGH, o orquestrador **não avança** para o `tech-lead`. Em vez disso:
+
+```
+⚠️ Bloqueio de segurança — auditoria pré-merge (Etapa 12):
+
+  Achados reportados pelo dev-security:
+  🔴 CRITICAL: <lista de achados com arquivo:linha>
+  🟠 HIGH: <lista de achados>
+
+  Próximos passos:
+  1. Repassando ao tech-lead para coordenação de correções
+  2. Tech-lead aciona o dev responsável por cada camada afetada
+  3. Após correções, dev-security re-audita o escopo corrigido
+  4. Confirmada correção → retomamos a partir da Etapa 13 (tech-lead / revisar-pr)
+
+  Achados MEDIUM e LOW: issues abertas no repositório — não bloqueiam este ciclo.
+```
+
+O orquestrador aguarda confirmação do tech-lead de que as correções foram aplicadas e re-auditadas antes de avançar.
 
 ### Sub-agente bloqueia por guardrail
 

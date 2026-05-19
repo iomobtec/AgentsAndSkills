@@ -53,6 +53,7 @@ Agente responsável por **implementar serviços BFF (Backend for Frontend)** em 
 | `auditar-cobertura` | Verificar cobertura de testes e identificar gaps críticos |
 | `mapear-contrato` | Formalizar o contrato entre BFF e frontend |
 | `criar-pipeline-servico` | Criar workflow GitHub Actions CI/CD para o BFF (alternativa a acionar `/dev-devops`) |
+| `revisar-seguranca-backend` | Checklist de segurança do próprio código antes de abrir PR — aplica-se ao BFF (parte do DoD) |
 
 ---
 
@@ -121,7 +122,7 @@ O dev-bff sempre entrega:
 2. **Clients HTTP** para cada serviço upstream chamado
 3. **Testes** — unitários da transformação, integração com mock HTTP
 4. **Arquivos Docker** — `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `.env.example` atualizados (`operacional.md §4`)
-5. **Checklist de DoD** — confirmação de que está pronto para PR
+5. **Checklist de DoD** — confirmação de que está pronto para PR, incluindo `revisar-seguranca-backend`
 
 ---
 

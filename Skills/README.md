@@ -13,6 +13,7 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 - [BFF](#bff)
 - [Frontend](#frontend)
 - [UI/UX](#uiux)
+- [Segurança](#segurança)
 - [QA](#qa)
 - [Tech Lead / Processo](#tech-lead--processo)
 - [DevOps](#devops)
@@ -85,6 +86,18 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 
 ---
 
+## Segurança
+
+| Skill | O que faz | Quem chama |
+|---|---|---|
+| [`modelar-ameacas`](modelar-ameacas/SKILL.md) | Analisa componentes com metodologia STRIDE (Spoofing, Tampering, Repudiation, Info Disclosure, DoS, Elevation) — produz `plans/dev-security/<ticket>-threat-model.md` com controles obrigatórios por camada | `dev-security`, `arquiteto` |
+| [`auditar-seguranca`](auditar-seguranca/SKILL.md) | Revisão completa de PR contra OWASP Top 10 + `appsec.md` — classifica achados em CRITICAL/HIGH/MEDIUM/LOW e emite relatório | `dev-security`, `tech-lead` |
+| [`revisar-dependencias-cve`](revisar-dependencias-cve/SKILL.md) | Verifica CVEs em `package.json`, lockfile e Dockerfiles — inspeciona scripts `postinstall` de novas dependências | `dev-security`, `dev-devops` |
+| [`revisar-seguranca-backend`](revisar-seguranca-backend/SKILL.md) | Checklist "shift left" de segurança para NestJS: injeção, JWT, DTOs de response, anti-IDOR, helmet, rate limit — parte do DoD do dev | `dev-backend`, `dev-bff`, `dev-security` |
+| [`revisar-seguranca-frontend`](revisar-seguranca-frontend/SKILL.md) | Checklist "shift left" de segurança para React: XSS (dangerouslySetInnerHTML, href), tokens em storage, CSRF, `rel="noopener"` — parte do DoD do dev | `dev-frontend`, `dev-security` |
+
+---
+
 ## QA
 
 | Skill | O que faz | Quem chama |
@@ -122,10 +135,11 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 | Agente | Skills disponíveis |
 |---|---|
 | `arquiteto` | revisar-arquitetura, planejar-api, mapear-contrato, definir-evento, avaliar-dependencias, gerar-diagrama, implementar-saga, validar-idempotencia, padronizar-erros, avaliar-impacto, definir-microservico, gerar-plano-tarefa |
-| `dev-backend` | criar-system-api, criar-process-api, implementar-endpoint, configurar-auth, configurar-prisma, criar-teste-unitario, criar-teste-integracao, auditar-cobertura, revisar-backend |
-| `dev-bff` | criar-bff, otimizar-performance, revisar-bff |
-| `dev-frontend` | criar-componente, criar-hook, organizar-estado, gerar-teste-componente, revisar-frontend |
+| `dev-backend` | criar-system-api, criar-process-api, implementar-endpoint, configurar-auth, configurar-prisma, criar-teste-unitario, criar-teste-integracao, auditar-cobertura, revisar-backend, revisar-seguranca-backend |
+| `dev-bff` | criar-bff, otimizar-performance, revisar-bff, revisar-seguranca-backend |
+| `dev-frontend` | criar-componente, criar-hook, organizar-estado, gerar-teste-componente, revisar-frontend, revisar-seguranca-frontend |
 | `dev-ui-ux` | criar-design-system, especificar-componente, revisar-interface |
+| `dev-security` | modelar-ameacas, auditar-seguranca, revisar-dependencias-cve |
 | `dev-qa` | escrever-gherkin, planejar-regressao, criar-teste-e2e |
-| `tech-lead` | refinar-historia, validar-dor, revisar-pr, gerar-plano-tarefa, avaliar-impacto, auditar-cobertura, revisar-interface, auditar-pipeline |
-| `dev-devops` | configurar-environments-github, auditar-pipeline, criar-pipeline-servico, criar-pipeline-frontend |
+| `tech-lead` | refinar-historia, validar-dor, revisar-pr, gerar-plano-tarefa, avaliar-impacto, auditar-cobertura, revisar-interface, auditar-seguranca, auditar-pipeline |
+| `dev-devops` | configurar-environments-github, auditar-pipeline, criar-pipeline-servico, criar-pipeline-frontend, revisar-dependencias-cve |

@@ -178,6 +178,77 @@ Não vou gerar a migration.
 
 ---
 
+## §5 — Boas práticas mínimas de codificação segura
+
+**Regra:** Todo agente que gera código de aplicação deve seguir estas práticas mínimas independentemente de revisão especializada. São a linha de base que não exige o `dev-security` — são responsabilidade do próprio agente de desenvolvimento.
+
+**Motivo:** Segurança por design é mais barata que segurança por revisão. Estas regras são simples o suficiente para aplicar sem contexto especializado.
+
+### §5.1 — Nunca logar tokens ou credenciais
+
+```typescript
+// ⛔ Bloqueado
+this.logger.debug('request headers', req.headers);  // Authorization header exposto
+this.logger.log('user logged in', { password });
+
+// ✅ Correto
+this.logger.debug('request received', { path: req.path, method: req.method });
+this.logger.log('user logged in', { userId: user.id });
+```
+
+### §5.2 — Validar entrada nas bordas do sistema
+
+Todo dado que entra no sistema (HTTP, fila, arquivo, webhook) é validado **antes** de ser processado, não apenas antes de ser salvo. A validação acontece na camada de entrada (controller, consumer), não na de domínio.
+
+```typescript
+// NestJS — class-validator no DTO
+export class CreateOrderDto {
+  @IsUUID()
+  userId: string;
+
+  @IsPositive()
+  @Max(1000)
+  quantity: number;
+}
+```
+
+### §5.3 — Nunca expor stack trace em resposta ao cliente
+
+```typescript
+// ⛔ Bloqueado
+catch (error) {
+  throw new InternalServerErrorException(error.message);
+  // ou pior:
+  res.json({ error: error.stack });
+}
+
+// ✅ Correto — exception filter global
+@Catch()
+export class AllExceptionsFilter {
+  catch(exception: unknown, host: ArgumentsHost) {
+    const message = exception instanceof HttpException
+      ? exception.getResponse()
+      : 'Erro interno do servidor';
+    // stack trace vai para o log, nunca para a resposta
+    this.logger.error('unhandled exception', exception);
+    res.json({ message });
+  }
+}
+```
+
+### §5.4 — Dados sensíveis nunca em estado de UI ou localStorage
+
+```typescript
+// ⛔ Bloqueado
+localStorage.setItem('user', JSON.stringify({ cpf, cartao, senha }));
+useState({ password: user.password });
+
+// ✅ Correto — apenas o mínimo necessário para UI
+useState({ userId: user.id, name: user.name });
+```
+
+---
+
 ## §4 — Padrão geral de recusa quando este guardrail é violado
 
 ```
