@@ -27,6 +27,10 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @Skills/revisar-backend/SKILL.md
 @Skills/auditar-cobertura/SKILL.md
 @Skills/validar-idempotencia/SKILL.md
+@Skills/revisar-seguranca-backend/SKILL.md
+@Skills/criar-pipeline-servico/SKILL.md
+@Skills/implementar-incremental/SKILL.md
+@Skills/simplificar-codigo/SKILL.md
 
 ---
 

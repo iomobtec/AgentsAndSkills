@@ -44,6 +44,11 @@ Agente responsável por **decisões arquiteturais, design de microserviços, con
 | `validar-idempotencia` | Verificar se operação é segura para retry sem efeito colateral duplo |
 | `padronizar-erros` | Definir formato e categorias de erro compartilhados entre serviços |
 | `gerar-plano-tarefa` | Gerar arquivo de plano arquitetural em `plans/arquitetura/` após definir microserviço |
+| `refinar-ideia` | Antes de comprometer com uma direção arquitetural: gerar variações, mapear suposições ocultas e produzir one-pager com o que ficará fora do escopo |
+| `gerenciar-contexto` | Ao estruturar spec para múltiplos agentes: delimitar o contexto relevante por camada e evitar context flooding |
+| `questionar-decisao` | Antes de fechar decisão arquitetural de alto impacto: revisor adversarial com artefato + contrato, sem passar a justificativa |
+| `migrar-deprecar` | Ao planejar remoção de API, serviço ou dependência: escolher padrão (Strangler/Adapter/Feature Flag) e comunicar consumidores |
+| `documentar-decisoes` | Ao tomar decisão arquitetural relevante: criar ADR em `docs/decisions/` com contexto, alternativas e consequências |
 
 ---
 

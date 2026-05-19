@@ -159,6 +159,18 @@ Este passo é verificado **apenas para histórias de novo serviço**. Para hist�
 
 ---
 
+## Racionalizações bloqueadas
+
+| Racionalização | Rebate |
+|---|---|
+| "Os critérios de aceite parecem óbvios, não preciso verificar" | Critérios "óbvios" são os que geram mais discussão no final do sprint. O que é óbvio para quem escreveu não é óbvio para quem vai implementar. |
+| "Vou começar e ajustamos os critérios durante a implementação" | Implementar sem DoR satisfeito é trabalhar em areia movediça. O custo de parar e replanejar durante a implementação é sempre maior que o custo de validar antes. |
+| "Já discutimos isso na reunião, todo mundo entende" | "Todo mundo entende" na reunião significa "cada um entendeu uma coisa diferente". DoR é o registro escrito do que foi acordado. |
+| "A história é pequena, não precisa de validação formal" | Histórias pequenas com escopo mal definido viram histórias grandes no meio da sprint. O tamanho não elimina a necessidade de clareza. |
+| "O PO garantiu que está pronta" | O PO garante valor de negócio, não prontidão técnica. Critérios de aceite verificáveis, contrato de API definido e dependências mapeadas são responsabilidade do processo, não apenas do PO. |
+
+---
+
 ## Checklist de conclusão
 
 - [ ] "Como / Quero / Para" verificado

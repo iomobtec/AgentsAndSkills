@@ -44,6 +44,8 @@ Agente responsável por **implementar serviços backend em Node.js**: System API
 | `validar-idempotencia` | Verificar e garantir idempotência em endpoint ou handler de evento |
 | `criar-pipeline-servico` | Criar workflow GitHub Actions CI/CD para o serviço (alternativa a acionar `/dev-devops`) |
 | `revisar-seguranca-backend` | Checklist de segurança do próprio código antes de abrir PR (parte do DoD) |
+| `implementar-incremental` | Ao iniciar implementação de feature: thin vertical slices com ciclo TDD por fatia, limit de ~100 linhas antes de testar |
+| `simplificar-codigo` | Ao refatorar código existente: Chesterton's Fence antes de modificar, preservação de comportamento, clareza sobre esperteza |
 
 ---
 

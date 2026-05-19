@@ -51,6 +51,8 @@ Agente responsável por **implementar interfaces React**: componentes, hooks cus
 | `auditar-cobertura` | Verificar cobertura de testes e identificar gaps críticos |
 | `criar-pipeline-frontend` | Criar workflow GitHub Actions CI/CD para o frontend (alternativa a acionar `/dev-devops`) |
 | `revisar-seguranca-frontend` | Checklist de segurança do próprio código antes de abrir PR (XSS, storage, CSRF — parte do DoD) |
+| `implementar-incremental` | Ao iniciar implementação de feature: thin vertical slices com ciclo TDD por fatia, limit de ~100 linhas antes de testar |
+| `simplificar-codigo` | Ao refatorar componente ou hook existente: Chesterton's Fence antes de modificar, clareza sobre esperteza |
 
 ---
 

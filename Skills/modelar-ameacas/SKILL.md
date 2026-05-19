@@ -141,6 +141,18 @@ dos planos gerados pelo gerar-plano-tarefa para cada agente de dev.
 
 ---
 
+## Racionalizações bloqueadas
+
+| Racionalização | Rebate |
+|---|---|
+| "O sistema é simples, não precisa de threat model" | Sistemas simples têm superfícies de ataque simples — mas ainda têm. 20 minutos de STRIDE podem evitar meses de breach response. |
+| "Vou fazer o threat model depois da implementação" | O ponto do threat model é identificar controles ANTES de implementar. Fazer depois transforma-o em pentest tardio — mais caro de corrigir. |
+| "O arquiteto já pensou em segurança no design" | Arquitetura e segurança são perspectivas distintas. O arquiteto pensa em conectividade; o threat model pensa em adversário. |
+| "STRIDE é burocracia para sistemas pequenos" | STRIDE gasta 6 perguntas por componente. Cada pergunta não respondida é um vetor potencialmente aberto. |
+| "Esse serviço é interno, sem exposição à internet" | Serviços internos são alvos de movimentação lateral após comprometimento inicial. "Interno" não elimina o modelo de ameaças. |
+
+---
+
 ## Anti-padrões bloqueados
 
 - Marcar ameaça como "Não se aplica" sem justificativa — toda ameaça deve ter resposta explícita

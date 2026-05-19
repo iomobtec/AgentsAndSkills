@@ -173,6 +173,18 @@ Se apenas MEDIUM/LOW:
 
 ---
 
+## Racionalizações bloqueadas
+
+| Racionalização | Rebate |
+|---|---|
+| "Já conheço este código, sei que está seguro" | Conhecimento pessoal não é auditoria. O checklist existe porque segurança deve ser verificável, não presumida. |
+| "Vou aprovar com ressalvas e o dev corrige depois" | CRITICAL e HIGH não são ressalvas — são bloqueadores. Aprovar com achado crítico pendente expõe produção. |
+| "É só um endpoint interno, não precisa de auditoria completa" | Endpoints internos são vetores frequentes de pivotagem de ataque. "Interno" não significa "sem risco". |
+| "A auditoria está demorando, vou fazer só uma parte" | Auditoria parcial sem declarar o escopo auditado é pior que nenhuma — cria falsa sensação de segurança. |
+| "O dev-security vai pegar, não preciso verificar no PR" | A auditoria do dev-security é a última linha — não a única. Achado na auditoria final que teria sido pego aqui custou um ciclo completo de correção. |
+
+---
+
 ## Anti-padrões bloqueados
 
 - Emitir "aprovado" sem ter executado todos os itens do checklist da camada

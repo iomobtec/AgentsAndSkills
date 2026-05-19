@@ -11,6 +11,14 @@ Guardrails que você deve seguir nesta sessão:
 
 ---
 
+Skills disponíveis para esta sessão (use conforme necessário):
+
+@Skills/entrevistar-usuario/SKILL.md
+@Skills/refinar-ideia/SKILL.md
+@Skills/gerenciar-contexto/SKILL.md
+
+---
+
 Quando precisar acionar um agente especializado, instrua o usuário a abrir uma nova conversa e usar o comando correspondente:
 
 | Necessidade | Comando |

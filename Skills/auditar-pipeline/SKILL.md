@@ -201,6 +201,18 @@ Checklist:
 
 ---
 
+## Racionalizações bloqueadas
+
+| Racionalização | Rebate |
+|---|---|
+| "O pipeline já funciona, não precisa de auditoria" | Pipeline funcionando não é pipeline seguro. Secret exposto em log só aparece quando auditado — não quando o deploy ocorre. |
+| "Vou verificar só os secrets, o resto está ok" | Auditoria parcial sem declarar escopo é mais perigosa que nenhuma — cria falsa sensação de conformidade. Actions sem SHA, deploy sem gate de produção: cada item tem consequência própria. |
+| "Esse pipeline é igual ao do outro serviço, deve estar correto" | Cópia preserva bugs. Actions de terceiros fixadas a SHA, paths de trigger, environments — cada serviço tem particularidades que divergem na cópia. |
+| "Produção sem approval gate é temporário" | Temporário em infraestrutura vira permanente. Gate de aprovação em produção é obrigatório por `devops.md §4` — não é configuração opcional que pode esperar. |
+| "As actions que uso são populares, não precisam de SHA fixo" | Popularidade não é segurança. Actions de terceiros sem SHA fixo são vetor de supply chain attack — um tag mutável pode ser reescrito por atacante com acesso ao repositório da action. |
+
+---
+
 ## Checklist de conclusão
 
 - [ ] Todos os 7 guardrails de `devops.md` verificados

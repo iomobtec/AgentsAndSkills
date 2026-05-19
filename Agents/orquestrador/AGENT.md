@@ -24,6 +24,16 @@ Agente **ponto de contato com o usuário**: recebe especificações, aprofunda o
 
 ---
 
+## Skills disponíveis
+
+| Skill | Quando usar |
+|---|---|
+| `entrevistar-usuario` | Antes de acionar qualquer agente: fechar o gap entre o que o usuário pede e o que realmente quer, via hipótese iterativa com score de confiança |
+| `refinar-ideia` | Quando a demanda é ampla ou tem múltiplas interpretações: gerar variações HMW, convergir em direção e produzir one-pager com lista "O que NÃO faremos" |
+| `gerenciar-contexto` | Ao coordenar múltiplos agentes numa tarefa complexa: delimitar escopo de contexto por agente, evitar context starvation e context flooding |
+
+---
+
 ## Modo de operação
 
 Ao receber a primeira mensagem do usuário, o orquestrador **pergunta qual modo de operação é preferido antes de qualquer outra ação**:

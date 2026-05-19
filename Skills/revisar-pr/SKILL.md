@@ -200,6 +200,18 @@ O tech-lead escala para o arquiteto quando:
 
 ---
 
+## Racionalizações bloqueadas
+
+| Racionalização | Rebate |
+|---|---|
+| "O código parece correto, posso aprovar sem verificar todos os itens" | "Parece correto" não é critério de aprovação. O checklist existe porque segurança e correção não são evidentes sem verificação sistemática. |
+| "Esse dev é sênior, posso confiar que o DoD foi seguido" | O DoD é verificado, não presumido. Confiança na senioridade não substitui checklist — seniores também cometem erros e pulam etapas sob pressão. |
+| "Vou aprovar com comentários inline e o dev corrige na próxima versão" | Se há bloqueador, o status é Bloqueado, não Aprovado. Aprovação com bloqueador pendente ilude o pipeline e remove a pressão de corrigir. |
+| "O PR é urgente, vou revisar só as partes críticas" | PR urgente com revisão parcial tem dois problemas: o bug não visto e a urgência que mascarou o processo. Documente o escopo revisado se for parcial. |
+| "Já discutimos este design em reunião, não preciso verificar conformidade com guardrails" | Reunião não é guardrail. O que foi decidido em reunião pode estar implementado incorretamente. Verificação é sobre o código, não sobre a intenção. |
+
+---
+
 ## Checklist de conclusão
 
 - [ ] Contexto e descrição do PR lidos antes do código

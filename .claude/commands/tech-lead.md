@@ -24,6 +24,15 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @Skills/avaliar-impacto/SKILL.md
 @Skills/mapear-contrato/SKILL.md
 @Skills/auditar-cobertura/SKILL.md
+@Skills/gerar-plano-tarefa/SKILL.md
+@Skills/auditar-seguranca/SKILL.md
+@Skills/revisar-interface/SKILL.md
+@Skills/auditar-pipeline/SKILL.md
+@Skills/entrevistar-usuario/SKILL.md
+@Skills/simplificar-codigo/SKILL.md
+@Skills/migrar-deprecar/SKILL.md
+@Skills/documentar-decisoes/SKILL.md
+@Skills/questionar-decisao/SKILL.md
 
 ---
 

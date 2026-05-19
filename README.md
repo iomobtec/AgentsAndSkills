@@ -21,7 +21,7 @@ AgentsAndSkills/
 │   ├── dev-security/          # Modelagem de ameaças, auditoria OWASP Top 10, revisão de dependências CVE
 │   └── dev-devops/            # Pipelines CI/CD GitHub Actions *(fora do fluxo do orquestrador)*
 │
-├── Skills/                    # 47 skills reutilizáveis entre agentes (SKILL.md)
+├── Skills/                    # 55 skills reutilizáveis entre agentes (SKILL.md)
 │   ├── criar-system-api/
 │   ├── criar-design-system/
 │   ├── especificar-componente/
@@ -42,6 +42,13 @@ AgentsAndSkills/
 │   ├── processo.md            # Git flow, DoR/DoD, conventional commits
 │   ├── ia-agentes.md          # Comportamento de agentes em cadeia
 │   └── devops.md              # Secrets em CI, rastreabilidade de imagens, gate de produção
+│
+├── References/                # Checklists leves para consulta rápida durante execução de skills
+│   ├── accessibility-checklist.md  # WCAG 2.1 AA por componente
+│   ├── security-checklist.md       # OWASP Top 10 2025 por camada
+│   ├── performance-checklist.md    # Core Web Vitals + anti-padrões por camada
+│   ├── testing-patterns.md         # Pirâmide, DAMP vs DRY, mock hierarchy, Beyonce Rule
+│   └── adr-template.md             # Template pronto para Architecture Decision Records
 │
 └── Guidelines/                # Guias de referência de engenharia
     ├── arquitetura/
@@ -508,17 +515,3 @@ Os guardrails e agentes foram escritos para **Node.js + React**. Para adaptar:
 | `dev-mensageria` | Producers, consumers, sagas, idempotência | — (usa skills de arquiteto e dev-backend) |
 | `dev-qa` | Gherkin, E2E Playwright, regressão | criar-teste-e2e, escrever-gherkin, planejar-regressao |
 | `dev-devops` | Pipelines CI/CD GitHub Actions, environments, secrets *(fora do fluxo do orquestrador)* | criar-pipeline-servico, criar-pipeline-frontend, configurar-environments-github, auditar-pipeline |
-
-## Skills disponíveis (42)
-
-| Categoria | Skills |
-|---|---|
-| Arquitetura | `revisar-arquitetura` `definir-microservico` `planejar-api` `mapear-contrato` `definir-evento` `avaliar-impacto` `avaliar-dependencias` `gerar-diagrama` `implementar-saga` `validar-idempotencia` `padronizar-erros` |
-| Planejamento | `gerar-plano-tarefa` |
-| UI/UX | `criar-design-system` `especificar-componente` `revisar-interface` |
-| Backend | `criar-system-api` `criar-process-api` `implementar-endpoint` `configurar-prisma` `configurar-auth` `revisar-backend` |
-| BFF | `criar-bff` `revisar-bff` `otimizar-performance` |
-| Frontend | `criar-componente` `criar-hook` `organizar-estado` `revisar-frontend` |
-| Testes | `criar-teste-unitario` `criar-teste-integracao` `gerar-teste-componente` `criar-teste-e2e` `auditar-cobertura` |
-| QA / Processo | `escrever-gherkin` `planejar-regressao` `validar-dor` `refinar-historia` `revisar-pr` |
-| DevOps | `criar-pipeline-servico` `criar-pipeline-frontend` `configurar-environments-github` `auditar-pipeline` |

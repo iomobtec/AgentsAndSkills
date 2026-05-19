@@ -22,6 +22,10 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @Skills/gerar-teste-componente/SKILL.md
 @Skills/revisar-frontend/SKILL.md
 @Skills/auditar-cobertura/SKILL.md
+@Skills/revisar-seguranca-frontend/SKILL.md
+@Skills/criar-pipeline-frontend/SKILL.md
+@Skills/implementar-incremental/SKILL.md
+@Skills/simplificar-codigo/SKILL.md
 
 ---
 

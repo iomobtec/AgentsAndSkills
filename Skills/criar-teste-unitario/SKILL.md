@@ -177,6 +177,18 @@ prisma.user.findUnique.mockResolvedValue(null);
 
 ---
 
+## Racionalizações bloqueadas
+
+| Racionalização | Rebate |
+|---|---|
+| "O código é simples, não precisa de teste" | Código simples hoje volta complexo amanhã quando alguém adicionar lógica de negócio. Teste agora é documentação executável do comportamento esperado. |
+| "Vou escrever os testes depois que a feature estiver pronta" | "Depois" raramente acontece. Testes escritos depois tendem a confirmar a implementação em vez de especificar o comportamento — perdem o valor de design. |
+| "Mockar tudo é mais rápido e o teste ainda passa" | Teste que mocka a própria lógica interna não testa nada — é teatro de qualidade. Mock só nas dependências injetadas; o comportamento da service deve ser real. |
+| "Cobertura de 80% já é suficiente, posso pular esse caso de erro" | Cobertura mede linhas executadas, não comportamento testado. O caso de erro que você pular é o que vai falhar em produção às 3h da manhã. |
+| "Esse teste está quebrando, vou ajustar o mock para passar" | Teste quebrando é sinal — não ruído. Ajustar o mock para passar sem entender por que quebrou é silenciar o alarme sem apagar o incêndio. |
+
+---
+
 ## Saída produzida
 
 - Arquivo `<nome>.service.spec.ts` ao lado da service

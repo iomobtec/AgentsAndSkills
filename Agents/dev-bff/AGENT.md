@@ -54,6 +54,8 @@ Agente responsável por **implementar serviços BFF (Backend for Frontend)** em 
 | `mapear-contrato` | Formalizar o contrato entre BFF e frontend |
 | `criar-pipeline-servico` | Criar workflow GitHub Actions CI/CD para o BFF (alternativa a acionar `/dev-devops`) |
 | `revisar-seguranca-backend` | Checklist de segurança do próprio código antes de abrir PR — aplica-se ao BFF (parte do DoD) |
+| `implementar-incremental` | Ao iniciar implementação de endpoint BFF: thin vertical slices com ciclo TDD por fatia |
+| `simplificar-codigo` | Ao refatorar lógica de agregação ou transformação existente: Chesterton's Fence, preservação de comportamento |
 
 ---
 

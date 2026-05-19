@@ -28,6 +28,12 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @Skills/implementar-saga/SKILL.md
 @Skills/validar-idempotencia/SKILL.md
 @Skills/padronizar-erros/SKILL.md
+@Skills/gerar-plano-tarefa/SKILL.md
+@Skills/refinar-ideia/SKILL.md
+@Skills/gerenciar-contexto/SKILL.md
+@Skills/questionar-decisao/SKILL.md
+@Skills/migrar-deprecar/SKILL.md
+@Skills/documentar-decisoes/SKILL.md
 
 ---
 

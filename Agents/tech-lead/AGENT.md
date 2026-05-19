@@ -65,6 +65,11 @@ Agente responsável pela **qualidade técnica e alinhamento de processo** da squ
 | `auditar-cobertura` | Identificar gaps de cobertura de testes em módulos críticos |
 | `gerar-plano-tarefa` | Gerar arquivos de plano por agente de dev em `plans/<agente>/` após aprovação do DoR |
 | `auditar-seguranca` | Revisão de segurança em PRs quando dev-security não estiver no fluxo ou para validação pontual |
+| `entrevistar-usuario` | Antes de refinar história: fechar ambiguidade de escopo via hipótese iterativa com score de confiança |
+| `simplificar-codigo` | Ao revisar PR com complexidade desnecessária: aplicar Chesterton's Fence e refactoring com preservação de comportamento |
+| `migrar-deprecar` | Ao coordenar remoção de código legado: escolher padrão, aplicar Churn Rule e comunicar consumidores |
+| `documentar-decisoes` | Ao tomar ou homologar decisão técnica relevante: criar ADR com contexto, alternativas e consequências |
+| `questionar-decisao` | Antes de fechar decisão técnica de alto impacto: revisor adversarial com máximo 3 ciclos |
 
 ---
 

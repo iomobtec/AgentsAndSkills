@@ -35,6 +35,11 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 | [`padronizar-erros`](padronizar-erros/SKILL.md) | Define formato de resposta de erro e padrões de código HTTP | `arquiteto` |
 | [`avaliar-impacto`](avaliar-impacto/SKILL.md) | Estima impacto e esforço de mudanças técnicas em sistemas existentes | `arquiteto`, `tech-lead` |
 | [`definir-microservico`](definir-microservico/SKILL.md) | Especifica estrutura de novo microsserviço: APIs, eventos e modelo de deploy | `arquiteto` |
+| [`refinar-ideia`](refinar-ideia/SKILL.md) | Ideação antes de comprometer com uma direção: reformulação HMW, variações, suposições ocultas e one-pager com lista "O que NÃO faremos" | `orquestrador`, `arquiteto` |
+| [`gerenciar-contexto`](gerenciar-contexto/SKILL.md) | Estrutura e curadoria do contexto para agentes: hierarquia de 5 níveis, limite de 2.000 linhas e anti-padrões context starvation / context flooding | `orquestrador`, `arquiteto` |
+| [`questionar-decisao`](questionar-decisao/SKILL.md) | Revisão adversarial de decisões de alto impacto: revisor cego à justificativa, biased to disprove, máximo 3 ciclos | `arquiteto`, `tech-lead` |
+| [`migrar-deprecar`](migrar-deprecar/SKILL.md) | Deprecação estruturada com padrões Strangler/Adapter/Feature Flag, Churn Rule e resolução de código zumbi | `arquiteto`, `tech-lead` |
+| [`documentar-decisoes`](documentar-decisoes/SKILL.md) | Cria ADRs em `docs/decisions/` com contexto, alternativas e consequências — nunca deleta, apenas supersede | `arquiteto`, `tech-lead` |
 
 ---
 
@@ -51,6 +56,8 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 | [`criar-teste-integracao`](criar-teste-integracao/SKILL.md) | Escreve testes de integração NestJS com banco de dados e mocking de serviços | `dev-backend` |
 | [`auditar-cobertura`](auditar-cobertura/SKILL.md) | Analisa relatórios de cobertura Jest e identifica lacunas na suíte de testes | `dev-backend`, `tech-lead` |
 | [`revisar-backend`](revisar-backend/SKILL.md) | Revisa código backend quanto a arquitetura, testes e conformidade de segurança | `dev-backend` |
+| [`implementar-incremental`](implementar-incremental/SKILL.md) | Thin vertical slices: uma fatia funcional por vez, ciclo TDD por fatia, limite de ~100 linhas antes de testar, feature flags para trabalho incompleto | `dev-backend`, `dev-bff`, `dev-frontend` |
+| [`simplificar-codigo`](simplificar-codigo/SKILL.md) | Refactoring com preservação de comportamento: Chesterton's Fence, complexidade essencial vs acidental, clareza sobre esperteza | `dev-backend`, `dev-bff`, `dev-frontend`, `tech-lead` |
 
 ---
 
@@ -116,6 +123,7 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 | [`validar-dor`](validar-dor/SKILL.md) | Valida Definition of Ready contra checklist e guardrails antes do desenvolvimento | `tech-lead` |
 | [`revisar-pr`](revisar-pr/SKILL.md) | Conduz revisão técnica de Pull Request com gates de qualidade | `tech-lead` |
 | [`gerar-plano-tarefa`](gerar-plano-tarefa/SKILL.md) | Gera arquivos de plano por agente em `plans/<agente>/` com tech review, cenários e critérios de aceite | `arquiteto`, `tech-lead` |
+| [`entrevistar-usuario`](entrevistar-usuario/SKILL.md) | Fecha o gap entre o que o usuário pede e o que quer: hipótese iterativa com score de confiança, uma pergunta por vez com palpite embutido, para ao atingir ~95% | `orquestrador`, `tech-lead` |
 
 ---
 
@@ -134,12 +142,13 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 
 | Agente | Skills disponíveis |
 |---|---|
-| `arquiteto` | revisar-arquitetura, planejar-api, mapear-contrato, definir-evento, avaliar-dependencias, gerar-diagrama, implementar-saga, validar-idempotencia, padronizar-erros, avaliar-impacto, definir-microservico, gerar-plano-tarefa |
-| `dev-backend` | criar-system-api, criar-process-api, implementar-endpoint, configurar-auth, configurar-prisma, criar-teste-unitario, criar-teste-integracao, auditar-cobertura, revisar-backend, revisar-seguranca-backend |
-| `dev-bff` | criar-bff, otimizar-performance, revisar-bff, revisar-seguranca-backend |
-| `dev-frontend` | criar-componente, criar-hook, organizar-estado, gerar-teste-componente, revisar-frontend, revisar-seguranca-frontend |
+| `orquestrador` | entrevistar-usuario, refinar-ideia, gerenciar-contexto |
+| `arquiteto` | revisar-arquitetura, planejar-api, mapear-contrato, definir-evento, avaliar-dependencias, gerar-diagrama, implementar-saga, validar-idempotencia, padronizar-erros, avaliar-impacto, definir-microservico, gerar-plano-tarefa, refinar-ideia, gerenciar-contexto, questionar-decisao, migrar-deprecar, documentar-decisoes |
+| `dev-backend` | criar-system-api, criar-process-api, implementar-endpoint, configurar-auth, configurar-prisma, criar-teste-unitario, criar-teste-integracao, auditar-cobertura, revisar-backend, validar-idempotencia, revisar-seguranca-backend, criar-pipeline-servico, implementar-incremental, simplificar-codigo |
+| `dev-bff` | criar-bff, implementar-endpoint, configurar-auth, otimizar-performance, revisar-bff, criar-teste-unitario, criar-teste-integracao, auditar-cobertura, mapear-contrato, revisar-seguranca-backend, criar-pipeline-servico, implementar-incremental, simplificar-codigo |
+| `dev-frontend` | criar-componente, criar-hook, organizar-estado, gerar-teste-componente, revisar-frontend, auditar-cobertura, revisar-seguranca-frontend, criar-pipeline-frontend, implementar-incremental, simplificar-codigo |
 | `dev-ui-ux` | criar-design-system, especificar-componente, revisar-interface |
 | `dev-security` | modelar-ameacas, auditar-seguranca, revisar-dependencias-cve |
 | `dev-qa` | escrever-gherkin, planejar-regressao, criar-teste-e2e |
-| `tech-lead` | refinar-historia, validar-dor, revisar-pr, gerar-plano-tarefa, avaliar-impacto, auditar-cobertura, revisar-interface, auditar-seguranca, auditar-pipeline |
+| `tech-lead` | refinar-historia, validar-dor, revisar-pr, gerar-plano-tarefa, avaliar-impacto, mapear-contrato, auditar-cobertura, revisar-interface, auditar-seguranca, auditar-pipeline, entrevistar-usuario, simplificar-codigo, migrar-deprecar, documentar-decisoes, questionar-decisao |
 | `dev-devops` | configurar-environments-github, auditar-pipeline, criar-pipeline-servico, criar-pipeline-frontend, revisar-dependencias-cve |

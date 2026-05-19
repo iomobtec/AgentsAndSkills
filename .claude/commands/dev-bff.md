@@ -25,6 +25,10 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @Skills/criar-teste-integracao/SKILL.md
 @Skills/auditar-cobertura/SKILL.md
 @Skills/mapear-contrato/SKILL.md
+@Skills/revisar-seguranca-backend/SKILL.md
+@Skills/criar-pipeline-servico/SKILL.md
+@Skills/implementar-incremental/SKILL.md
+@Skills/simplificar-codigo/SKILL.md
 
 ---
 
