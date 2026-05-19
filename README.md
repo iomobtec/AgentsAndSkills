@@ -426,8 +426,8 @@ Os guardrails e agentes foram escritos para **Node.js + React**. Para adaptar:
 | Agente | Responsabilidade principal | Skills exclusivas |
 |---|---|---|
 | `orquestrador` | Ponto de contato com o usuário, coordena os demais | — |
-| `arquiteto` | Contratos de API, eventos, arquitetura de serviços | revisar-arquitetura, definir-microservico, planejar-api, definir-evento, implementar-saga |
-| `tech-lead` | Valida DoR, revisa PR, facilita refinamento | validar-dor, refinar-historia, revisar-pr |
+| `arquiteto` | Contratos de API, eventos, arquitetura de serviços | revisar-arquitetura, definir-microservico, planejar-api, definir-evento, implementar-saga, gerar-plano-tarefa |
+| `tech-lead` | Valida DoR, revisa PR, facilita refinamento | validar-dor, refinar-historia, revisar-pr, gerar-plano-tarefa |
 | `dev-backend` | System API e Process API (NestJS + Prisma) | criar-system-api, criar-process-api, configurar-prisma, configurar-auth |
 | `dev-bff` | BFF — adapter entre frontend e serviços | criar-bff, revisar-bff, otimizar-performance |
 | `dev-frontend` | React, hooks, estado, testes RTL | criar-componente, criar-hook, organizar-estado, revisar-frontend |
@@ -435,11 +435,12 @@ Os guardrails e agentes foram escritos para **Node.js + React**. Para adaptar:
 | `dev-qa` | Gherkin, E2E Playwright, regressão | criar-teste-e2e, escrever-gherkin, planejar-regressao |
 | `dev-devops` | Pipelines CI/CD GitHub Actions, environments, secrets *(fora do fluxo do orquestrador)* | criar-pipeline-servico, criar-pipeline-frontend, configurar-environments-github, auditar-pipeline |
 
-## Skills disponíveis (38)
+## Skills disponíveis (39)
 
 | Categoria | Skills |
 |---|---|
 | Arquitetura | `revisar-arquitetura` `definir-microservico` `planejar-api` `mapear-contrato` `definir-evento` `avaliar-impacto` `avaliar-dependencias` `gerar-diagrama` `implementar-saga` `validar-idempotencia` `padronizar-erros` |
+| Planejamento | `gerar-plano-tarefa` |
 | Backend | `criar-system-api` `criar-process-api` `implementar-endpoint` `configurar-prisma` `configurar-auth` `revisar-backend` |
 | BFF | `criar-bff` `revisar-bff` `otimizar-performance` |
 | Frontend | `criar-componente` `criar-hook` `organizar-estado` `revisar-frontend` |
