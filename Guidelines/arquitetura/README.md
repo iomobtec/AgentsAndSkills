@@ -23,8 +23,8 @@ Esta camada se aproxima muito da Process API, porém seu foco se concentra na ex
 
 ### Exemplos de uso
 
-- Criação de BFF (Backend for FroentEnd) para atender a plataforma do Corretor e outra BFF para atender a plataforma do Tomador.
-- API dos corretores (online-guarantee).
+- Criação de BFF (Backend for Frontend) para atender a plataforma web e outra BFF para atender o aplicativo mobile.
+- API pública para parceiros e integradores externos.
 
 ### Procure Não Fazer
 
@@ -58,11 +58,11 @@ Esta camada é responsável por orquestrar serviços e sistemas internos de uma 
 
 #### Exemplos de uso
 
-- Cadastro de segurados: A camada poderia ser usada para gerenciar o processo de cadastro de segurados, orquestrando o fluxo de trabalho para a coleta de informações de novos segurados (busca na receita), validando e transformando os dados de entrada para garantir a integridade dos dados. Em seguida, a camada poderia integrar-se com os sistemas internos da seguradora para criar um novo registro de segurado (Sistema ERP, Resseguradora, etc).
+- Cadastro de clientes: A camada poderia ser usada para gerenciar o processo de cadastro de clientes, orquestrando o fluxo de trabalho para a coleta de informações (busca em APIs externas de validação), validando e transformando os dados de entrada para garantir a integridade dos dados. Em seguida, a camada poderia integrar-se com os sistemas internos para criar um novo registro de cliente (CRM, sistemas de notificação, etc).
 <br/>
-- Cotação: simplificando o processo de cotação de seguros, a camada poderia abstrair a complexidade dos sistemas de preços, carteira do corretor, políticas internas (contrato resseguro, limites, bloqueios).
+- Precificação: simplificando o processo de precificação de produtos, a camada poderia abstrair a complexidade dos sistemas de preços, catálogo de produtos e políticas internas (descontos, limites, bloqueios por perfil).
 <br/>
-- Emissão: Semelhante a Cotação, poderia ir além e orquestrar processo de gerar parcelamentos, integrar com a resseguradora, com sistemas ERPs, sistema de Sinistros.
+- Checkout: semelhante à Precificação, poderia ir além e orquestrar o processo de gerar parcelamentos, integrar com gateways de pagamento, sistemas de estoque e notificações ao cliente.
 
 #### Procure Não Fazer
 
@@ -76,7 +76,7 @@ Tentar criar APIs complexas demais, que dificultem o uso pelos usuários finais.
 #### Por que precisamos dessa camada?
 
 - Foco: processo acima da conectividade.
-- Se você está escrevendo uma aplicação que atualiza dados do corretor e da apólice, então você está escrevendo um monolíto.
+- Se você está escrevendo uma aplicação que atualiza dados do cliente e do pedido, então você está escrevendo um monolíto.
 - Se você está acessando aplicações existentes para criar um fluxo de negócio, então você está praticando arquitetura - composta (composable architecture).
 - Separar a orquestração da "conectividade com aplicação" (system API) e com routing (experience API).
 - Camada que concentra a lógica ponta-a-ponta de uma capacidade de negócio.
@@ -97,10 +97,10 @@ Esta camada é a fundamental entre as três pois expõe funcionalidades CORE de 
 
 ##### Exemplos de uso
 
-- API Precificação de Apólices.
-- API Contrato de Resseguro.
-- API Segurado.
-- API Tomador.
+- API Precificação de Produtos.
+- API Catálogo.
+- API Clientes.
+- API Pedidos.
 
 ##### Procure Não Fazer
 
