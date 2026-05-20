@@ -21,7 +21,8 @@ IomobAgents/
 │   ├── dev-security/          # Modelagem de ameaças, auditoria OWASP Top 10, revisão de dependências CVE
 │   └── dev-devops/            # Pipelines CI/CD GitHub Actions *(fora do fluxo do orquestrador)*
 │
-├── skills/                    # 55 skills reutilizáveis entre agentes (SKILL.md)
+├── skills/                    # 56 skills reutilizáveis entre agentes (SKILL.md)
+│   ├── handoff/               # Protocolo de conclusão de sessão e passagem de contexto entre agentes
 │   ├── criar-system-api/
 │   ├── criar-design-system/
 │   ├── especificar-componente/
@@ -32,6 +33,15 @@ IomobAgents/
 │   ├── orquestrador.md
 │   ├── arquiteto.md
 │   └── ...
+│
+├── plans/                     # Artefatos gerados pelos agentes durante execução
+│   └── .handoff/              # Handoff entre sessões: current.md, sequence.md e archive/
+│
+├── scripts/                   # Scripts auxiliares invocados pelos hooks
+│   └── inject-handoff.js      # Lido pelo hook UserPromptSubmit — injeta contexto do agente anterior
+│
+├── .claude/                   # Configuração local do Claude Code
+│   └── settings.json          # Permissões e hook UserPromptSubmit para injeção de handoff
 │
 ├── .claude-plugin/            # Metadados do plugin Claude Code
 │   ├── plugin.json            # Manifesto do plugin
