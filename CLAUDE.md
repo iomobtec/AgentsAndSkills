@@ -20,7 +20,7 @@ Sistema de agentes de IA especializados para desenvolvimento de software. Este r
 | `Guardrails/` | Regras idempotentes com seções numeradas para citação (`backend.md §2`) | `@Guardrails/<nome>.md` nos commands |
 | `References/` | Checklists leves para consulta rápida durante execução | `**Referências rápidas:**` no cabeçalho da skill |
 | `Guidelines/` | Guias de referência detalhados — **não** carregados automaticamente em contexto | Leitura manual ou via skill |
-| `commands/` | Slash commands Claude Code — um por agente | `/agents-and-skills:<nome>` no Claude Code |
+| `commands/` | Slash commands Claude Code — um por agente | `/IomobAgents:<nome>` no Claude Code |
 
 ---
 
@@ -124,4 +124,4 @@ Demanda do usuário: $ARGUMENTS
 - **`dev-devops` fica fora do fluxo do orquestrador** — é acionado diretamente pelo usuário para pipelines e infraestrutura
 - **Nunca deletar ADRs** — se uma decisão foi supersedida, criar novo ADR e atualizar o status do anterior
 - **Racionalizações bloqueadas** são a principal defesa contra agentes que pulam etapas — toda skill que tem processo crítico deve ter essa seção
-- **Comandos são namespaceados**: após instalação via plugin, os comandos ficam disponíveis como `/agents-and-skills:<agente>`
+- **Comandos são namespaceados**: após instalação via plugin, os comandos ficam disponíveis como `/IomobAgents:<agente>`

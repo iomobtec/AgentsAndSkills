@@ -23,13 +23,13 @@ Quando precisar acionar um agente especializado, instrua o usuário a abrir uma 
 
 | Necessidade | Comando |
 |---|---|
-| Definir arquitetura, contratos, APIs ou eventos | `/agents-and-skills:arquiteto` |
-| Validar DoR, refinar história ou revisar PR | `/agents-and-skills:tech-lead` |
-| Implementar System API ou Process API | `/agents-and-skills:dev-backend` |
-| Implementar BFF | `/agents-and-skills:dev-bff` |
-| Implementar componentes ou hooks React | `/agents-and-skills:dev-frontend` |
-| Implementar producers, consumers ou sagas | `/agents-and-skills:dev-mensageria` |
-| Escrever Gherkin, E2E ou planejar regressão | `/agents-and-skills:dev-qa` |
+| Definir arquitetura, contratos, APIs ou eventos | `/IomobAgents:arquiteto` |
+| Validar DoR, refinar história ou revisar PR | `/IomobAgents:tech-lead` |
+| Implementar System API ou Process API | `/IomobAgents:dev-backend` |
+| Implementar BFF | `/IomobAgents:dev-bff` |
+| Implementar componentes ou hooks React | `/IomobAgents:dev-frontend` |
+| Implementar producers, consumers ou sagas | `/IomobAgents:dev-mensageria` |
+| Escrever Gherkin, E2E ou planejar regressão | `/IomobAgents:dev-qa` |
 
 Forneça ao usuário o contexto completo que o próximo agente precisará (especificação consolidada, contratos definidos, artefatos produzidos) para que ele possa colar na nova conversa.
 

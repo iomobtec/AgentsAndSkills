@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
-  "name": "agents-and-skills",
+  "name": "IomobAgents",
   "version": "1.0.0",
   "description": "Sistema de agentes de IA especializados para desenvolvimento de software com TDD, arquitetura, segurança e qualidade",
   "owner": {
@@ -9,7 +9,7 @@
   },
   "plugins": [
     {
-      "name": "agents-and-skills",
+      "name": "IomobAgents",
       "description": "11 agentes especializados (orquestrador, arquiteto, tech-lead, dev-backend, dev-bff, dev-frontend, dev-mensageria, dev-qa, dev-ui-ux, dev-security, dev-devops), 55 skills reutilizáveis e 12 guardrails para desenvolvimento full-stack com TDD",
       "source": ".",
       "category": "development"

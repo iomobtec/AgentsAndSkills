@@ -154,7 +154,7 @@ Dentro do Claude Code, execute:
 ### 2. Instalar o plugin
 
 ```
-/plugin install agents-and-skills
+/plugin install IomobAgents
 ```
 
 ### 3. Usar os agentes
@@ -163,26 +163,26 @@ Após a instalação, todos os agentes ficam disponíveis como comandos namespac
 
 | Comando | Quando usar |
 |---|---|
-| `/agents-and-skills:orquestrador` | **Ponto de entrada.** Coleta a especificação, faz perguntas, coordena os demais agentes na sequência correta com TDD |
-| `/agents-and-skills:arquiteto` | Definir contratos de API, eventos, schemas e arquitetura de serviços |
-| `/agents-and-skills:tech-lead` | Validar DoR antes de iniciar desenvolvimento; revisar PRs; refinar histórias |
-| `/agents-and-skills:dev-backend` | Implementar lógica de domínio, endpoints, persistência (NestJS + Prisma) |
-| `/agents-and-skills:dev-bff` | Implementar camada BFF — agregar e adaptar dados do backend para o frontend |
-| `/agents-and-skills:dev-frontend` | Implementar componentes React, hooks, estado e testes RTL |
-| `/agents-and-skills:dev-mensageria` | Implementar producers, consumers e sagas (@nestjs/microservices) |
-| `/agents-and-skills:dev-ui-ux` | Criar design system, especificar componentes antes da implementação, auditar qualidade de interface |
-| `/agents-and-skills:dev-security` | Modelar ameaças (STRIDE), auditar segurança OWASP pré-merge, revisar dependências CVE |
-| `/agents-and-skills:dev-qa` | Escrever Gherkin, testes E2E com Playwright e planejar regressão |
-| `/agents-and-skills:dev-devops` | Criar pipelines CI/CD GitHub Actions, configurar environments e auditar workflows |
+| `/IomobAgents:orquestrador` | **Ponto de entrada.** Coleta a especificação, faz perguntas, coordena os demais agentes na sequência correta com TDD |
+| `/IomobAgents:arquiteto` | Definir contratos de API, eventos, schemas e arquitetura de serviços |
+| `/IomobAgents:tech-lead` | Validar DoR antes de iniciar desenvolvimento; revisar PRs; refinar histórias |
+| `/IomobAgents:dev-backend` | Implementar lógica de domínio, endpoints, persistência (NestJS + Prisma) |
+| `/IomobAgents:dev-bff` | Implementar camada BFF — agregar e adaptar dados do backend para o frontend |
+| `/IomobAgents:dev-frontend` | Implementar componentes React, hooks, estado e testes RTL |
+| `/IomobAgents:dev-mensageria` | Implementar producers, consumers e sagas (@nestjs/microservices) |
+| `/IomobAgents:dev-ui-ux` | Criar design system, especificar componentes antes da implementação, auditar qualidade de interface |
+| `/IomobAgents:dev-security` | Modelar ameaças (STRIDE), auditar segurança OWASP pré-merge, revisar dependências CVE |
+| `/IomobAgents:dev-qa` | Escrever Gherkin, testes E2E com Playwright e planejar regressão |
+| `/IomobAgents:dev-devops` | Criar pipelines CI/CD GitHub Actions, configurar environments e auditar workflows |
 
 ```
 # Iniciar pelo orquestrador — ele coordena tudo
-/agents-and-skills:orquestrador quero criar um endpoint de cancelamento de pedido
+/IomobAgents:orquestrador quero criar um endpoint de cancelamento de pedido
 
 # Ou acionar um agente diretamente
-/agents-and-skills:arquiteto preciso definir o contrato do endpoint POST /orders
-/agents-and-skills:dev-backend implementar o serviço OrderService com validação de estoque
-/agents-and-skills:tech-lead revisar o PR #42 — mudança no serviço de pagamento
+/IomobAgents:arquiteto preciso definir o contrato do endpoint POST /orders
+/IomobAgents:dev-backend implementar o serviço OrderService com validação de estoque
+/IomobAgents:tech-lead revisar o PR #42 — mudança no serviço de pagamento
 ```
 
 Cada comando carrega **somente os guardrails do seu agente** — o contexto da janela não é poluído com regras irrelevantes para aquele domínio.
