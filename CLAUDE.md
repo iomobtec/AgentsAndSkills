@@ -1,4 +1,4 @@
-# CLAUDE.md — AgentsAndSkills
+# CLAUDE.md — IomobAgents
 
 Sistema de agentes de IA especializados para desenvolvimento de software. Este repositório contém as definições de agentes, skills e guardrails — não é um projeto de aplicação.
 

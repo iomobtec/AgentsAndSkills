@@ -1,4 +1,4 @@
-# AgentsAndSkills
+# IomobAgents
 
 Sistema de **agentes de IA especializados** para desenvolvimento de software: cada agente conhece seu domínio, carrega apenas as regras relevantes (guardrails) e executa skills bem definidas. O orquestrador coordena a conversa com o usuário e aciona os agentes na sequência certa, garantindo TDD e conformidade com os padrões de engenharia.
 
@@ -7,7 +7,7 @@ Sistema de **agentes de IA especializados** para desenvolvimento de software: ca
 ## Estrutura do repositório
 
 ```
-AgentsAndSkills/
+IomobAgents/
 ├── agents/                    # Definição de cada agente (AGENT.md)
 │   ├── orquestrador/          # Ponto de entrada — coordena todos os outros
 │   ├── arquiteto/             # Contratos, APIs, eventos, arquitetura
@@ -148,7 +148,7 @@ Este projeto é distribuído como um **plugin Claude Code**. A instalação é f
 Dentro do Claude Code, execute:
 
 ```
-/plugin marketplace add iomobtec/AgentsAndSkills
+/plugin marketplace add iomobtec/IomobAgents
 ```
 
 ### 2. Instalar o plugin
@@ -192,7 +192,7 @@ Cada comando carrega **somente os guardrails do seu agente** — o contexto da j
 Para executar uma skill pontual sem carregar o agente completo, referencie o `SKILL.md` diretamente no chat:
 
 ```
-Leia e siga as instruções de @/caminho/para/AgentsAndSkills/skills/criar-componente/SKILL.md
+Leia e siga as instruções de @/caminho/para/IomobAgents/skills/criar-componente/SKILL.md
 
 Preciso criar um componente UserCard que exibe nome, email e foto do usuário.
 ```
@@ -202,7 +202,7 @@ Preciso criar um componente UserCard que exibe nome, email e foto do usuário.
 Se preferir que o orquestrador seja o comportamento padrão de **toda** conversa no projeto (sem precisar digitar o comando), crie ou edite `CLAUDE.md` na raiz do seu projeto:
 
 ```markdown
-@/caminho/para/AgentsAndSkills/commands/orquestrador.md
+@/caminho/para/IomobAgents/commands/orquestrador.md
 ```
 
 Com isso, cada nova conversa no Claude Code já parte do comportamento do orquestrador automaticamente.

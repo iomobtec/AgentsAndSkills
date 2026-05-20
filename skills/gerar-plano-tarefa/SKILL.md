@@ -17,7 +17,7 @@ Gera arquivos de plano de tarefa na pasta `plans/` do repositório do projeto do
 
 ## Estrutura de pastas
 
-Os planos são salvos no **repositório do projeto do usuário** (não no repositório AgentsAndSkills):
+Os planos são salvos no **repositório do projeto do usuário** (não no repositório IomobAgents):
 
 ```
 plans/
