@@ -11,7 +11,7 @@
     {
       "name": "IomobAgents",
       "description": "11 agentes especializados (orquestrador, arquiteto, tech-lead, dev-backend, dev-bff, dev-frontend, dev-mensageria, dev-qa, dev-ui-ux, dev-security, dev-devops), 55 skills reutilizáveis e 12 guardrails para desenvolvimento full-stack com TDD",
-      "source": ".",
+      "source": "./",
       "category": "development"
     }
   ]
