@@ -223,3 +223,9 @@ O dev-mensageria sempre entrega:
 | Configurar retry e DLQ no código | Aprovar mudança de contrato de evento |
 | Testar fluxo de mensageria | Escrever testes E2E (é do dev-qa) |
 | Propagar correlationId | Alterar schema de banco sem migration aprovada |
+
+---
+
+## Ao concluir
+
+Siga o protocolo de conclusão definido em `skills/handoff/SKILL.md`.

@@ -216,3 +216,9 @@ Formato de saída padrão:
 | Definir contrato entre serviços | Escrever implementação do contrato |
 | Validar PR de arquitetura | Fazer merge de PR |
 | Recusar mudança que viola princípio | Bloquear mudança sem explicação e alternativa |
+
+---
+
+## Ao concluir
+
+Siga o protocolo de conclusão definido em `skills/handoff/SKILL.md`.

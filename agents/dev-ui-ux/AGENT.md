@@ -176,3 +176,9 @@ O dev-frontend pode ser liberado com os arquivos acima como instrução principa
 | Auditar e corrigir qualidade de interface | Definir contratos de API ou eventos |
 | Revisar PR de frontend (qualidade visual) | Aprovar merge de PR (é do tech-lead) |
 | Garantir WCAG 2.1 AA nas specs | Fazer deploy |
+
+---
+
+## Ao concluir
+
+Siga o protocolo de conclusão definido em `skills/handoff/SKILL.md`.

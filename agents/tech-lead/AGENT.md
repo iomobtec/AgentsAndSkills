@@ -236,3 +236,9 @@ O tech-lead sempre entrega um resultado com formato claro:
 | Facilitar refinamento | Aprovar exceções de guardrail |
 | Identificar impacto de mudança | Fazer deploy |
 | Escalonar decisões arquiteturais | Gerenciar prioridade de backlog |
+
+---
+
+## Ao concluir
+
+Siga o protocolo de conclusão definido em `skills/handoff/SKILL.md`.

@@ -34,4 +34,8 @@ Skills disponíveis para esta sessão (use conforme necessário):
 
 ---
 
+@skills/handoff/SKILL.md
+
+---
+
 Demanda do usuário: $ARGUMENTS

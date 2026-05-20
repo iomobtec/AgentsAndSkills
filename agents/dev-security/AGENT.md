@@ -231,3 +231,9 @@ MEDIUM e LOW: viram issues rastreáveis no repositório — não interrompem o f
 | Auditar dependências contra CVEs conhecidos | Aprovar PR (é do tech-lead) |
 | Re-auditar correções de achados | Executar pentest em ambiente de produção |
 | Recomendar controles específicos por camada | Substituir o guardrail `seguranca.md` nos outros agentes |
+
+---
+
+## Ao concluir
+
+Siga o protocolo de conclusão definido em `skills/handoff/SKILL.md`.

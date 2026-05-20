@@ -140,3 +140,9 @@ O dev-frontend sempre entrega:
 | Garantir acessibilidade | Definir estratégia de auth (é do arquiteto) |
 | Escrever testes de componente | Escrever testes E2E (é do dev-qa) |
 | Usar tokens do design system | Criar design system do zero sem especificação |
+
+---
+
+## Ao concluir
+
+Siga o protocolo de conclusão definido em `skills/handoff/SKILL.md`.

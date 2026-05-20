@@ -175,3 +175,9 @@ Formato de conclusão:
 | Adicionar dependência após aprovação | Aprovar dependência nova (é do arquiteto) |
 | Corrigir bug em endpoint existente | Mudar contrato de API sem alinhamento |
 | Configurar auth conforme padrão | Definir estratégia de auth (é do arquiteto) |
+
+---
+
+## Ao concluir
+
+Siga o protocolo de conclusão definido em `skills/handoff/SKILL.md`.

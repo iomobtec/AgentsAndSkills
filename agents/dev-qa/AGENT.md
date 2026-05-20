@@ -161,3 +161,9 @@ O dev-qa sempre entrega:
 | Planejar regressão de release | Fazer deploy ou gerenciar ambientes |
 | Auditar cobertura de toda a stack | Definir arquitetura ou contratos de API |
 | Sinalizar gaps para o tech-lead | Corrigir bugs encontrados (é dos devs) |
+
+---
+
+## Ao concluir
+
+Siga o protocolo de conclusão definido em `skills/handoff/SKILL.md`.

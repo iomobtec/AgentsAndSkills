@@ -171,3 +171,9 @@ Formato de conclusão:
 | Auditar pipelines contra `devops.md` | Implementar código de negócio |
 | Documentar secrets necessários | Armazenar ou fornecer valores de secrets |
 | Configurar cache e otimização de pipeline | Gerenciar banco de dados em produção |
+
+---
+
+## Ao concluir
+
+Siga o protocolo de conclusão definido em `skills/handoff/SKILL.md`.

@@ -31,6 +31,7 @@ Agente **ponto de contato com o usuário**: recebe especificações, aprofunda o
 | `entrevistar-usuario` | Antes de acionar qualquer agente: fechar o gap entre o que o usuário pede e o que realmente quer, via hipótese iterativa com score de confiança |
 | `refinar-ideia` | Quando a demanda é ampla ou tem múltiplas interpretações: gerar variações HMW, convergir em direção e produzir one-pager com lista "O que NÃO faremos" |
 | `gerenciar-contexto` | Ao coordenar múltiplos agentes numa tarefa complexa: delimitar escopo de contexto por agente, evitar context starvation e context flooding |
+| `handoff` | Ao concluir cada etapa: escrever `plans/.handoff/current.md` e exibir o próximo comando ao usuário |
 
 ---
 
@@ -547,3 +548,46 @@ Se durante a execução o orquestrador percebe que a demanda é maior do que o i
 | Garantir TDD na sequência de execução | Tomar decisões de negócio |
 | Apresentar bloqueios e opções ao usuário | Fazer deploy |
 | Emitir summary honesto ao final | Expandir escopo sem autorização |
+
+---
+
+## Sistema de handoff entre agentes
+
+O orquestrador é responsável por inicializar o sistema de handoff ao confirmar a sequência de execução. Ao concluir cada etapa, siga o protocolo da skill `handoff`.
+
+### Ao confirmar a sequência (Fase 2.3)
+
+Crie `plans/.handoff/sequence.md` com a sequência planejada:
+
+```markdown
+## Sequência de execução — <Ticket>
+
+**Tarefa:** <descrição resumida>
+**Data do planejamento:** <YYYY-MM-DD>
+
+| Etapa | Agente | Skill principal | Depende de |
+|---|---|---|---|
+| 1 | tech-lead | validar-dor, gerar-plano-tarefa | — |
+| 2 | arquiteto | planejar-api, definir-evento | etapa 1 |
+| 3 | dev-security | modelar-ameacas | etapa 2 |
+| 4 | dev-ui-ux | especificar-componente | etapa 2 (se há UI) |
+| 5 | dev-qa | escrever-gherkin | etapas 3 e 4 |
+| 6 | dev-backend | criar-teste-unitario, implementar-endpoint | etapa 5 |
+| 7 | dev-bff | criar-bff | etapa 6 (se há BFF) |
+| 8 | dev-mensageria | implementar-saga | etapa 6 (se há mensageria) |
+| 9 | dev-frontend | criar-componente, gerar-teste-componente | etapas 4 e 7 |
+| 10 | dev-ui-ux | revisar-interface | etapa 9 |
+| 11 | dev-qa | criar-teste-e2e | etapa 10 |
+| 12 | dev-security | auditar-seguranca | etapa 11 |
+| 13 | tech-lead | revisar-pr | etapa 12 |
+| 14 | dev-qa | planejar-regressao | etapa 13 (se release) |
+
+**Etapa atual:** 1
+**Próxima etapa:** 1 → /IomobAgents:tech-lead
+```
+
+Adapte a tabela removendo as etapas que não se aplicam à demanda atual.
+
+### Ao iniciar cada etapa (Modo B — Guiado)
+
+Após escrever o `sequence.md`, siga o protocolo da skill `handoff` para escrever `plans/.handoff/current.md` e exibir ao usuário o próximo comando.

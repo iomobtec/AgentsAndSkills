@@ -1,5 +1,4 @@
 # Claude Code
-.claude/settings.json
 .claude/settings.local.json
 
 # Environment files — never commit real values

@@ -137,3 +137,9 @@ O dev-bff sempre entrega:
 | Cachear leitura para reduzir latência | Criar banco de dados ou persistência |
 | Autenticar request do frontend | Emitir JWT (é do serviço de identidade) |
 | Mascarar dados sensíveis antes de enviar ao frontend | Decidir quais dados são sensíveis (é do guardrail `seguranca.md §1`) |
+
+---
+
+## Ao concluir
+
+Siga o protocolo de conclusão definido em `skills/handoff/SKILL.md`.

@@ -17,6 +17,7 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 - [QA](#qa)
 - [Tech Lead / Processo](#tech-lead--processo)
 - [DevOps](#devops)
+- [Transversal](#transversal)
 
 ---
 
@@ -138,17 +139,28 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 
 ---
 
+---
+
+## Transversal
+
+| Skill | O que faz | Quem chama |
+|---|---|---|
+| [`handoff`](handoff/SKILL.md) | Protocolo de conclusão de sessão: escreve `plans/.handoff/current.md` e exibe ao usuário o próximo comando a executar | todos os agentes |
+
+---
+
 ## Resumo por agente
 
 | Agente | Skills disponíveis |
 |---|---|
-| `orquestrador` | entrevistar-usuario, refinar-ideia, gerenciar-contexto |
-| `arquiteto` | revisar-arquitetura, planejar-api, mapear-contrato, definir-evento, avaliar-dependencias, gerar-diagrama, implementar-saga, validar-idempotencia, padronizar-erros, avaliar-impacto, definir-microservico, gerar-plano-tarefa, refinar-ideia, gerenciar-contexto, questionar-decisao, migrar-deprecar, documentar-decisoes |
-| `dev-backend` | criar-system-api, criar-process-api, implementar-endpoint, configurar-auth, configurar-prisma, criar-teste-unitario, criar-teste-integracao, auditar-cobertura, revisar-backend, validar-idempotencia, revisar-seguranca-backend, criar-pipeline-servico, implementar-incremental, simplificar-codigo |
-| `dev-bff` | criar-bff, implementar-endpoint, configurar-auth, otimizar-performance, revisar-bff, criar-teste-unitario, criar-teste-integracao, auditar-cobertura, mapear-contrato, revisar-seguranca-backend, criar-pipeline-servico, implementar-incremental, simplificar-codigo |
-| `dev-frontend` | criar-componente, criar-hook, organizar-estado, gerar-teste-componente, revisar-frontend, auditar-cobertura, revisar-seguranca-frontend, criar-pipeline-frontend, implementar-incremental, simplificar-codigo |
-| `dev-ui-ux` | criar-design-system, especificar-componente, revisar-interface |
-| `dev-security` | modelar-ameacas, auditar-seguranca, revisar-dependencias-cve |
-| `dev-qa` | escrever-gherkin, planejar-regressao, criar-teste-e2e |
-| `tech-lead` | refinar-historia, validar-dor, revisar-pr, gerar-plano-tarefa, avaliar-impacto, mapear-contrato, auditar-cobertura, revisar-interface, auditar-seguranca, auditar-pipeline, entrevistar-usuario, simplificar-codigo, migrar-deprecar, documentar-decisoes, questionar-decisao |
-| `dev-devops` | configurar-environments-github, auditar-pipeline, criar-pipeline-servico, criar-pipeline-frontend, revisar-dependencias-cve |
+| `orquestrador` | entrevistar-usuario, refinar-ideia, gerenciar-contexto, **handoff** |
+| `arquiteto` | revisar-arquitetura, planejar-api, mapear-contrato, definir-evento, avaliar-dependencias, gerar-diagrama, implementar-saga, validar-idempotencia, padronizar-erros, avaliar-impacto, definir-microservico, gerar-plano-tarefa, refinar-ideia, gerenciar-contexto, questionar-decisao, migrar-deprecar, documentar-decisoes, **handoff** |
+| `dev-backend` | criar-system-api, criar-process-api, implementar-endpoint, configurar-auth, configurar-prisma, criar-teste-unitario, criar-teste-integracao, auditar-cobertura, revisar-backend, validar-idempotencia, revisar-seguranca-backend, criar-pipeline-servico, implementar-incremental, simplificar-codigo, **handoff** |
+| `dev-bff` | criar-bff, implementar-endpoint, configurar-auth, otimizar-performance, revisar-bff, criar-teste-unitario, criar-teste-integracao, auditar-cobertura, mapear-contrato, revisar-seguranca-backend, criar-pipeline-servico, implementar-incremental, simplificar-codigo, **handoff** |
+| `dev-frontend` | criar-componente, criar-hook, organizar-estado, gerar-teste-componente, revisar-frontend, auditar-cobertura, revisar-seguranca-frontend, criar-pipeline-frontend, implementar-incremental, simplificar-codigo, **handoff** |
+| `dev-ui-ux` | criar-design-system, especificar-componente, revisar-interface, **handoff** |
+| `dev-security` | modelar-ameacas, auditar-seguranca, revisar-dependencias-cve, **handoff** |
+| `dev-qa` | escrever-gherkin, planejar-regressao, criar-teste-e2e, **handoff** |
+| `tech-lead` | refinar-historia, validar-dor, revisar-pr, gerar-plano-tarefa, avaliar-impacto, mapear-contrato, auditar-cobertura, revisar-interface, auditar-seguranca, auditar-pipeline, entrevistar-usuario, simplificar-codigo, migrar-deprecar, documentar-decisoes, questionar-decisao, **handoff** |
+| `dev-devops` | configurar-environments-github, auditar-pipeline, criar-pipeline-servico, criar-pipeline-frontend, revisar-dependencias-cve, **handoff** |
+| `dev-mensageria` | *(usa skills de arquiteto e dev-backend)*, **handoff** |

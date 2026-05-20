@@ -38,4 +38,8 @@ Forneça ao usuário o contexto completo que o próximo agente precisará (espec
 
 ---
 
+@skills/handoff/SKILL.md
+
+---
+
 Demanda do usuário: $ARGUMENTS
