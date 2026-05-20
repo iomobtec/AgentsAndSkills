@@ -5,5 +5,8 @@
   "author": {
     "name": "Pedro Andriow",
     "email": "pedro@iomob.com"
-  }
+  },
+  "homepage": "https://github.com/iomobtec/AgentsAndSkills",
+  "repository": "https://github.com/iomobtec/AgentsAndSkills",
+  "license": "GPL-3.0"
 }

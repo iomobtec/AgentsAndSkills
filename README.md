@@ -8,7 +8,7 @@ Sistema de **agentes de IA especializados** para desenvolvimento de software: ca
 
 ```
 AgentsAndSkills/
-├── Agents/                    # Definição de cada agente (AGENT.md)
+├── agents/                    # Definição de cada agente (AGENT.md)
 │   ├── orquestrador/          # Ponto de entrada — coordena todos os outros
 │   ├── arquiteto/             # Contratos, APIs, eventos, arquitetura
 │   ├── tech-lead/             # DoR, revisão de PR, refinamento
@@ -21,12 +21,21 @@ AgentsAndSkills/
 │   ├── dev-security/          # Modelagem de ameaças, auditoria OWASP Top 10, revisão de dependências CVE
 │   └── dev-devops/            # Pipelines CI/CD GitHub Actions *(fora do fluxo do orquestrador)*
 │
-├── Skills/                    # 55 skills reutilizáveis entre agentes (SKILL.md)
+├── skills/                    # 55 skills reutilizáveis entre agentes (SKILL.md)
 │   ├── criar-system-api/
 │   ├── criar-design-system/
 │   ├── especificar-componente/
 │   ├── revisar-interface/
 │   └── ...
+│
+├── commands/                  # Slash commands Claude Code — um por agente
+│   ├── orquestrador.md
+│   ├── arquiteto.md
+│   └── ...
+│
+├── .claude-plugin/            # Metadados do plugin Claude Code
+│   ├── plugin.json            # Manifesto do plugin
+│   └── marketplace.json       # Configuração de marketplace
 │
 ├── Guardrails/                # Regras que todo agente deve seguir
 │   ├── README.md              # Como aplicar, hierarquia, matriz agente × guardrail
@@ -132,51 +141,48 @@ tech-lead (revisão de PR — inclui checklist Docker, pipeline, revisão de int
 
 ## Instalação no Claude Code
 
-O Claude Code suporta **comandos personalizados** via arquivos `.md` na pasta `.claude/commands/` do repositório. Este projeto já inclui um comando por agente — basta copiar a pasta `.claude/` para o seu projeto e ajustar os caminhos.
+Este projeto é distribuído como um **plugin Claude Code**. A instalação é feita em dois comandos — sem clonar o repositório manualmente.
 
-### 1. Copiar os comandos
+### 1. Adicionar o marketplace
 
-```bash
-# Na raiz do seu projeto
-cp -r /caminho/para/AgentsAndSkills/.claude ./
-```
-
-Abra cada arquivo em `.claude/commands/` e substitua os caminhos relativos pelos caminhos absolutos corretos no seu ambiente. Os arquivos usam referências como:
+Dentro do Claude Code, execute:
 
 ```
-@Agents/orquestrador/AGENT.md
-@Guardrails/00-core.md
+/plugin marketplace add iomobtec/AgentsAndSkills
 ```
 
-Que devem apontar para o repositório `AgentsAndSkills` no seu disco.
+### 2. Instalar o plugin
 
-### 2. Comandos disponíveis
+```
+/plugin install agents-and-skills
+```
+
+### 3. Usar os agentes
+
+Após a instalação, todos os agentes ficam disponíveis como comandos namespaceados:
 
 | Comando | Quando usar |
 |---|---|
-| `/orquestrador` | **Ponto de entrada.** Coleta a especificação, faz perguntas, coordena os demais agentes na sequência correta com TDD |
-| `/arquiteto` | Definir contratos de API, eventos, schemas e arquitetura de serviços |
-| `/tech-lead` | Validar DoR antes de iniciar desenvolvimento; revisar PRs; refinar histórias |
-| `/dev-backend` | Implementar lógica de domínio, endpoints, persistência (NestJS + Prisma) |
-| `/dev-bff` | Implementar camada BFF — agregar e adaptar dados do backend para o frontend |
-| `/dev-frontend` | Implementar componentes React, hooks, estado e testes RTL |
-| `/dev-mensageria` | Implementar producers, consumers e sagas (@nestjs/microservices) |
-| `/dev-ui-ux` | Criar design system, especificar componentes antes da implementação, auditar qualidade de interface |
-| `/dev-security` | Modelar ameaças (STRIDE), auditar segurança OWASP pré-merge, revisar dependências CVE |
-| `/dev-qa` | Escrever Gherkin, testes E2E com Playwright e planejar regressão |
-| `/dev-devops` | Criar pipelines CI/CD GitHub Actions, configurar environments e auditar workflows |
-
-### 3. Usar os comandos
+| `/agents-and-skills:orquestrador` | **Ponto de entrada.** Coleta a especificação, faz perguntas, coordena os demais agentes na sequência correta com TDD |
+| `/agents-and-skills:arquiteto` | Definir contratos de API, eventos, schemas e arquitetura de serviços |
+| `/agents-and-skills:tech-lead` | Validar DoR antes de iniciar desenvolvimento; revisar PRs; refinar histórias |
+| `/agents-and-skills:dev-backend` | Implementar lógica de domínio, endpoints, persistência (NestJS + Prisma) |
+| `/agents-and-skills:dev-bff` | Implementar camada BFF — agregar e adaptar dados do backend para o frontend |
+| `/agents-and-skills:dev-frontend` | Implementar componentes React, hooks, estado e testes RTL |
+| `/agents-and-skills:dev-mensageria` | Implementar producers, consumers e sagas (@nestjs/microservices) |
+| `/agents-and-skills:dev-ui-ux` | Criar design system, especificar componentes antes da implementação, auditar qualidade de interface |
+| `/agents-and-skills:dev-security` | Modelar ameaças (STRIDE), auditar segurança OWASP pré-merge, revisar dependências CVE |
+| `/agents-and-skills:dev-qa` | Escrever Gherkin, testes E2E com Playwright e planejar regressão |
+| `/agents-and-skills:dev-devops` | Criar pipelines CI/CD GitHub Actions, configurar environments e auditar workflows |
 
 ```
 # Iniciar pelo orquestrador — ele coordena tudo
-/orquestrador quero criar um endpoint de cancelamento de pedido
+/agents-and-skills:orquestrador quero criar um endpoint de cancelamento de pedido
 
 # Ou acionar um agente diretamente
-/arquiteto preciso definir o contrato do endpoint POST /orders
-/dev-backend implementar o serviço OrderService com validação de estoque
-/dev-qa escrever cenários Gherkin para o fluxo de cancelamento
-/tech-lead revisar o PR #42 — mudança no serviço de pagamento
+/agents-and-skills:arquiteto preciso definir o contrato do endpoint POST /orders
+/agents-and-skills:dev-backend implementar o serviço OrderService com validação de estoque
+/agents-and-skills:tech-lead revisar o PR #42 — mudança no serviço de pagamento
 ```
 
 Cada comando carrega **somente os guardrails do seu agente** — o contexto da janela não é poluído com regras irrelevantes para aquele domínio.
@@ -186,7 +192,7 @@ Cada comando carrega **somente os guardrails do seu agente** — o contexto da j
 Para executar uma skill pontual sem carregar o agente completo, referencie o `SKILL.md` diretamente no chat:
 
 ```
-Leia e siga as instruções de @/caminho/para/AgentsAndSkills/Skills/criar-componente/SKILL.md
+Leia e siga as instruções de @/caminho/para/AgentsAndSkills/skills/criar-componente/SKILL.md
 
 Preciso criar um componente UserCard que exibe nome, email e foto do usuário.
 ```
@@ -196,7 +202,7 @@ Preciso criar um componente UserCard que exibe nome, email e foto do usuário.
 Se preferir que o orquestrador seja o comportamento padrão de **toda** conversa no projeto (sem precisar digitar o comando), crie ou edite `CLAUDE.md` na raiz do seu projeto:
 
 ```markdown
-@/caminho/para/AgentsAndSkills/.claude/commands/orquestrador.md
+@/caminho/para/AgentsAndSkills/commands/orquestrador.md
 ```
 
 Com isso, cada nova conversa no Claude Code já parte do comportamento do orquestrador automaticamente.

@@ -1,6 +1,6 @@
 Você é o agente dev-devops definido abaixo. Leia e siga exatamente o comportamento descrito.
 
-@Agents/dev-devops/AGENT.md
+@agents/dev-devops/AGENT.md
 
 Guardrails que você deve seguir nesta sessão:
 
@@ -15,10 +15,10 @@ Guardrails que você deve seguir nesta sessão:
 
 Skills disponíveis para esta sessão (use conforme necessário):
 
-@Skills/criar-pipeline-servico/SKILL.md
-@Skills/criar-pipeline-frontend/SKILL.md
-@Skills/configurar-environments-github/SKILL.md
-@Skills/auditar-pipeline/SKILL.md
+@skills/criar-pipeline-servico/SKILL.md
+@skills/criar-pipeline-frontend/SKILL.md
+@skills/configurar-environments-github/SKILL.md
+@skills/auditar-pipeline/SKILL.md
 
 ---
 

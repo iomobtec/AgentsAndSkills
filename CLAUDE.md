@@ -1,13 +1,11 @@
 # CLAUDE.md — AgentsAndSkills
 
-Este repositório define um sistema de **agentes de IA especializados** para desenvolvimento de software. Não é um projeto de aplicação — é o meta-sistema que outros projetos importam via `.claude/commands/`.
-
----
+Sistema de agentes de IA especializados para desenvolvimento de software. Este repositório contém as definições de agentes, skills e guardrails — não é um projeto de aplicação.
 
 ## Estado atual
 
 - **11 agentes**: orquestrador, arquiteto, tech-lead, dev-backend, dev-bff, dev-frontend, dev-mensageria, dev-qa, dev-ui-ux, dev-security, dev-devops
-- **55 skills** em `Skills/`
+- **55 skills** em `skills/`
 - **12 guardrails** em `Guardrails/`
 - **5 checklists** em `References/`
 
@@ -17,38 +15,38 @@ Este repositório define um sistema de **agentes de IA especializados** para des
 
 | Pasta | Conteúdo | Carregado como |
 |---|---|---|
-| `Agents/` | `AGENT.md` por agente: escopo, guardrails, skills, outputs esperados | `@Agents/<nome>/AGENT.md` nos commands |
-| `Skills/` | `SKILL.md` por skill: processo passo a passo, anti-padrões, checklist | `@Skills/<nome>/SKILL.md` nos commands |
+| `agents/` | `AGENT.md` por agente: escopo, guardrails, skills, outputs esperados | `@agents/<nome>/AGENT.md` nos commands |
+| `skills/` | `SKILL.md` por skill: processo passo a passo, anti-padrões, checklist | `@skills/<nome>/SKILL.md` nos commands |
 | `Guardrails/` | Regras idempotentes com seções numeradas para citação (`backend.md §2`) | `@Guardrails/<nome>.md` nos commands |
 | `References/` | Checklists leves para consulta rápida durante execução | `**Referências rápidas:**` no cabeçalho da skill |
 | `Guidelines/` | Guias de referência detalhados — **não** carregados automaticamente em contexto | Leitura manual ou via skill |
-| `.claude/commands/` | Slash commands Claude Code — um por agente | `/nome-do-agente` no Claude Code |
+| `commands/` | Slash commands Claude Code — um por agente | `/agents-and-skills:<nome>` no Claude Code |
 
 ---
 
 ## Adicionar uma nova skill
 
-1. Criar `Skills/<nome-da-skill>/SKILL.md` seguindo a estrutura padrão (ver abaixo)
-2. Adicionar à tabela do `Agents/<agente>/AGENT.md` correspondente
-3. Adicionar `@Skills/<nome>/SKILL.md` no `.claude/commands/<agente>.md`
-4. Adicionar linha na categoria correta em `Skills/README.md`
-5. Atualizar a linha do agente em `## Resumo por agente` em `Skills/README.md`
+1. Criar `skills/<nome-da-skill>/SKILL.md` seguindo a estrutura padrão (ver abaixo)
+2. Adicionar à tabela do `agents/<agente>/AGENT.md` correspondente
+3. Adicionar `@skills/<nome>/SKILL.md` no `commands/<agente>.md`
+4. Adicionar linha na categoria correta em `skills/README.md`
+5. Atualizar a linha do agente em `## Resumo por agente` em `skills/README.md`
 6. Atualizar contagem de skills e tabela `## Agentes disponíveis` no `README.md` raiz
 
 ## Adicionar um novo guardrail
 
 1. Criar `Guardrails/<nome>.md` com seções numeradas (`## §1 — Título`)
 2. Atualizar a matriz em `Guardrails/README.md §3`
-3. Adicionar ao `Agents/<agente>/AGENT.md` dos agentes afetados
-4. Adicionar `@Guardrails/<nome>.md` nos `.claude/commands/` correspondentes
+3. Adicionar ao `agents/<agente>/AGENT.md` dos agentes afetados
+4. Adicionar `@Guardrails/<nome>.md` nos `commands/` correspondentes
 
 ## Adicionar um novo agente
 
-1. Criar `Agents/<nome>/AGENT.md`
-2. Criar `.claude/commands/<nome>.md` com estrutura padrão (ver abaixo)
+1. Criar `agents/<nome>/AGENT.md`
+2. Criar `commands/<nome>.md` com estrutura padrão (ver abaixo)
 3. Adicionar linha em `## Agentes disponíveis` no `README.md` raiz
-4. Adicionar linha em `## Resumo por agente` em `Skills/README.md`
-5. Atualizar tabela de roteamento no `Agents/orquestrador/AGENT.md` e `.claude/commands/orquestrador.md`
+4. Adicionar linha em `## Resumo por agente` em `skills/README.md`
+5. Atualizar tabela de roteamento no `agents/orquestrador/AGENT.md` e `commands/orquestrador.md`
 
 ## Adicionar uma nova Reference
 
@@ -92,12 +90,12 @@ Este repositório define um sistema de **agentes de IA especializados** para des
 
 ---
 
-## Estrutura padrão de .claude/commands/<agente>.md
+## Estrutura padrão de commands/<agente>.md
 
 ```markdown
 Você é o agente <nome> definido abaixo. Leia e siga exatamente o comportamento descrito.
 
-@Agents/<nome>/AGENT.md
+@agents/<nome>/AGENT.md
 
 Guardrails que você deve seguir nesta sessão:
 
@@ -108,7 +106,7 @@ Guardrails que você deve seguir nesta sessão:
 
 Skills disponíveis para esta sessão (use conforme necessário):
 
-@Skills/<skill>/SKILL.md
+@skills/<skill>/SKILL.md
 
 ---
 
@@ -126,3 +124,4 @@ Demanda do usuário: $ARGUMENTS
 - **`dev-devops` fica fora do fluxo do orquestrador** — é acionado diretamente pelo usuário para pipelines e infraestrutura
 - **Nunca deletar ADRs** — se uma decisão foi supersedida, criar novo ADR e atualizar o status do anterior
 - **Racionalizações bloqueadas** são a principal defesa contra agentes que pulam etapas — toda skill que tem processo crítico deve ter essa seção
+- **Comandos são namespaceados**: após instalação via plugin, os comandos ficam disponíveis como `/agents-and-skills:<agente>`

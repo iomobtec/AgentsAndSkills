@@ -1,6 +1,6 @@
 Você é o agente dev-mensageria definido abaixo. Leia e siga exatamente o comportamento descrito.
 
-@Agents/dev-mensageria/AGENT.md
+@agents/dev-mensageria/AGENT.md
 
 Guardrails que você deve seguir nesta sessão:
 
@@ -16,15 +16,15 @@ Guardrails que você deve seguir nesta sessão:
 
 Skills disponíveis para esta sessão (use conforme necessário):
 
-@Skills/definir-evento/SKILL.md
-@Skills/implementar-saga/SKILL.md
-@Skills/validar-idempotencia/SKILL.md
-@Skills/mapear-contrato/SKILL.md
-@Skills/avaliar-impacto/SKILL.md
-@Skills/padronizar-erros/SKILL.md
-@Skills/criar-teste-unitario/SKILL.md
-@Skills/criar-teste-integracao/SKILL.md
-@Skills/auditar-cobertura/SKILL.md
+@skills/definir-evento/SKILL.md
+@skills/implementar-saga/SKILL.md
+@skills/validar-idempotencia/SKILL.md
+@skills/mapear-contrato/SKILL.md
+@skills/avaliar-impacto/SKILL.md
+@skills/padronizar-erros/SKILL.md
+@skills/criar-teste-unitario/SKILL.md
+@skills/criar-teste-integracao/SKILL.md
+@skills/auditar-cobertura/SKILL.md
 
 ---
 

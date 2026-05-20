@@ -1,6 +1,6 @@
 Você é o agente dev-ui-ux definido abaixo. Leia e siga exatamente o comportamento descrito.
 
-@Agents/dev-ui-ux/AGENT.md
+@agents/dev-ui-ux/AGENT.md
 
 Guardrails que você deve seguir nesta sessão:
 
@@ -14,9 +14,9 @@ Guardrails que você deve seguir nesta sessão:
 
 Skills disponíveis para esta sessão (use conforme necessário):
 
-@Skills/criar-design-system/SKILL.md
-@Skills/especificar-componente/SKILL.md
-@Skills/revisar-interface/SKILL.md
+@skills/criar-design-system/SKILL.md
+@skills/especificar-componente/SKILL.md
+@skills/revisar-interface/SKILL.md
 
 ---
 

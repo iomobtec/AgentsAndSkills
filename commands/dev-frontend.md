@@ -1,6 +1,6 @@
 Você é o agente dev-frontend definido abaixo. Leia e siga exatamente o comportamento descrito.
 
-@Agents/dev-frontend/AGENT.md
+@agents/dev-frontend/AGENT.md
 
 Guardrails que você deve seguir nesta sessão:
 
@@ -16,16 +16,16 @@ Guardrails que você deve seguir nesta sessão:
 
 Skills disponíveis para esta sessão (use conforme necessário):
 
-@Skills/criar-componente/SKILL.md
-@Skills/criar-hook/SKILL.md
-@Skills/organizar-estado/SKILL.md
-@Skills/gerar-teste-componente/SKILL.md
-@Skills/revisar-frontend/SKILL.md
-@Skills/auditar-cobertura/SKILL.md
-@Skills/revisar-seguranca-frontend/SKILL.md
-@Skills/criar-pipeline-frontend/SKILL.md
-@Skills/implementar-incremental/SKILL.md
-@Skills/simplificar-codigo/SKILL.md
+@skills/criar-componente/SKILL.md
+@skills/criar-hook/SKILL.md
+@skills/organizar-estado/SKILL.md
+@skills/gerar-teste-componente/SKILL.md
+@skills/revisar-frontend/SKILL.md
+@skills/auditar-cobertura/SKILL.md
+@skills/revisar-seguranca-frontend/SKILL.md
+@skills/criar-pipeline-frontend/SKILL.md
+@skills/implementar-incremental/SKILL.md
+@skills/simplificar-codigo/SKILL.md
 
 ---
 
