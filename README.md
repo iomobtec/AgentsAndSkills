@@ -269,19 +269,7 @@ python "$HOME\ui-ux-pro-max\skills\ui-ux-pro-max\scripts\search.py" --help
 
 ## Customização
 
-### Adicionar um novo guardrail
-
-1. Crie `Guardrails/<nome>.md` seguindo as convenções (`Guardrails/README.md §8`)
-2. Atualize a matriz em `Guardrails/README.md §3` com os agentes que devem carregar a nova regra
-3. Atualize os `AGENT.md` afetados para incluir o novo guardrail na seção "Guardrails carregados"
-4. Abra PR com aprovação do arquiteto (`Guardrails/README.md §7`)
-
-### Adicionar uma nova skill
-
-1. Crie a pasta `Skills/<nome-da-skill>/`
-2. Crie `SKILL.md` seguindo a estrutura: quando usar → processo passo a passo → anti-padrões → checklist
-3. Referencie os guardrails aplicáveis por seção (ex: `backend.md §2`) — não repita o conteúdo
-4. Adicione a skill na tabela do `AGENT.md` do agente responsável
+> Para contribuir com novos agentes, skills, guardrails ou references, siga os checklists passo a passo em `CLAUDE.md`.
 
 ### Adaptar para outra stack
 
@@ -295,8 +283,8 @@ Os guardrails e agentes foram escritos para **Node.js + React**. Para adaptar:
 ### Adicionar suporte a novo broker de mensageria
 
 1. Adicione o template de `docker-compose.yml` com o novo broker em `Guidelines/infraestrutura/README.md`
-2. Atualize a Fase 0 do arquiteto (`Agents/arquiteto/AGENT.md`) para listar o novo broker nas opções
-3. Atualize `Skills/definir-evento/SKILL.md` com as configurações específicas do broker
+2. Atualize a Fase 0 do arquiteto (`agents/arquiteto/AGENT.md`) para listar o novo broker nas opções
+3. Atualize `skills/definir-evento/SKILL.md` com as configurações específicas do broker
 
 ---
 

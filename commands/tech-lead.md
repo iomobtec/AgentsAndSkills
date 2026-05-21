@@ -33,9 +33,6 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @skills/migrar-deprecar/SKILL.md
 @skills/documentar-decisoes/SKILL.md
 @skills/questionar-decisao/SKILL.md
-
----
-
 @skills/handoff/SKILL.md
 
 ---

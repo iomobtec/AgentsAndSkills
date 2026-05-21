@@ -17,9 +17,6 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @skills/modelar-ameacas/SKILL.md
 @skills/auditar-seguranca/SKILL.md
 @skills/revisar-dependencias-cve/SKILL.md
-
----
-
 @skills/handoff/SKILL.md
 
 ---

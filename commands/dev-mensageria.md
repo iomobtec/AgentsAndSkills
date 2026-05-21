@@ -25,9 +25,6 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @skills/criar-teste-unitario/SKILL.md
 @skills/criar-teste-integracao/SKILL.md
 @skills/auditar-cobertura/SKILL.md
-
----
-
 @skills/handoff/SKILL.md
 
 ---

@@ -31,9 +31,6 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @skills/criar-pipeline-servico/SKILL.md
 @skills/implementar-incremental/SKILL.md
 @skills/simplificar-codigo/SKILL.md
-
----
-
 @skills/handoff/SKILL.md
 
 ---

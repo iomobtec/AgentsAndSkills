@@ -19,9 +19,6 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @skills/planejar-regressao/SKILL.md
 @skills/auditar-cobertura/SKILL.md
 @skills/gerar-teste-componente/SKILL.md
-
----
-
 @skills/handoff/SKILL.md
 
 ---

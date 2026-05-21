@@ -19,9 +19,6 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @skills/criar-pipeline-frontend/SKILL.md
 @skills/configurar-environments-github/SKILL.md
 @skills/auditar-pipeline/SKILL.md
-
----
-
 @skills/handoff/SKILL.md
 
 ---

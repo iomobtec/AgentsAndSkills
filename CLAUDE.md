@@ -5,7 +5,7 @@ Sistema de agentes de IA especializados para desenvolvimento de software. Este r
 ## Estado atual
 
 - **11 agentes**: orquestrador, arquiteto, tech-lead, dev-backend, dev-bff, dev-frontend, dev-mensageria, dev-qa, dev-ui-ux, dev-security, dev-devops
-- **55 skills** em `skills/`
+- **56 skills** em `skills/`
 - **12 guardrails** em `Guardrails/`
 - **5 checklists** em `References/`
 
@@ -31,7 +31,7 @@ Sistema de agentes de IA especializados para desenvolvimento de software. Este r
 3. Adicionar `@skills/<nome>/SKILL.md` no `commands/<agente>.md`
 4. Adicionar linha na categoria correta em `skills/README.md`
 5. Atualizar a linha do agente em `## Resumo por agente` em `skills/README.md`
-6. Atualizar contagem de skills e tabela `## Agentes disponíveis` no `README.md` raiz
+6. Atualizar contagem de skills na tabela `## Agentes disponíveis` do `README.md` raiz e em `## Estado atual` deste arquivo
 
 ## Adicionar um novo guardrail
 
@@ -39,6 +39,7 @@ Sistema de agentes de IA especializados para desenvolvimento de software. Este r
 2. Atualizar a matriz em `Guardrails/README.md §3`
 3. Adicionar ao `agents/<agente>/AGENT.md` dos agentes afetados
 4. Adicionar `@Guardrails/<nome>.md` nos `commands/` correspondentes
+5. Atualizar contagem de guardrails em `## Estado atual` deste arquivo e árvore `## Estrutura do repositório` do `README.md` raiz
 
 ## Adicionar um novo agente
 
@@ -47,12 +48,14 @@ Sistema de agentes de IA especializados para desenvolvimento de software. Este r
 3. Adicionar linha em `## Agentes disponíveis` no `README.md` raiz
 4. Adicionar linha em `## Resumo por agente` em `skills/README.md`
 5. Atualizar tabela de roteamento no `agents/orquestrador/AGENT.md` e `commands/orquestrador.md`
+6. Atualizar contagem de agentes e tabela de comandos em `## Estado atual` deste arquivo e no `README.md` raiz
 
 ## Adicionar uma nova Reference
 
 1. Criar `References/<nome>.md` — checklist acionável durante execução de skill
 2. Adicionar `**Referências rápidas:** \`References/<nome>.md\`` no cabeçalho das skills que devem usá-la
 3. Adicionar entrada na árvore de diretórios do `README.md` raiz
+4. Atualizar contagem de checklists em `## Estado atual` deste arquivo
 
 ---
 
@@ -91,6 +94,8 @@ Sistema de agentes de IA especializados para desenvolvimento de software. Este r
 ---
 
 ## Estrutura padrão de commands/<agente>.md
+
+> O índice completo de skills disponíveis por agente está em `skills/README.md`.
 
 ```markdown
 Você é o agente <nome> definido abaixo. Leia e siga exatamente o comportamento descrito.

@@ -16,6 +16,7 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @skills/entrevistar-usuario/SKILL.md
 @skills/refinar-ideia/SKILL.md
 @skills/gerenciar-contexto/SKILL.md
+@skills/handoff/SKILL.md
 
 ---
 
@@ -35,10 +36,6 @@ Quando precisar acionar um agente especializado, instrua o usuário a abrir uma 
 | Criar pipelines CI/CD, configurar environments ou auditar workflows | `/IomobAgents:dev-devops` |
 
 Forneça ao usuário o contexto completo que o próximo agente precisará (especificação consolidada, contratos definidos, artefatos produzidos) para que ele possa colar na nova conversa.
-
----
-
-@skills/handoff/SKILL.md
 
 ---
 

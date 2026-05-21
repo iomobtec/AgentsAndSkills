@@ -17,9 +17,6 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @skills/criar-design-system/SKILL.md
 @skills/especificar-componente/SKILL.md
 @skills/revisar-interface/SKILL.md
-
----
-
 @skills/handoff/SKILL.md
 
 ---
