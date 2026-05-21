@@ -124,16 +124,16 @@ dev-security (modelar-ameacas: STRIDE por componente → plans/dev-security/<tic
     ↓
 dev-ui-ux (lê plans/dev-ui-ux/<ticket>.md → criar-design-system → especificar-componente
           → gera plans/dev-frontend/<ticket>-<componente>-spec.md)
-    ↓  [em paralelo com dev-backend]
-dev-backend / dev-bff / dev-mensageria (lê plans/<agente>/<ticket>.md → testes → implementação
-                                       + revisar-seguranca-backend (DoD)
-                                       + Dockerfile + docker-compose + ci-cd-staging.yml + ci-cd-production.yml)
     ↓
-dev-qa (lê plans/dev-qa/<ticket>.md → Gherkin incluindo estados visuais)
-    ↓
-dev-frontend (lê plans/dev-frontend/<ticket>-<componente>-spec.md → testes → implementação
-             + revisar-seguranca-frontend (DoD)
-             + Dockerfile multi-stage + docker-compose + ci-cd-staging.yml + ci-cd-production.yml)
+dev-qa (lê plans/dev-qa/<ticket>.md → Gherkin incluindo estados visuais
+       → critérios de aceite formalizados antes de qualquer implementação)
+    ↓  [em paralelo]
+dev-backend / dev-bff / dev-mensageria          dev-frontend
+(lê plans/<agente>/<ticket>.md + Gherkin        (lê plans/dev-frontend/<ticket>-<componente>-spec.md
+ → testes → implementação                        + Gherkin → testes → implementação
+ + revisar-seguranca-backend (DoD)               + revisar-seguranca-frontend (DoD)
+ + Dockerfile + docker-compose                   + Dockerfile multi-stage + docker-compose
+ + ci-cd-staging.yml + ci-cd-production.yml)     + ci-cd-staging.yml + ci-cd-production.yml)
     ↓
 dev-ui-ux (revisar-interface: auditoria de acessibilidade e qualidade visual no PR)
     ↓
