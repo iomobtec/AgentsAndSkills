@@ -223,44 +223,15 @@ Com isso, cada nova conversa no Claude Code já parte do comportamento do orques
 
 As skills deste sistema que dependem de diretrizes externas as buscam automaticamente via `WebFetch` no momento do uso — sempre na versão mais recente, sem nenhuma instalação manual.
 
-### `ui-ux-pro-max` — CLI de design system
+### `ui-ux-pro-max` — plugin de design system
 
 Banco de dados com 67 estilos visuais, 161 paletas, 57 pares tipográficos e 99 guidelines UX. Usado pela skill `criar-design-system` para consultar combinações por tipo de produto e stack.
 
-**Pré-requisito:** Python 3.x — verificar com `python3 --version` (Linux/macOS) ou `python --version` (Windows).
+#### Instalação do plugin Claude Code
 
-#### Opção 1 — via npm (recomendado)
-
-```bash
-# Linux / macOS
-npm install -g uipro-cli
-
-# Windows (PowerShell)
-npm install -g uipro-cli
 ```
-
-#### Opção 2 — instalação manual
-
-**Linux / macOS:**
-```bash
-git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill ~/ui-ux-pro-max
-```
-
-**Windows (PowerShell):**
-```powershell
-git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill "$HOME\ui-ux-pro-max"
-```
-
-#### Verificar instalação
-
-**Linux / macOS:**
-```bash
-python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py --help
-```
-
-**Windows (PowerShell):**
-```powershell
-python "$HOME\ui-ux-pro-max\skills\ui-ux-pro-max\scripts\search.py" --help
+/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill
+/plugin install ui-ux-pro-max@ui-ux-pro-max-skill
 ```
 
 **Sem instalação:** a skill `criar-design-system` executa o processo manual guiado por perguntas, gerando o `design-system/MASTER.md` sem consultar o banco de dados externo.

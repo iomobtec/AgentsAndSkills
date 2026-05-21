@@ -26,18 +26,23 @@ Estabelece a fundação visual do produto: identidade estética, paleta de cores
 
 ## Processo de execução
 
-### Passo 1 — Verificar se ui-ux-pro-max está disponível
+### Passo 1 — Verificar modo de execução
 
-```bash
-# Linux / macOS
-python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py --help 2>/dev/null && echo "disponível" || echo "não instalado"
-# Windows (PowerShell)
-python "$HOME\ui-ux-pro-max\skills\ui-ux-pro-max\scripts\search.py" --help 2>$null; if ($?) { "disponível" } else { "não instalado" }
+Identifique qual modo está disponível e mantenha essa escolha em todos os passos seguintes:
+
+| Prioridade | Modo | Como identificar |
+|---|---|---|
+| 1 | **Plugin** | Comandos `/ui-ux-pro-max:<subcomando>` disponíveis na sessão |
+| 2 | **Manual** | Nenhum dos anteriores disponível |
+
+**Se modo = Manual:** informar ao usuário antes de continuar:
 ```
+O plugin ui-ux-pro-max não está instalado. Vou executar o processo manual guiado.
+Para enriquecer as consultas em sessões futuras, instale o plugin:
 
-**Se disponível:** usar o CLI nos passos seguintes para consultar o banco de dados de estilos, paletas e tipografia.
-
-**Se não instalado:** executar o processo manual descrito abaixo. Informar ao usuário que a instalação da CLI enriquece as opções disponíveis (ver README.md do projeto, seção "Skills externas").
+  /plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill
+  /plugin install ui-ux-pro-max@ui-ux-pro-max-skill
+```
 
 ---
 
@@ -90,10 +95,7 @@ Confirma essa direção antes de eu gerar os tokens?
 
 ### Passo 4 — Gerar paleta de cores
 
-**Com ui-ux-pro-max:**
-```bash
-python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py "[palavra-chave]" --domain color -n 3
-```
+**Plugin:** `/ui-ux-pro-max:search "[palavra-chave]" --domain color`
 
 **Manual:** Definir escala de 9 tons para a cor brand (50→900) + neutros + semânticos (success, warning, error, info). Sempre verificar contraste para os pares de uso primários (ver `ux.md §1.1` e template em `Guidelines/ux/README.md §1`).
 
@@ -106,10 +108,9 @@ python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py "[palavra-chave]"
 
 ### Passo 5 — Definir tipografia
 
-**Com ui-ux-pro-max:**
-```bash
-python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py "[estilo]" --domain typography -n 3
-```
+**Plugin:** `/ui-ux-pro-max:search "[estilo]" --domain typography`
+
+**Manual:** consultar pares tipográficos conforme a direção estética definida no Passo 3.
 
 **Critérios de seleção:**
 - Produto técnico/B2B: preferir fontes com `tabular-nums` nativo e boa legibilidade em tamanhos pequenos
@@ -141,11 +142,10 @@ Lista de "nunca fazer neste produto" — derivada da direção estética escolhi
 
 Usar o template completo de `Guidelines/ux/README.md §1`. O arquivo deve ser auto-suficiente — qualquer desenvolvedor lendo deve entender as decisões sem contexto adicional.
 
-```bash
-# Com ui-ux-pro-max (gera e persiste automaticamente)
-python3 ~/ui-ux-pro-max/skills/ui-ux-pro-max/scripts/search.py "[tipo de produto]" --design-system -p "[Nome]"
-# Cria: design-system/MASTER.md + design-system/pages/
-```
+**Plugin:** `/ui-ux-pro-max:design-system "[tipo de produto]" --project "[Nome]"`
+*(gera `design-system/MASTER.md` + `design-system/pages/` automaticamente)*
+
+**Manual:** Escrever o arquivo seguindo o template de `Guidelines/ux/README.md §1` com todos os tokens coletados nos passos anteriores.
 
 ---
 
