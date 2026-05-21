@@ -128,12 +128,12 @@ dev-ui-ux (lê plans/dev-ui-ux/<ticket>.md → criar-design-system → especific
 dev-qa (lê plans/dev-qa/<ticket>.md → Gherkin incluindo estados visuais
        → critérios de aceite formalizados antes de qualquer implementação)
     ↓  [em paralelo]
-dev-backend / dev-bff / dev-mensageria          dev-frontend
-(lê plans/<agente>/<ticket>.md + Gherkin        (lê plans/dev-frontend/<ticket>-<componente>-spec.md
- → testes → implementação                        + Gherkin → testes → implementação
- + revisar-seguranca-backend (DoD)               + revisar-seguranca-frontend (DoD)
- + Dockerfile + docker-compose                   + Dockerfile multi-stage + docker-compose
- + ci-cd-staging.yml + ci-cd-production.yml)     + ci-cd-staging.yml + ci-cd-production.yml)
+dev-backend / dev-bff / dev-mensageria
+    (plans/<agente>/<ticket>.md + Gherkin → testes → implementação
+     + revisar-seguranca-backend (DoD) + Dockerfile + docker-compose + pipelines CI/CD)
+dev-frontend
+    (plans/dev-frontend/<ticket>-<componente>-spec.md + Gherkin → testes → implementação
+     + revisar-seguranca-frontend (DoD) + Dockerfile multi-stage + pipelines CI/CD)
     ↓
 dev-ui-ux (revisar-interface: auditoria de acessibilidade e qualidade visual no PR)
     ↓
