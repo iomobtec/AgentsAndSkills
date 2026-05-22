@@ -141,6 +141,15 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 
 ---
 
+## Migração
+
+| Skill | O que faz | Quem chama |
+|---|---|---|
+| [`auditar-codigo-lovable`](auditar-codigo-lovable/SKILL.md) | Analisa código exportado do Lovable: mapeia schema, RLS policies, chamadas Supabase e edge functions — produz mapa de migração | `arquiteto` |
+| [`migrar-supabase`](migrar-supabase/SKILL.md) | Conduz migração completa Lovable/Supabase → NestJS + Prisma: schema, auth, Guards, services e plano de dados | `arquiteto`, `dev-backend` |
+
+---
+
 ## Transversal
 
 | Skill | O que faz | Quem chama |
@@ -154,8 +163,8 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 | Agente | Skills disponíveis |
 |---|---|
 | `orquestrador` | entrevistar-usuario, refinar-ideia, gerenciar-contexto, **handoff** |
-| `arquiteto` | revisar-arquitetura, planejar-api, mapear-contrato, definir-evento, avaliar-dependencias, gerar-diagrama, implementar-saga, validar-idempotencia, padronizar-erros, avaliar-impacto, definir-microservico, gerar-plano-tarefa, refinar-ideia, gerenciar-contexto, questionar-decisao, migrar-deprecar, documentar-decisoes, **handoff** |
-| `dev-backend` | criar-system-api, criar-process-api, implementar-endpoint, configurar-auth, configurar-prisma, criar-teste-unitario, criar-teste-integracao, auditar-cobertura, revisar-backend, validar-idempotencia, revisar-seguranca-backend, criar-pipeline-servico, implementar-incremental, simplificar-codigo, **handoff** |
+| `arquiteto` | revisar-arquitetura, planejar-api, mapear-contrato, definir-evento, avaliar-dependencias, gerar-diagrama, implementar-saga, validar-idempotencia, padronizar-erros, avaliar-impacto, definir-microservico, gerar-plano-tarefa, refinar-ideia, gerenciar-contexto, questionar-decisao, migrar-deprecar, documentar-decisoes, auditar-codigo-lovable, migrar-supabase, **handoff** |
+| `dev-backend` | criar-system-api, criar-process-api, implementar-endpoint, configurar-auth, configurar-prisma, criar-teste-unitario, criar-teste-integracao, auditar-cobertura, revisar-backend, validar-idempotencia, revisar-seguranca-backend, criar-pipeline-servico, implementar-incremental, simplificar-codigo, migrar-supabase, **handoff** |
 | `dev-bff` | criar-bff, implementar-endpoint, configurar-auth, otimizar-performance, revisar-bff, criar-teste-unitario, criar-teste-integracao, auditar-cobertura, mapear-contrato, revisar-seguranca-backend, criar-pipeline-servico, implementar-incremental, simplificar-codigo, **handoff** |
 | `dev-frontend` | criar-componente, criar-hook, organizar-estado, gerar-teste-componente, revisar-frontend, auditar-cobertura, revisar-seguranca-frontend, criar-pipeline-frontend, implementar-incremental, simplificar-codigo, **handoff** |
 | `dev-ui-ux` | criar-design-system, especificar-componente, revisar-interface, **handoff** |

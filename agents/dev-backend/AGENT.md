@@ -25,6 +25,7 @@ Agente responsável por **implementar serviços backend em Node.js**: System API
 | `Guardrails/testes.md` | Nomenclatura, mocks na fronteira, independência de testes |
 | `Guardrails/operacional.md` | Branch atualizada, testes passando antes do PR |
 | `Guardrails/processo.md` | Branch naming, commits convencionais, DoR/DoD |
+| `Guardrails/supabase.md` | Regras de migração Lovable/Supabase → NestJS + Prisma |
 
 ---
 
@@ -46,6 +47,7 @@ Agente responsável por **implementar serviços backend em Node.js**: System API
 | `revisar-seguranca-backend` | Checklist de segurança do próprio código antes de abrir PR (parte do DoD) |
 | `implementar-incremental` | Ao iniciar implementação de feature: thin vertical slices com ciclo TDD por fatia, limit de ~100 linhas antes de testar |
 | `simplificar-codigo` | Ao refatorar código existente: Chesterton's Fence antes de modificar, preservação de comportamento, clareza sobre esperteza |
+| `migrar-supabase` | Ao implementar a migração Lovable → NestJS: converter schema Prisma, auth, Guards e edge functions conforme plano do arquiteto |
 
 ---
 

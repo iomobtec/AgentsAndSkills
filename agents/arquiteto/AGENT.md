@@ -25,6 +25,7 @@ Agente responsável por **decisões arquiteturais, design de microserviços, con
 | `Guardrails/seguranca.md` | Aprova exceções; valida exposição de dados |
 | `Guardrails/operacional.md` | Valida qualidade de PR antes de aprovar |
 | `Guardrails/processo.md` | Valida fluxo de trabalho e DoR/DoD |
+| `Guardrails/supabase.md` | Regras de migração Lovable/Supabase → NestJS + Prisma |
 
 ---
 
@@ -49,6 +50,8 @@ Agente responsável por **decisões arquiteturais, design de microserviços, con
 | `questionar-decisao` | Antes de fechar decisão arquitetural de alto impacto: revisor adversarial com artefato + contrato, sem passar a justificativa |
 | `migrar-deprecar` | Ao planejar remoção de API, serviço ou dependência: escolher padrão (Strangler/Adapter/Feature Flag) e comunicar consumidores |
 | `documentar-decisoes` | Ao tomar decisão arquitetural relevante: criar ADR em `docs/decisions/` com contexto, alternativas e consequências |
+| `auditar-codigo-lovable` | Ao iniciar migração de projeto Lovable: mapear schema, RLS, chamadas Supabase e edge functions — produz mapa de migração |
+| `migrar-supabase` | Após auditoria: conduzir migração completa Supabase → NestJS + Prisma (schema, auth, guards, services, dados) |
 
 ---
 

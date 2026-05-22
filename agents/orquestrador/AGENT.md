@@ -85,10 +85,12 @@ Quando o usuário escolhe o modo guiado, o orquestrador segue o comportamento de
 
 O orquestrador nunca assume que a especificação inicial é suficiente. Ao receber uma demanda, identifica:
 
-- **O que é pedido** — funcionalidade, correção, refatoração, nova integração?
+- **O que é pedido** — funcionalidade, correção, refatoração, nova integração, **ou migração de projeto existente**?
 - **Qual camada é afetada** — backend apenas, frontend também, mensageria, tudo?
 - **Há dependências externas** — novo serviço upstream, novo contrato de API, mudança de banco?
 - **Qual o critério de sucesso** — como o usuário vai saber que está pronto?
+
+**Detecção de migração Lovable:** Se a demanda contiver palavras como "Lovable", "Supabase", "migrar", "protótipo para produção" ou "migração", identificar imediatamente como fluxo de migração e usar a sequência e perguntas específicas descritas abaixo.
 
 ### 1.2 — Aprofundar com perguntas
 
@@ -128,6 +130,19 @@ Para planejar a integração:
 3. Qual camada faz a chamada? (System API, Process API, BFF)
 4. O que acontece se o serviço ficar indisponível?
 5. Há SLA de latência a respeitar?
+```
+
+**Migração de projeto Lovable:**
+```
+Para planejar a migração:
+
+1. Qual é o repositório do projeto Lovable? (URL ou caminho local do código exportado)
+2. Há usuários ativos que precisam continuar acessando durante a migração?
+3. Há integrações com serviços externos passando pelo Supabase?
+   (pagamentos, emails, webhooks, storage)
+4. O projeto tem ambientes separados no Supabase (dev/staging/prod) ou apenas um?
+5. Qual é a janela de tempo disponível para o corte do Supabase?
+   (impacta a estratégia de migração de dados e invalidação de tokens)
 ```
 
 ### 1.3 — Consolidar a especificação
@@ -222,6 +237,43 @@ A ordem padrão garante que os testes precedem a implementação:
        ↓
 14. /dev-qa         → planejar-regressao (antes de release, se aplicável)
 ```
+
+### 2.2b — Sequência de migração Lovable → NestJS + Prisma
+
+Quando a demanda é identificada como migração de projeto Lovable (§1.1), a sequência padrão é **substituída** por:
+
+```
+1.  /arquiteto      → auditar-codigo-lovable
+                      (mapear schema, RLS, auth, chamadas Supabase e edge functions)
+                      → produz plans/arquitetura/<ticket>-lovable-audit.md
+       ↓ (mapa de auditoria concluído e revisado)
+2.  /arquiteto      → migrar-supabase (decisões: schema Prisma, microserviços, planos)
+                      → emite tabela de repositórios a criar
+       ↓ (Fase 2.5 — repositórios criados e caminhos confirmados)
+3.  /dev-security   → modelar-ameacas
+                      (foco nos riscos da auditoria: RLS fraca/ausente, auth migration)
+       ↓
+4.  /dev-qa         → escrever-gherkin
+                      (cenários dos fluxos críticos pós-migração)
+       ↓
+5.  /dev-backend    → migrar-supabase (implementação: Prisma, auth, Guards, services)
+       ↓
+6.  /dev-frontend   → refatorar React
+                      (remover @supabase/supabase-js, integrar com NestJS)
+       ↓
+7.  /dev-devops     → criar-pipeline-servico + criar-pipeline-frontend
+       ↓
+8.  /dev-qa         → criar-teste-e2e (fluxos completos pós-migração)
+       ↓
+9.  /dev-security   → auditar-seguranca + revisar-dependencias-cve
+       ↓
+10. /tech-lead      → revisar-pr
+```
+
+**Gates obrigatórios nesta sequência:**
+- Etapa 2 só inicia após mapa de auditoria revisado e riscos críticos endereçados
+- Etapa 5 só inicia após plano de migração de dados (`plans/dev-backend/<ticket>-data-migration.md`) aprovado
+- Etapa final (corte do Supabase) só ocorre após E2E passando em staging
 
 ### 2.3 — Ajustes na sequência
 
@@ -587,6 +639,31 @@ Crie `plans/.handoff/sequence.md` com a sequência planejada:
 ```
 
 Adapte a tabela removendo as etapas que não se aplicam à demanda atual.
+
+Para demandas de **migração Lovable**, use este template de sequência:
+
+```markdown
+## Sequência de execução — <Ticket> (Migração Lovable)
+
+**Tarefa:** Migração do projeto <nome> de Lovable/Supabase para NestJS + Prisma
+**Data do planejamento:** <YYYY-MM-DD>
+
+| Etapa | Agente | Skill principal | Depende de |
+|---|---|---|---|
+| 1 | arquiteto | auditar-codigo-lovable | — |
+| 2 | arquiteto | migrar-supabase (decisões) | etapa 1 |
+| 3 | dev-security | modelar-ameacas | etapa 2 |
+| 4 | dev-qa | escrever-gherkin | etapa 3 |
+| 5 | dev-backend | migrar-supabase (implementação) | etapas 2 e 4 |
+| 6 | dev-frontend | refatorar React | etapa 5 |
+| 7 | dev-devops | criar-pipeline-servico, criar-pipeline-frontend | etapas 5 e 6 |
+| 8 | dev-qa | criar-teste-e2e | etapas 6 e 7 |
+| 9 | dev-security | auditar-seguranca, revisar-dependencias-cve | etapa 8 |
+| 10 | tech-lead | revisar-pr | etapa 9 |
+
+**Etapa atual:** 1
+**Próxima etapa:** 1 → /IomobAgents:arquiteto
+```
 
 ### Ao iniciar cada etapa (Modo B — Guiado)
 

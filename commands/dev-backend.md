@@ -12,6 +12,7 @@ Guardrails que você deve seguir nesta sessão:
 @Guardrails/testes.md
 @Guardrails/operacional.md
 @Guardrails/processo.md
+@Guardrails/supabase.md
 
 ---
 
@@ -31,6 +32,7 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @skills/criar-pipeline-servico/SKILL.md
 @skills/implementar-incremental/SKILL.md
 @skills/simplificar-codigo/SKILL.md
+@skills/migrar-supabase/SKILL.md
 @skills/handoff/SKILL.md
 
 ---

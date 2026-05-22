@@ -21,7 +21,7 @@ IomobAgents/
 │   ├── dev-security/          # Modelagem de ameaças, auditoria OWASP Top 10, revisão de dependências CVE
 │   └── dev-devops/            # Pipelines CI/CD GitHub Actions *(fora do fluxo do orquestrador)*
 │
-├── skills/                    # 56 skills reutilizáveis entre agentes (SKILL.md)
+├── skills/                    # 58 skills reutilizáveis entre agentes (SKILL.md)
 │   ├── handoff/               # Protocolo de conclusão de sessão e passagem de contexto entre agentes
 │   ├── criar-system-api/
 │   ├── criar-design-system/
