@@ -17,9 +17,19 @@ Listar todos os componentes que receberão entrada externa ou processarão dados
 Para cada componente, identificar:
 - Tipo: endpoint REST | consumer de evento | formulário de UI | webhook | upload
 - Dados de entrada: quais campos, de quem vêm (usuário, sistema externo, fila)
-- Dados de saída: o que retorna, para quem
+- Dados de saída: o que retorna, para quem — quais propriedades do objeto são expostas?
 - Dados persistidos: tabelas, campos, sensibilidade (PII? financeiro? credencial?)
 - Integrações: sistemas externos chamados, serviços internos dependentes
+- Perfil de acesso: público | autenticado | role específica | apenas sistemas internos
+- Fluxo de negócio: é fluxo sensível a automação? (compra, reserva, cupom, registro)
+```
+
+Para a **superfície de API** especificamente, também responder:
+
+```
+- Quantas versões da API existem? As versões antigas estão documentadas e monitoradas?
+- Há endpoints de terceiros que este serviço consome? Como os dados são validados?
+- Os DTOs de response expõem apenas os campos necessários para cada consumidor?
 ```
 
 ### Passo 2 — Aplicar STRIDE por componente
@@ -34,6 +44,17 @@ Para cada componente listado no Passo 1, responder as 6 perguntas STRIDE:
 | **I**nformation Disclosure | Dados sensíveis podem vazar na response, nos logs, em mensagens de erro ou em headers? |
 | **D**enial of Service | Um atacante pode tornar este componente indisponível ou degradar seu desempenho enviando requisições fabricadas? |
 | **E**levation of Privilege | Um usuário comum pode ganhar acesso a dados ou ações que deveriam ser restritas a outro papel? |
+
+Para **endpoints REST**, responder também as perguntas adicionais do OWASP API Security Top 10 2023:
+
+| Vetor API | Pergunta a responder | Referência |
+|---|---|---|
+| BOLA (API1) | Um usuário autenticado pode acessar ou modificar objetos de outro usuário manipulando IDs no request? | `appsec.md §4` |
+| BOPLA (API3) | A response expõe propriedades que este consumidor não deveria ver? O input aceita campos privilegiados como `role` ou `isAdmin`? | `appsec.md §14` |
+| Função (API5) | A função tem guard de role declarado? Um usuário sem privilégio consegue chamar esta função via HTTP? | `appsec.md §15` |
+| Business Flow (API6) | Este endpoint faz parte de fluxo sensível a automação? O rate limit específico é suficiente contra bots? | `appsec.md §16` |
+| Inventário (API9) | Este endpoint está documentado? Existe versão anterior sem os mesmos controles de segurança? | `appsec.md §17` |
+| Consumo externo (API10) | Este componente consome API de terceiro? Os dados externos são validados antes de persistir ou repassar? | `appsec.md §18` |
 
 ### Passo 3 — Classificar risco
 

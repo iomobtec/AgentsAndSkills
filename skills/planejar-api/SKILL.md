@@ -3,7 +3,7 @@
 Desenha a **especificação completa de uma API REST**: endpoints, verbos, paths, contratos de request/response, códigos de status, versionamento e regras de autenticação. Produz o contrato que governa o desenvolvimento — não escreve implementação.
 
 **Agente:** arquiteto  
-**Guardrails aplicáveis:** `00-core.md`, `backend.md`, `seguranca.md`
+**Guardrails aplicáveis:** `00-core.md`, `backend.md`, `seguranca.md`, `appsec.md §14, §15, §16, §17`
 
 ---
 
@@ -84,6 +84,19 @@ Para cada endpoint:
 - **Sem breaking change:** não versionar — adicionar campo opcional é retrocompatível
 - **Com breaking change:** versão no path (`/v2/users`) ou header (`API-Version: 2`)
 - Versão antiga mantida por período definido (registrar no PR a data de deprecação)
+
+### Passo 7 — Security design por endpoint
+
+Para cada endpoint definido nos passos anteriores, responder:
+
+| Pergunta | Referência |
+|---|---|
+| Quais propriedades do objeto são expostas nesta resposta? Há campos que não deveriam estar disponíveis para este consumidor? | `appsec.md §14` — BOPLA |
+| Quem pode chamar esta função? Há distinção de papel (user / admin / sistema)? O guard é declarado explicitamente? | `appsec.md §15` — Function Level Auth |
+| Este endpoint faz parte de um fluxo de negócio sensível (compra, reserva, cupom, registro)? Requer proteção contra automação? | `appsec.md §16` — Business Flows |
+| Este endpoint deve existir em todas as versões da API ou apenas na atual? Há data de deprecação para versão anterior? | `appsec.md §17` — Inventory |
+
+Registrar decisões na seção `## Notas de segurança` da especificação de API.
 
 ---
 

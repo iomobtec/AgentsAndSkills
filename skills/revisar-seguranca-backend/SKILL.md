@@ -62,11 +62,25 @@ export class UserResponseDto {
 return user; // retorna entidade Prisma com passwordHash incluso
 ```
 
+### §3b — Mass assignment e serialização (API3:2023)
+
+- [ ] **DTO de input explícito:** Nenhum `@Body() body: any` — todo endpoint usa DTO com campos declarados e validados. Campos privilegiados (`role`, `isAdmin`) estão ausentes do DTO de input do usuário.
+- [ ] **DTO de response com whitelist:** Respostas usam `plainToInstance(ResponseDto, entity)` — a entidade Prisma bruta nunca é retornada diretamente.
+
+```typescript
+// ⛔ Violação — mass assignment
+create(@Body() body: any) { return this.service.create(body); }
+
+// ✅ Correto
+create(@Body() dto: CreateOrderDto) { return this.service.create(dto); }
+```
+
 ### §4 — Controle de acesso
 
 - [ ] **Anti-IDOR:** Toda busca por ID inclui `userId: req.user.id` no WHERE. Nunca buscar só pelo ID do parâmetro.
 - [ ] **Guards em rotas admin:** Rotas com prefixo `/admin` ou que retornam dados de outros usuários têm `@Roles` + `RolesGuard`.
 - [ ] **Deleção/edição com ownership:** Operações que modificam ou removem recursos verificam que pertencem ao usuário autenticado antes de executar.
+- [ ] **Guard por função (API5:2023):** Funções sensíveis (bulk, export, alteração de permissão) têm `@Roles` declarado individualmente — não apenas no controller.
 
 ```typescript
 // ✅ Correto — anti-IDOR
@@ -97,6 +111,7 @@ const order = await this.ordersService.findOne(orderId); // qualquer userId pode
 - [ ] **ThrottlerModule configurado:** Presente no `AppModule` com `ttl` e `limit` definidos.
 - [ ] **Endpoints sensíveis com throttle específico:** Login, registro, recuperação de senha têm `@Throttle` com limite menor.
 - [ ] **Paginação com limite máximo:** `take: Math.min(pageSize ?? 20, 100)` em todas as listagens.
+- [ ] **Fluxos de negócio sensíveis (API6:2023):** Checkout, uso de cupom e reserva de item limitado têm rate limit específico além do global. Cupons têm limite de uso por conta além de por IP.
 
 ---
 
@@ -119,8 +134,9 @@ Adicionar ao checklist de conclusão do `dev-backend` e `dev-bff`:
 - [x] §1 Injeção — sem concatenação em queries
 - [x] §2 Auth — JWT com exp, guard global, rate limit
 - [x] §3 Exposição — DTO de response sem campos sensíveis, logs limpos
-- [x] §4 Controle de acesso — anti-IDOR verificado
+- [x] §3b Mass assignment — DTO de input explícito, sem @Body() body: any
+- [x] §4 Controle de acesso — anti-IDOR + guard por função (admin/bulk)
 - [x] §5 Configuração — helmet, CORS restritivo, payload limit
 - [x] §9 Logging — eventos de segurança logados
-- [x] §12 Rate limiting — paginação com limite máximo
+- [x] §12 Rate limiting — paginação com limite máximo, fluxos sensíveis com throttle próprio
 ```

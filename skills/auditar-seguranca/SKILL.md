@@ -2,7 +2,7 @@
 
 **Agente:** `dev-security`, `tech-lead`  
 **Quando usar:** Após `dev-qa` concluir os testes E2E e antes da revisão de PR do `tech-lead`. Também usado em re-auditoria após correção de achados CRITICAL/HIGH.  
-**Baseado em:** OWASP Top 10 2025 (`https://owasp.org/Top10/2025/`) + `Guardrails/appsec.md`  
+**Baseado em:** OWASP Top 10 2025 (`https://owasp.org/Top10/2025/`) + OWASP API Security Top 10 2023 (`https://owasp.org/API-Security/editions/2023/en/0x00-header/`) + `Guardrails/appsec.md`  
 **Output:** Relatório de segurança estruturado com achados classificados por severidade.  
 **Referências rápidas:** `References/security-checklist.md`
 
@@ -87,6 +87,35 @@ Execute o checklist completo de cada camada presente no PR. Para cada item, regi
 - [ ] Consumers de mensageria têm tratamento de exceção + dead-letter queue
 - [ ] Transações financeiras/críticas têm rollback explícito garantido
 - [ ] `process.on('unhandledRejection')` e `process.on('uncaughtException')` configurados
+
+#### Checklist — API Security Top 10 2023
+
+> Referência: OWASP API Security Top 10 2023. Aplicar para todo PR que toca endpoints REST, BFF ou integrações externas.
+
+**§14 Broken Object Property Level Auth — API3:2023 (`appsec.md §14`)**
+- [ ] Nenhum `@Body() body: any` — todos os inputs usam DTOs com campos explícitos
+- [ ] Respostas usam `ResponseDto` com `plainToInstance` — sem entidade Prisma bruta
+- [ ] DTO de response não inclui campos não destinados ao consumidor (role, passwordHash, flags internos)
+
+**§15 Broken Function Level Authorization — API5:2023 (`appsec.md §15`)**
+- [ ] Toda função sensível (admin, bulk, export, alteração de permissão) tem `@Roles` declarado individualmente
+- [ ] Guard não aplicado apenas no controller — funções críticas têm guard próprio
+- [ ] Existe teste que verifica HTTP 403 para usuário sem role tentando acessar endpoint admin
+
+**§16 Sensitive Business Flows — API6:2023 (`appsec.md §16`)**
+- [ ] Fluxos de compra, reserva e uso de recurso limitado têm rate limit específico além do global
+- [ ] Cupons/vouchers têm limite de uso por conta, não apenas por IP
+- [ ] Logs permitem detectar picos de automação em retrospecto
+
+**§17 Improper Inventory Management — API9:2023 (`appsec.md §17`)**
+- [ ] Todo endpoint novo tem `@ApiOperation` e `@ApiResponse` no Swagger — atualizado no mesmo PR
+- [ ] Versões depreciadas retornam header `Sunset` com data
+- [ ] Nenhuma variável de ambiente de produção reutilizada em staging
+
+**§18 Unsafe Consumption of APIs — API10:2023 (`appsec.md §18`)**
+- [ ] Dados de APIs externas validados com DTO + class-validator antes de persistir
+- [ ] Toda chamada a API externa tem `timeout` configurado (máximo 10s)
+- [ ] Respostas de APIs externas mapeadas para DTO interno — sem passthrough ao cliente
 
 #### Checklist — Frontend (React)
 

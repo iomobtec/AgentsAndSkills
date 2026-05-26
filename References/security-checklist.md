@@ -73,9 +73,43 @@
 
 ---
 
+## API Security (OWASP API Top 10 2023)
+
+> Aplicar para qualquer PR que toca endpoints REST, BFF ou integrações com APIs externas.
+
+### Object & Property Authorization
+
+- [ ] **[CRITICAL]** BOLA verificado: operações por ID incluem `userId: req.user.id` no WHERE — nenhum usuário acessa objeto de outro (`appsec.md §4`, API1)
+- [ ] **[HIGH]** Nenhum `@Body() body: any` — DTOs de input com campos explícitos, sem campos privilegiados (`role`, `isAdmin`) acessíveis ao usuário (`appsec.md §14`, API3)
+- [ ] **[HIGH]** Respostas usam `ResponseDto` com `plainToInstance` — entidade Prisma bruta nunca retornada ao cliente (`appsec.md §14`, API3)
+
+### Function Level Authorization
+
+- [ ] **[HIGH]** Funções sensíveis (admin, bulk, export, alteração de permissão) têm `@Roles` declarado individualmente (`appsec.md §15`, API5)
+- [ ] **[HIGH]** Existe teste HTTP 403 para usuário sem role tentando acessar endpoint administrativo (`appsec.md §15`, API5)
+
+### Business Flows & Resource Consumption
+
+- [ ] **[HIGH]** Fluxos de compra, reserva e uso de recurso limitado têm rate limit específico além do global (`appsec.md §16`, API6)
+- [ ] **[MEDIUM]** Cupons e vouchers têm limite de uso por conta, não apenas por IP (`appsec.md §16`, API6)
+
+### API Inventory
+
+- [ ] **[MEDIUM]** Todo endpoint novo tem `@ApiOperation` e `@ApiResponse` no Swagger — atualizado no mesmo PR (`appsec.md §17`, API9)
+- [ ] **[MEDIUM]** Nenhuma variável de ambiente de produção (`JWT_SECRET`, `DATABASE_URL`) reutilizada em staging (`appsec.md §17`, API9)
+
+### External API Consumption
+
+- [ ] **[HIGH]** Dados de APIs externas validados com DTO + class-validator antes de persistir ou usar (`appsec.md §18`, API10)
+- [ ] **[HIGH]** Toda chamada a API externa tem `timeout` (máximo 10s) e `maxContentLength` configurados (`appsec.md §18`, API10)
+- [ ] **[MEDIUM]** Respostas de APIs externas mapeadas para DTO interno antes de repassar ao cliente — sem passthrough (`appsec.md §18`, API10)
+
+---
+
 ## Referências
 
 - `Guardrails/appsec.md` — regras de segurança obrigatórias na Junto
 - `Guidelines/security/README.md` — guia completo de segurança de aplicação
 - OWASP Top 10: https://owasp.org/Top10/
+- OWASP API Security Top 10 2023: https://owasp.org/API-Security/editions/2023/en/0x00-header/
 - OWASP Cheat Sheet Series: https://cheatsheetseries.owasp.org/

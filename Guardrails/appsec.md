@@ -2,7 +2,7 @@
 
 Regras técnicas de segurança de aplicação para **revisão aprofundada de código, arquitetura e dependências**. Complementa `seguranca.md` (que cobre dados pessoais, secrets e migrations) com vetores de ataque, padrões de codificação segura e verificação de supply chain.
 
-Baseado no **OWASP Top 10 2025** (`https://owasp.org/Top10/2025/`). Inclui controles adicionais além do Top 10 quando relevantes para a stack.
+Baseado no **OWASP Top 10 2025** (`https://owasp.org/Top10/2025/`) e no **OWASP API Security Top 10 2023** (`https://owasp.org/API-Security/editions/2023/en/0x00-header/`). Inclui controles adicionais além do Top 10 quando relevantes para a stack.
 
 Carregado por: **dev-security**, **tech-lead**, **arquiteto**.
 
@@ -603,7 +603,241 @@ process.on('uncaughtException', (error) => {
 
 ---
 
-## §15 — Padrão geral de relatório de achado
+## §14 — Broken Object Property Level Authorization — API3:2023
+
+**Regra:** Respostas de API nunca expõem propriedades além do mínimo necessário. Nenhum binding automático mapeia campos do request diretamente para entidades do banco — todo campo aceito ou retornado é declarado explicitamente no DTO.
+
+**Motivo:** Mass assignment permite que atacantes modifiquem propriedades privilegiadas (`role`, `isAdmin`, `price`) enviando campos extras no request. Serialização excessiva vaza dados sensíveis mesmo sem ataque ativo. Ambos os vetores compõem API3:2023 — Broken Object Property Level Authorization.
+
+### §14.1 — Bloqueado
+
+```typescript
+// Mass assignment — corpo do request mapeado direto para entidade
+@Post('/users')
+create(@Body() body: any) {
+  return this.usersService.create(body); // ⛔ body pode conter { role: 'admin' }
+}
+
+// Serialização excessiva — entidade Prisma retornada inteira
+@Get('/users/:id')
+findOne(@Param('id') id: string) {
+  return this.usersRepository.findOne(id); // ⛔ inclui passwordHash, role, internalFlags
+}
+```
+
+### §14.2 — Forma correta
+
+```typescript
+// DTO de input com campos explícitos — sem 'role' ou campos privilegiados
+export class CreateUserDto {
+  @IsEmail() email: string;
+  @MinLength(8) password: string;
+  @IsOptional() @IsString() name?: string;
+}
+
+// DTO de response com whitelist explícita
+export class UserResponseDto {
+  id: string;
+  email: string;
+  name: string;
+  // sem passwordHash, sem role, sem internalFlags
+}
+
+@Get('/users/:id')
+async findOne(@Param('id') id: string): Promise<UserResponseDto> {
+  const user = await this.usersRepository.findOne(id);
+  return plainToInstance(UserResponseDto, user, { excludeExtraneousValues: true });
+}
+```
+
+### §14.3 — Verificação obrigatória em revisão
+
+- [ ] Nenhum `@Body() body: any` ou `@Body() body: Record<string, any>` em controllers?
+- [ ] DTOs de input declaram campos explicitamente com decoradores de validação?
+- [ ] Respostas usam `ResponseDto` com `plainToInstance` — nunca entidade Prisma bruta?
+- [ ] DTOs de response excluem campos não destinados ao consumidor daquele endpoint?
+
+---
+
+## §15 — Broken Function Level Authorization — API5:2023
+
+**Regra:** A política de autorização padrão é **negar tudo** — cada função e endpoint declara sua permissão explicitamente. Não confiar em convenções de nomenclatura de rota como única proteção; toda função administrativa ou sensível tem guard de role aplicado individualmente.
+
+**Motivo:** Atacantes identificam endpoints administrativos por enumeração de paths (troca de `/user/` por `/admin/`), manipulação de verbos HTTP e exploração de diferenças entre versões. Ausência de guard explícito por função é o vetor mais frequente de escalada de privilégio em APIs (API5:2023).
+
+### §15.1 — Bloqueado
+
+```typescript
+// Guard apenas no controller — função sensível sobrescreve sem guard
+@Controller('orders')
+@UseGuards(JwtAuthGuard)
+export class OrdersController {
+  @Delete('bulk') // ⛔ qualquer usuário autenticado deleta em lote
+  bulkDelete() { ... }
+}
+
+// Segurança por nomenclatura de rota sem guard real
+@Controller('admin/reports')
+export class AdminReportsController {
+  @Get() // ⛔ sem @Roles — qualquer autenticado acessa
+  exportAll() { ... }
+}
+```
+
+### §15.2 — Forma correta
+
+```typescript
+@Controller('admin/users')
+@UseGuards(JwtAuthGuard, RolesGuard)
+export class AdminUsersController {
+  @Get()
+  @Roles('admin') // ✅ role declarado por função
+  findAll() { ... }
+
+  @Delete(':id')
+  @Roles('admin') // ✅ cada função com seu guard — não herda do controller
+  remove(@Param('id') id: string) { ... }
+}
+```
+
+### §15.3 — Verificação obrigatória em revisão
+
+- [ ] Toda função sensível (admin, bulk, export, alteração de permissão) tem `@Roles` declarado?
+- [ ] Guards não aplicados apenas no controller sem repetição nas funções críticas?
+- [ ] Testes verificam que usuário sem role não acessa endpoint administrativo (HTTP 403)?
+- [ ] Verbos HTTP não-convencionais em endpoints sensíveis têm comportamento seguro?
+
+---
+
+## §16 — Unrestricted Access to Sensitive Business Flows — API6:2023
+
+**Regra:** Fluxos de negócio sensíveis (compra, reserva, uso de cupom, criação de conta, envio de formulário) têm proteção contra automação além do rate limit técnico global. Esses endpoints identificam comportamento não-humano e aplicam fricção proporcional ao risco.
+
+**Motivo:** Atacantes automatizam fluxos legítimos para obter vantagem competitiva (scalping, abuso de cupons, fraude de referral). Rate limit genérico não é suficiente — o vetor é business logic, não DoS técnico (API6:2023).
+
+### §16.1 — Fluxos que exigem proteção adicional
+
+| Fluxo | Risco | Controle mínimo |
+|---|---|---|
+| Registro de conta | Criação em massa de contas falsas | Rate limit + detecção de e-mail descartável |
+| Login | Credential stuffing | Rate limit estrito + lockout |
+| Uso de cupom / voucher | Esgotamento por bot | Rate limit + uso único por conta |
+| Compra / reserva de item limitado | Scalping | Rate limit por IP e por conta |
+| Referral / indicação | Fraude de bônus | Validação de vínculo real entre contas |
+
+### §16.2 — Implementação
+
+```typescript
+// Rate limit específico por fluxo — além do rate limit global
+@Throttle(3, 3600) // 3 por hora por IP
+@Post('/checkout')
+createOrder(@Body() dto: CreateOrderDto) { ... }
+
+// Cupom: uma validação por conta, não apenas por IP
+async applyCoupon(couponCode: string, userId: string) {
+  const uses = await this.couponRepo.countByUser(couponCode, userId);
+  if (uses >= 1) throw new ConflictException('Cupom já utilizado');
+}
+```
+
+### §16.3 — Verificação obrigatória em revisão
+
+- [ ] Fluxos de compra, reserva e uso de recurso limitado têm rate limit específico (além do global)?
+- [ ] Endpoints de criação de conta têm proteção contra criação em massa?
+- [ ] Cupons e vouchers têm limite de uso por conta além do limite por IP?
+- [ ] Logs de fluxos sensíveis permitem detectar picos de automação em retrospecto?
+
+---
+
+## §17 — Improper Inventory Management — API9:2023
+
+**Regra:** Todo endpoint tem versão explícita e documentação atualizada no mesmo PR que o cria. Versões antigas são deprecadas com prazo definido via header `Sunset` e removidas quando o prazo vence. Ambientes de staging e desenvolvimento nunca reutilizam credenciais de produção.
+
+**Motivo:** APIs esquecidas ("shadow APIs", "zombie endpoints") não recebem patches e ficam fora do monitoramento. Versões antigas são vetores clássicos de bypass de controles adicionados em versões novas (API9:2023).
+
+### §17.1 — Regras de ciclo de vida
+
+```
+Novo endpoint:
+  → Versão definida antes da implementação
+  → Swagger/OpenAPI (@ApiOperation, @ApiResponse) atualizado no mesmo PR
+  → Documentação inclui: autenticação, rate limit, campos sensíveis
+
+Breaking change:
+  → Nova versão (/v2/...) com data de deprecação de /v1/ registrada no PR
+  → /v1/ retorna header Deprecation: true e Sunset: <data ISO>
+  → /v1/ removida na data Sunset — sem exceção
+
+Ambientes:
+  → JWT_SECRET e credenciais de banco distintos por ambiente
+  → Endpoints de debug nunca expostos sem autenticação em staging
+```
+
+### §17.2 — Bloqueado
+
+- Endpoint ativo sem documentação no Swagger
+- Versão `/v1/` mantida sem data de deprecação após `/v2/` lançada
+- Variáveis de ambiente (`JWT_SECRET`, `DATABASE_URL`) iguais em staging e produção
+- Endpoint de debug ou internal sem autenticação em qualquer ambiente
+
+### §17.3 — Verificação obrigatória em revisão
+
+- [ ] Todo endpoint novo tem `@ApiOperation` e `@ApiResponse` no Swagger?
+- [ ] Versões deprecadas retornam header `Sunset` com data?
+- [ ] Nenhuma variável de ambiente de produção reutilizada em staging?
+- [ ] Nenhum endpoint não documentado ativo no Swagger sem justificativa?
+
+---
+
+## §18 — Unsafe Consumption of APIs — API10:2023
+
+**Regra:** Dados recebidos de APIs externas são tratados como não-confiáveis — validados e sanitizados com o mesmo rigor aplicado a input de usuário. Chamadas a APIs de terceiros têm `timeout` definido, limite de tamanho de resposta e tratamento de falha explícito. Nenhuma resposta externa é repassada diretamente ao cliente.
+
+**Motivo:** Atacantes comprometem um serviço de terceiro para injetar payload malicioso na cadeia de confiança. O serviço consumidor que aceita dados externos sem validação torna-se vetor de ataque indireto (API10:2023).
+
+### §18.1 — Bloqueado
+
+```typescript
+// Persistir dado externo sem validação
+const externalUser = await partnerApi.getUser(id);
+await this.db.users.create({ data: externalUser }); // ⛔ payload malicioso persiste
+
+// Chamada sem timeout
+const response = await axios.get('https://api.parceiro.com/data'); // ⛔ hang indefinido
+
+// Passthrough cego de resposta externa
+return await externalService.getData(); // ⛔ expõe campos internos do parceiro
+```
+
+### §18.2 — Forma correta
+
+```typescript
+// Validar com DTO antes de usar dado externo
+const raw = await partnerApi.getUser(id);
+const dto = plainToInstance(ExternalUserDto, raw);
+await validateOrReject(dto); // ✅ rejeita payload malformado
+
+// Timeout e limite de tamanho obrigatórios
+const response = await axios.get('https://api.parceiro.com/data', {
+  timeout: 5000,
+  maxContentLength: 1 * 1024 * 1024,
+});
+
+// Mapear para DTO interno antes de retornar
+return this.mapper.toInternalDto(response.data); // ✅ nunca passthrough
+```
+
+### §18.3 — Verificação obrigatória em revisão
+
+- [ ] Dados de APIs externas são validados com DTO + class-validator antes de persistir ou usar?
+- [ ] Toda chamada a API externa tem `timeout` configurado (máximo 10s)?
+- [ ] Respostas de APIs externas são mapeadas para DTOs internos antes de repassar ao cliente?
+- [ ] Falhas de API externa têm tratamento explícito — sem propagação silenciosa?
+- [ ] Chamadas a parceiros usam TLS (`https://`) — sem `http://`?
+
+---
+
+## §19 — Padrão geral de relatório de achado
 
 Quando um achado de segurança é identificado, reportar no formato:
 
@@ -620,7 +854,7 @@ Quando um achado de segurança é identificado, reportar no formato:
 
 ---
 
-## §16 — Fluxo de correção de achados CRITICAL
+## §20 — Fluxo de correção de achados CRITICAL
 
 Achados CRITICAL não bloqueiam o merge diretamente — passam pelo tech-lead para coordenação:
 
