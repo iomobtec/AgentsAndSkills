@@ -1,9 +1,10 @@
 # Skill: criar-pipeline-servico
 
-Cria os **dois workflows GitHub Actions** para um serviço Node.js (System API, Process API, BFF ou worker de mensageria): `ci-cd-staging.yml` (deploy automático em todas as branches exceto `main`) e `ci-cd-production.yml` (deploy em `main` com aprovação manual).
+Cria os **dois workflows GitHub Actions** para um serviço Node.js (backend, BFF ou worker de mensageria): `ci-cd-staging.yml` (deploy automático em branches de desenvolvimento) e `ci-cd-production.yml` (deploy em `main` com aprovação manual). Target padrão: **AWS ECS Fargate + ECR**.
 
 **Agente:** dev-devops · dev-backend · dev-bff · dev-mensageria  
-**Guardrails aplicáveis:** `devops.md`, `operacional.md §4`, `seguranca.md`
+**Guardrails aplicáveis:** `devops.md §1`, `devops.md §2`, `devops.md §3`, `devops.md §4`, `devops.md §9`, `operacional.md §4`, `seguranca.md`  
+**Referências rápidas:** `Guidelines/devops/ecs-fargate.md`
 
 ---
 
@@ -11,17 +12,19 @@ Cria os **dois workflows GitHub Actions** para um serviço Node.js (System API, 
 
 - Ao criar um novo serviço Node.js que precisa de pipeline CI/CD
 - Ao adicionar pipeline a serviço existente que ainda não tem
-- Ao migrar pipeline de outra ferramenta para GitHub Actions
+- Ao migrar pipeline de SSH/VM para ECS Fargate
 
 ---
 
 ## Pré-requisitos
 
-- Nome do serviço (usado no nome da imagem e do workflow)
-- Repositório GitHub dedicado ao serviço já criado e clonado localmente (cada serviço tem seu próprio repo)
-- Registry de imagens definido (GHCR por padrão; ECR/GCR se o projeto usa AWS/GCP)
-- Target de deploy definido pelo arquiteto (Kubernetes, ECS, Docker Compose em VM)
-- Environments `staging` e `production` criados no GitHub (usar `configurar-environments-github` se ainda não existirem)
+- Nome do serviço (usado no ECR repo e no nome da imagem)
+- Repositório GitHub dedicado ao serviço já criado
+- Infraestrutura AWS provisionada: ECR repo, ECS cluster, ECS service, task definition base, ALB com health check
+- Environments `staging` e `production` criados no GitHub (`configurar-environments-github`)
+- `.env.example` no repositório com todas as chaves sem valores
+
+Se infraestrutura não estiver pronta, verificar `Guidelines/devops/ecs-fargate.md §Pré-requisitos` antes de continuar.
 
 ---
 
@@ -29,115 +32,41 @@ Cria os **dois workflows GitHub Actions** para um serviço Node.js (System API, 
 
 ### Passo 1 — Coletar informações do serviço
 
-Cada serviço tem seu próprio repositório — o workflow é criado na raiz do repo, sem `paths` filter nem `working-directory`. Confirmar:
-
-```
-1. Qual o nome do serviço? (usado no nome da imagem Docker)
-2. Qual o registry de imagens?
-   - GHCR (ghcr.io) — padrão, usa GITHUB_TOKEN automático
-   - AWS ECR — se o projeto usa AWS (recomendado: OIDC, não access key)
-   - GCP Artifact Registry — se o projeto usa GCP
-   - Azure ACR — se o projeto usa Azure
-3. Qual o target de deploy? (Kubernetes · ECS · Docker Compose em VM)
-```
-
-Se o registry não for GHCR, usar o bloco de login correspondente da seção §Variantes de registry abaixo.
-
-### Passo 1.5 — Variantes de login no registry
-
-Os templates usam GHCR por padrão. Substituir o bloco de `env` e o step `docker/login-action` conforme o registry do projeto:
-
-#### GHCR (padrão — sem configuração extra)
-
-```yaml
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
-# step de login no job de build:
-- uses: docker/login-action@v3
-  with:
-    registry: ghcr.io
-    username: ${{ github.actor }}
-    password: ${{ secrets.GITHUB_TOKEN }}
-# permissão necessária no job: packages: write
-```
-
-#### AWS ECR (via OIDC)
-
-```yaml
-env:
-  REGISTRY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
-  IMAGE_NAME: <nome-do-servico>
-
-# steps de login no job de build:
-- uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
-  with:
-    role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-    aws-region: ${{ vars.AWS_REGION }}
-
-- uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076
-# Secrets: AWS_ROLE_ARN | Variables: AWS_ACCOUNT_ID, AWS_REGION
-```
-
-#### GCP Artifact Registry (via Workload Identity)
-
-```yaml
-env:
-  REGISTRY: ${{ vars.GCP_REGION }}-docker.pkg.dev
-  IMAGE_NAME: ${{ vars.GCP_PROJECT_ID }}/<repositorio>/<nome-do-servico>
-
-# steps de login no job de build:
-- uses: google-github-actions/auth@55bd3a7c6e2ae7cf1877fd1ccb9d54c0503c457c
-  id: auth
-  with:
-    workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-    service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-
-- uses: docker/login-action@v3
-  with:
-    registry: ${{ vars.GCP_REGION }}-docker.pkg.dev
-    username: oauth2accesstoken
-    password: ${{ steps.auth.outputs.access_token }}
-# Secrets: GCP_WORKLOAD_IDENTITY_PROVIDER, GCP_SERVICE_ACCOUNT | Variables: GCP_REGION, GCP_PROJECT_ID
-```
-
-#### Azure ACR (via Service Principal)
-
-```yaml
-env:
-  REGISTRY: ${{ vars.ACR_LOGIN_SERVER }}
-  IMAGE_NAME: <nome-do-servico>
-
-# step de login no job de build:
-- uses: docker/login-action@v3
-  with:
-    registry: ${{ vars.ACR_LOGIN_SERVER }}
-    username: ${{ secrets.ACR_USERNAME }}
-    password: ${{ secrets.ACR_PASSWORD }}
-# Secrets: ACR_USERNAME, ACR_PASSWORD | Variables: ACR_LOGIN_SERVER
+```text
+1. Qual o nome do serviço? (usado no ECR repo e nome do workflow)
+2. Autenticação AWS:
+   - OIDC (preferido): AWS_ROLE_ARN configurado no GitHub
+   - Access key (fallback): AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY
+3. As variáveis AWS já estão configuradas nos GitHub environments?
+   (AWS_REGION, AWS_ACCOUNT_ID, ECR_REPOSITORY, ECS_CLUSTER, ECS_SERVICE)
+4. O target de deploy é diferente de ECS Fargate?
+   (Se sim: escalar para arquiteto antes de gerar pipeline — devops.md §9)
 ```
 
 ### Passo 2 — Gerar `ci-cd-staging.yml`
 
-Executa em **todas as branches exceto `main`**. Test → build → deploy automático.
+Executa em **branches de desenvolvimento** (todas exceto `main`). Fluxo: test → envfile → release → deploy automático.
 
 ```yaml
-name: CI/CD Staging — <nome-do-servico>
+name: CI/CD - Build & Deploy to Staging
 
 on:
   push:
-    branches-ignore:
-      - main
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+    branches:
+      - development
+      - staging
+      - chore/*
+      - feature/*
+      - fix/*
+      - hotfix/*
+      - release/*
+  workflow_dispatch:
 
 jobs:
+  # ─────────────────────────────────────────────────────────
   test:
-    name: Test
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -152,154 +81,240 @@ jobs:
       - name: Run tests with coverage
         run: npm test -- --coverage --ci
 
-      - name: Build check
-        run: npm run build
+    environment: staging
 
-  build-staging:
-    name: Build & Push Image (staging)
-    needs: test
+  # ─────────────────────────────────────────────────────────
+  envfile:
+    needs: [test]
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write        # necessário para push no GHCR; remover se usar ECR/GCR/ACR
-    outputs:
-      image-tag: sha-${{ github.sha }}-staging
+    environment: staging
+
+    env:
+      # Mapear secrets com prefixo _ (substituídos pelo dump-env)
+      _APP_KEY:      ${{ secrets._APP_KEY }}
+      _DB_HOST:      ${{ secrets._DB_HOST }}
+      _DB_PASSWORD:  ${{ secrets._DB_PASSWORD }}
+      # ... demais secrets com prefixo _
+      # Vars sem prefixo _ (valores não sensíveis)
+      _APP_URL:      ${{ vars._APP_URL }}
+      # ... demais vars com prefixo _
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - name: Generate .env from template
+        run: |
+          pip install dump-env
+          dump-env --template=.env.example --prefix='_' > env
+      - uses: actions/upload-artifact@v4
+        with:
+          name: env-file
+          path: env
+          if-no-files-found: error
+
+  # ─────────────────────────────────────────────────────────
+  release:
+    needs: [test, envfile]
+    runs-on: ubuntu-latest
+    environment: staging
+
     steps:
       - uses: actions/checkout@v4
 
-      # ── Login no container registry ──────────────────────────────────────
-      # GHCR (padrão). Para ECR / GCR / ACR ver Passo 1.5 acima.
-      - uses: docker/login-action@v3
+      - name: Download .env artifact
+        uses: actions/download-artifact@v4
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          name: env-file
+          path: .
 
-      - uses: docker/setup-buildx-action@v3
+      - name: Move .env to project root
+        run: mv env .env
 
-      # ── Build e push para registry ───────────────────────────────────────
-      - uses: docker/build-push-action@v5
+      - uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+          # Para OIDC substituir pelas linhas abaixo e remover as duas acima:
+          # role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          # aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
         with:
           context: .
-          push: true          # faz o push para o registry após o build
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}-staging
-          cache-from: type=gha,scope=staging
-          cache-to: type=gha,scope=staging,mode=max
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:sha-${{ github.sha }}-staging
 
-  deploy-staging:
-    name: Deploy → Staging
-    needs: build-staging
+  # ─────────────────────────────────────────────────────────
+  deploy:
+    needs: release
     runs-on: ubuntu-latest
-    environment:
-      name: staging
-      url: ${{ vars.STAGING_URL }}
+    environment: staging
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Deploy (staging)
-        # Substituir pelo bloco de deploy correto — ver variantes no Passo 4
-        run: echo "Substituir pelo passo de deploy para ${{ vars.STAGING_URL }}"
-        env:
-          IMAGE_TAG: ${{ needs.build-staging.outputs.image-tag }}
+      - uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Deploy to ECS
+        run: |
+          aws ecs update-service \
+            --cluster ${{ vars.ECS_CLUSTER }} \
+            --service ${{ vars.ECS_SERVICE }} \
+            --force-new-deployment
+
+      - name: Wait for service stability
+        run: |
+          aws ecs wait services-stable \
+            --cluster ${{ vars.ECS_CLUSTER }} \
+            --services ${{ vars.ECS_SERVICE }}
 ```
 
 ### Passo 3 — Gerar `ci-cd-production.yml`
 
-Executa **apenas em `main`**. Test → build → deploy com aprovação obrigatória.
+Executa **apenas em `main`**. Fluxo: envfile → release → deploy com aprovação obrigatória.
 
 ```yaml
-name: CI/CD Production — <nome-do-servico>
+name: CI/CD - Build & Deploy to Production
 
 on:
   push:
     branches:
       - main
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  workflow_dispatch:
 
 jobs:
-  test:
-    name: Test
+  # ─────────────────────────────────────────────────────────
+  envfile:
     runs-on: ubuntu-latest
+    environment: production
+
+    env:
+      # Mapear secrets com prefixo _ (substituídos pelo dump-env)
+      _APP_KEY:      ${{ secrets._APP_KEY }}
+      _DB_HOST:      ${{ secrets._DB_HOST }}
+      _DB_PASSWORD:  ${{ secrets._DB_PASSWORD }}
+      # ... demais secrets com prefixo _
+      # Vars sem prefixo _ (valores não sensíveis)
+      _APP_URL:      ${{ vars._APP_URL }}
+      # ... demais vars com prefixo _
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - name: Generate .env from template
+        run: |
+          pip install dump-env
+          dump-env --template=.env.example --prefix='_' > env
+      - uses: actions/upload-artifact@v4
+        with:
+          name: env-file
+          path: env
+          if-no-files-found: error
+
+  # ─────────────────────────────────────────────────────────
+  release:
+    needs: [envfile]
+    runs-on: ubuntu-latest
+    environment: production
+
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Download .env artifact
+        uses: actions/download-artifact@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          name: env-file
+          path: .
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Move .env to project root
+        run: mv env .env
 
-      - name: Run tests with coverage
-        run: npm test -- --coverage --ci
-
-      - name: Build check
-        run: npm run build
-
-  build:
-    name: Build & Push Image
-    needs: test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write        # necessário para push no GHCR; remover se usar ECR/GCR/ACR
-    outputs:
-      image-tag: sha-${{ github.sha }}
-    steps:
-      - uses: actions/checkout@v4
-
-      # ── Login no container registry ──────────────────────────────────────
-      # GHCR (padrão). Para ECR / GCR / ACR ver Passo 1.5 acima.
-      - uses: docker/login-action@v3
+      - uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
 
-      - uses: docker/metadata-action@v5
-        id: meta
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=sha,prefix=sha-
-            type=raw,value=latest,enable={{is_default_branch}}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076
 
-      - uses: docker/setup-buildx-action@v3
-
-      # ── Build e push para registry ───────────────────────────────────────
-      - uses: docker/build-push-action@v5
+      - name: Build and push image
+        uses: docker/build-push-action@v5
         with:
           context: .
-          push: true          # faz o push para o registry após o build
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:sha-${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:production
 
-  deploy-production:
-    name: Deploy → Production
-    needs: build
+  # ─────────────────────────────────────────────────────────
+  deploy:
+    needs: release
     runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: ${{ vars.PRODUCTION_URL }}
+    environment: production
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Deploy (production)
-        # Substituir pelo bloco de deploy correto — ver variantes abaixo
-        run: echo "Substituir pelo passo de deploy para ${{ vars.PRODUCTION_URL }}"
-        env:
-          IMAGE_TAG: ${{ needs.build.outputs.image-tag }}
+      - uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Deploy to ECS
+        run: |
+          aws ecs update-service \
+            --cluster ${{ vars.ECS_CLUSTER }} \
+            --service ${{ vars.ECS_SERVICE }} \
+            --force-new-deployment
+
+      - name: Wait for service stability
+        run: |
+          aws ecs wait services-stable \
+            --cluster ${{ vars.ECS_CLUSTER }} \
+            --services ${{ vars.ECS_SERVICE }}
 ```
 
-### Passo 4 — Substituir o passo de deploy pela variante correta
+### Passo 4 — Documentar secrets e variables necessários
 
-Escolher o bloco de deploy com base no target definido pelo arquiteto:
+Criar ou atualizar `docs/pipeline.md` com:
 
-#### Variante A — Kubernetes (kubectl)
+```markdown
+## Pipeline CI/CD — <nome-do-servico>
+
+### GitHub Secrets (por environment)
+
+| Secret | Descrição |
+| --- | --- |
+| `AWS_ACCESS_KEY_ID` | IAM access key com permissão ECR + ECS |
+| `AWS_SECRET_ACCESS_KEY` | IAM secret key correspondente |
+| `_<NOME>` | Cada secret da aplicação com prefixo `_` |
+
+### GitHub Variables (por environment)
+
+| Variable | Staging | Produção |
+| --- | --- | --- |
+| `AWS_REGION` | `us-east-1` | `us-east-1` |
+| `AWS_ACCOUNT_ID` | `<id-staging>` | `<id-prod>` |
+| `ECR_REPOSITORY` | `<nome>` | `<nome>` |
+| `ECS_CLUSTER` | `<cluster>-staging` | `<cluster>-production` |
+| `ECS_SERVICE` | `<servico>-staging` | `<servico>-production` |
+| `_<NOME>` | valor staging | valor produção |
+```
+
+### Passo 5 — Variantes para targets alternativos (não-padrão)
+
+> Usar apenas se o arquiteto aprovou explicitamente target diferente de ECS (`devops.md §9`).
+
+#### Kubernetes (kubectl)
 
 ```yaml
 - name: Deploy to Kubernetes
@@ -307,107 +322,54 @@ Escolher o bloco de deploy com base no target definido pelo arquiteto:
     echo "$KUBECONFIG_B64" | base64 -d > /tmp/kubeconfig
     kubectl --kubeconfig /tmp/kubeconfig \
       set image deployment/<nome-do-servico> \
-      app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+      app=${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:sha-${{ github.sha }} \
       -n ${{ vars.K8S_NAMESPACE }}
     kubectl --kubeconfig /tmp/kubeconfig \
       rollout status deployment/<nome-do-servico> \
       -n ${{ vars.K8S_NAMESPACE }} --timeout=120s
   env:
     KUBECONFIG_B64: ${{ secrets.KUBECONFIG }}
-    IMAGE_TAG: ${{ needs.build.outputs.image-tag }}
 ```
 
-Secrets necessários no environment: `KUBECONFIG` (base64 do kubeconfig do cluster)  
-Variables necessárias: `K8S_NAMESPACE`, `STAGING_URL` / `PRODUCTION_URL`
-
-#### Variante B — AWS ECS
-
-```yaml
-- uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
-  with:
-    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    aws-region: ${{ vars.AWS_REGION }}
-
-- name: Deploy to ECS
-  run: |
-    aws ecs update-service \
-      --cluster ${{ vars.ECS_CLUSTER }} \
-      --service <nome-do-servico> \
-      --force-new-deployment
-    aws ecs wait services-stable \
-      --cluster ${{ vars.ECS_CLUSTER }} \
-      --services <nome-do-servico>
-```
-
-Secrets necessários: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`  
-Variables necessárias: `AWS_REGION`, `ECS_CLUSTER`
-
-#### Variante C — Docker Compose em VM via SSH
+#### Docker Compose em VM via SSH
 
 ```yaml
 - name: Deploy via SSH
   run: |
     echo "$SSH_PRIVATE_KEY" > /tmp/deploy_key
     chmod 600 /tmp/deploy_key
-    ssh -i /tmp/deploy_key \
-      -o StrictHostKeyChecking=no \
+    scp -i /tmp/deploy_key -o StrictHostKeyChecking=no \
+      ./docker-compose.yml ${{ vars.DEPLOY_USER }}@${{ vars.DEPLOY_HOST }}:~/
+    ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no \
       ${{ vars.DEPLOY_USER }}@${{ vars.DEPLOY_HOST }} \
-      "cd /app/<nome-do-servico> && \
-       echo 'IMAGE_TAG=${{ env.IMAGE_TAG }}' >> .env && \
-       docker compose pull && \
-       docker compose up -d --no-build"
+      "docker compose pull && docker compose up -d --no-build"
   env:
     SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-    IMAGE_TAG: ${{ needs.build.outputs.image-tag }}
-```
-
-Secrets necessários: `SSH_PRIVATE_KEY`  
-Variables necessárias: `DEPLOY_USER`, `DEPLOY_HOST`
-
-### Passo 5 — Documentar secrets e variables necessários
-
-Criar ou atualizar `docs/pipeline.md` (ou seção no README do serviço) com a lista de todos os secrets e variables necessários para o pipeline funcionar:
-
-```markdown
-## Pipeline CI/CD — <nome-do-servico>
-
-### GitHub Secrets necessários
-
-| Secret | Environment | Descrição |
-|---|---|---|
-| `KUBECONFIG` | staging | kubeconfig do cluster de staging (base64) |
-| `KUBECONFIG` | production | kubeconfig do cluster de produção (base64) |
-
-### GitHub Variables necessárias
-
-| Variable | Environment | Exemplo |
-|---|---|---|
-| `STAGING_URL` | staging | `https://staging.example.com` |
-| `PRODUCTION_URL` | production | `https://example.com` |
-| `K8S_NAMESPACE` | staging | `staging` |
-| `K8S_NAMESPACE` | production | `production` |
 ```
 
 ---
 
 ## Anti-padrões bloqueados
 
-- `devops.md §1` — secret hardcoded no workflow (`password: minha-senha`)
+- `devops.md §1` — secret hardcoded no workflow ou em `build-args` Docker
 - `devops.md §2` — imagem tagueada apenas com `:latest` sem SHA
 - `devops.md §4` — environment `production` sem reviewer obrigatório no GitHub
-- Usar arquivo único de workflow para staging e produção — impede controle de fluxo por branch
+- `devops.md §9` — GHCR como registry para serviço ECS (requer credencial extra na task definition)
+- Deploy sem `wait services-stable` — pipeline reporta sucesso antes do serviço estar ativo
+- Arquivo único de workflow para staging e produção — impede controle de fluxo por branch
 
 ---
 
 ## Checklist de conclusão
 
-- [ ] `ci-cd-staging.yml` criado com `branches-ignore: [main]`
+- [ ] `ci-cd-staging.yml` criado com branches de desenvolvimento corretos
 - [ ] `ci-cd-production.yml` criado com `branches: [main]`
-- [ ] Staging: imagem tagueada com `sha-<commit>-staging` (`devops.md §2`)
-- [ ] Produção: imagem tagueada com `sha-<commit>` + `latest` (`devops.md §2`)
-- [ ] `context: .` nos builds — Dockerfile está na raiz do repo
-- [ ] Todos os secrets referenciados como `${{ secrets.NOME }}` (`devops.md §1`)
+- [ ] Job `test` presente no staging
+- [ ] Job `envfile` com `dump-env` e todos os secrets/vars mapeados com prefixo `_`
+- [ ] Job `release` baixa artifact `.env`, autentica no ECR e faz push (`devops.md §9`)
+- [ ] Staging: imagem tagueada com `sha-<commit>-staging`
+- [ ] Produção: imagem tagueada com `sha-<commit>` + `production` (`devops.md §2`)
+- [ ] Job `deploy` usa `update-service --force-new-deployment` + `wait services-stable`
 - [ ] Environment `production` com reviewer obrigatório (`devops.md §4`)
-- [ ] Cache Docker configurado (`cache-from/cache-to: type=gha`)
-- [ ] Secrets e variables documentados para quem vai configurar o repositório
+- [ ] Secrets e variables documentados em `docs/pipeline.md`
+- [ ] `.env.example` no repositório com todas as chaves sem valores

@@ -88,6 +88,7 @@ deploy-production:
 ### §4.1 — Configuração obrigatória no GitHub
 
 No environment `production` (Settings → Environments → production):
+
 - `Required reviewers`: ao menos 1 pessoa ou time
 - `Wait timer`: opcional, recomendado mínimo 5 minutos para dar tempo de cancelar
 - `Deployment branches`: restringir a `main` ou branches de release
@@ -132,7 +133,7 @@ No environment `production` (Settings → Environments → production):
 
 **Regra:** Secrets de staging e produção devem ser armazenados em **environments diferentes** no GitHub (não como repository secrets). Repository secrets são compartilhados por todos os workflows e environments — um vazamento expõe tudo.
 
-```
+```text
 # ✅ estrutura correta de secrets
 Repository secrets:
   - REGISTRY_TOKEN          (mesmo token para todos os ambientes é aceitável)
@@ -148,9 +149,70 @@ Environment secrets (production):
 
 ---
 
+## §9 — ECS Fargate + ECR como target padrão de containers
+
+**Regra:** Todo serviço que produz imagem Docker (backend, BFF, mensageria, frontend) é deployado no **AWS ECS Fargate** usando **AWS ECR** como registry. Outros targets (Kubernetes, VM, outro cloud) exigem decisão explícita do arquiteto registrada antes de gerar o pipeline.
+
+**Motivo:** Padronização reduz superfície de configuração, elimina dúvida sobre qual target escolher e concentra o conhecimento de infraestrutura em um único stack.
+
+### §9.1 — Registry padrão: ECR
+
+```yaml
+# ✅ padrão — ECR com OIDC
+- uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+  with:
+    role-to-assume: ${{ secrets.AWS_ROLE_ARN }}   # preferido
+    aws-region: ${{ vars.AWS_REGION }}
+
+# ✅ ECR com access key — aceito como fallback
+- uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+  with:
+    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    aws-region: ${{ vars.AWS_REGION }}
+
+# ⛔ GHCR como registry para serviço que roda em ECS — requer credencial extra na task definition
+```
+
+### §9.2 — Deploy padrão: update-service + wait
+
+```yaml
+# ✅ deploy com verificação de estabilização
+- name: Deploy to ECS
+  run: |
+    aws ecs update-service \
+      --cluster ${{ vars.ECS_CLUSTER }} \
+      --service ${{ vars.ECS_SERVICE }} \
+      --force-new-deployment
+
+- name: Wait for service stability
+  run: |
+    aws ecs wait services-stable \
+      --cluster ${{ vars.ECS_CLUSTER }} \
+      --services ${{ vars.ECS_SERVICE }}
+
+# ⛔ deploy sem wait — pipeline reporta sucesso antes de a task nova estar ativa
+```
+
+### §9.3 — Variables obrigatórias por environment ECS
+
+Cada environment (`staging`, `production`) deve conter:
+
+| Variable | Exemplo |
+| --- | --- |
+| `AWS_REGION` | `us-east-1` |
+| `AWS_ACCOUNT_ID` | `123456789012` |
+| `ECR_REPOSITORY` | `meuestar-backend` |
+| `ECS_CLUSTER` | `meuestar-staging` |
+| `ECS_SERVICE` | `meuestar-backend-staging` |
+
+Ver guia completo em `Guidelines/devops/ecs-fargate.md`.
+
+---
+
 ## §8 — Padrão geral de recusa para violação deste guardrail
 
-```
+```text
 ⛔ Pedido bloqueado pelo GuardRails/devops.md §<n> — <título>
 
 Motivo: <qual parte específica do pedido infringe>

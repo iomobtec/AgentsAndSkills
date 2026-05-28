@@ -21,9 +21,11 @@ Revisa um workflow GitHub Actions existente verificando conformidade com `Guardr
 ### Passo 1 — Ler o workflow antes de qualquer análise
 
 Confirmar:
+
 1. Qual o arquivo auditado? (caminho no repositório)
 2. É pipeline de serviço Node.js, frontend, biblioteca ou outro?
-3. Qual o target de deploy? (Kubernetes, ECS, VM)
+3. Qual o target de deploy? (ECS Fargate — padrão · Kubernetes · VM)
+4. O target é diferente de ECS? Se sim, verificar se há aprovação do arquiteto registrada (`devops.md §9`)
 
 ### Passo 2 — Verificar segurança de secrets (`devops.md §1`)
 
@@ -170,7 +172,40 @@ Checklist:
 - [ ] Job de teste roda apenas em PRs; deploy apenas em push para `main`
 - [ ] Cache Docker configurado (`cache-from/cache-to: type=gha`)
 
-### Passo 8 — Emitir parecer
+### Passo 8 — Verificar conformidade com ECS Fargate (`devops.md §9`)
+
+Aplicar apenas quando o target de deploy é ECS:
+
+```yaml
+# ⛔ GHCR como registry para serviço ECS
+- uses: docker/login-action@v3
+  with:
+    registry: ghcr.io                     # requer credencial extra na task definition
+
+# ✅ ECR — integração nativa com ECS
+- uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076
+
+# ⛔ deploy sem verificação de estabilização
+- run: aws ecs update-service --cluster ... --service ... --force-new-deployment
+  # sem wait — pipeline reporta sucesso antes do serviço estar ativo
+
+# ✅ deploy com wait obrigatório
+- run: |
+    aws ecs update-service --cluster ... --service ... --force-new-deployment
+- run: |
+    aws ecs wait services-stable --cluster ... --services ...
+```
+
+Checklist ECS:
+
+- [ ] Registry é ECR (não GHCR) — `devops.md §9.1`
+- [ ] Autenticação via `aws-actions/configure-aws-credentials` com SHA fixo
+- [ ] Login via `aws-actions/amazon-ecr-login` com SHA fixo
+- [ ] Job `deploy` inclui `wait services-stable` após `update-service` — `devops.md §9.2`
+- [ ] Variables ECS presentes por environment: `AWS_REGION`, `ECR_REPOSITORY`, `ECS_CLUSTER`, `ECS_SERVICE` — `devops.md §9.3`
+- [ ] Target diferente de ECS tem aprovação do arquiteto registrada — `devops.md §9`
+
+### Passo 9 — Emitir parecer
 
 ```markdown
 ## Auditoria de Pipeline — <nome-do-arquivo>
@@ -190,6 +225,7 @@ Checklist:
 - ✅ <o que está correto>
 
 ### Checklist de conformidade
+
 - [x/⛔] Secrets sem hardcode (`devops.md §1`)
 - [x/⛔] Images com SHA (`devops.md §2`)
 - [x/⛔] Staging precede produção (`devops.md §3`)
@@ -197,6 +233,7 @@ Checklist:
 - [x/⛔] Actions de terceiros fixadas a SHA (`devops.md §5`)
 - [x/⛔] Logs sem dados sensíveis (`devops.md §6`)
 - [x/⛔] Secrets por environment, não repository (`devops.md §7`)
+- [x/⛔] Registry ECR + deploy ECS com wait (`devops.md §9`) — se aplicável
 ```
 
 ---
@@ -215,6 +252,6 @@ Checklist:
 
 ## Checklist de conclusão
 
-- [ ] Todos os 7 guardrails de `devops.md` verificados
+- [ ] Todos os guardrails de `devops.md` verificados (§1–§7 sempre; §9 quando target é ECS)
 - [ ] Parecer emitido com resultado claro
 - [ ] Bloqueadores têm referência ao guardrail e ação de correção específica
