@@ -2,7 +2,7 @@
 
 Analisa o **relatório de cobertura de testes** de um serviço Node.js, identifica gaps críticos e recomenda quais testes devem ser escritos para garantir qualidade mínima sem desperdício de esforço.
 
-**Agente:** dev-backend  
+**Agente:** `dev-backend`, `dev-frontend`, `dev-mobile`, `tech-lead`  
 **Guardrails aplicáveis:** `00-core.md`, `testes.md`
 
 ---

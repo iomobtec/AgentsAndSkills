@@ -2,7 +2,7 @@
 
 Refatorar código para reduzir complexidade acidental, preservando o comportamento exato. Baseado no Princípio de Chesterton's Fence: entender o propósito de algo antes de modificá-lo.
 
-**Agente:** `dev-backend`, `dev-bff`, `dev-frontend`, `tech-lead`  
+**Agente:** `dev-backend`, `dev-bff`, `dev-frontend`, `dev-mobile`, `tech-lead`  
 **Quando usar:** Ao fazer code review e encontrar complexidade desnecessária; antes de adicionar feature em área com débito técnico; quando um PR de simplificação é explicitamente solicitado
 
 ---

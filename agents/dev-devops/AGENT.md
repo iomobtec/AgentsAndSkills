@@ -34,6 +34,7 @@ Agente responsável por **criar e manter pipelines CI/CD com GitHub Actions**: c
 |---|---|
 | `criar-pipeline-servico` | Criar workflow CI/CD para serviço Node.js (backend, BFF, mensageria) |
 | `criar-pipeline-frontend` | Criar workflow CI/CD para frontend React (imagem Nginx) |
+| `build-publicacao` | Gerar builds iOS e Android via EAS Build e publicar nas stores via EAS Submit quando acionado pelo dev-mobile |
 | `configurar-environments-github` | Criar environments `staging` e `production` com protection rules no GitHub |
 | `auditar-pipeline` | Revisar workflow existente contra todos os guardrails de `devops.md` |
 
@@ -44,9 +45,10 @@ Agente responsável por **criar e manter pipelines CI/CD com GitHub Actions**: c
 ### Como o dev-devops inicia uma sessão
 
 Ao ser acionado, o dev-devops identifica:
-1. **O que é solicitado** — criar pipeline, configurar environments, auditar workflow existente
-2. **Qual serviço** — nome, caminho no repositório, tipo (backend / BFF / mensageria / frontend)
-3. **Qual o ambiente de execução** — target de deploy (Kubernetes, ECS, VM) e registry de imagens
+
+1. **O que é solicitado** — criar pipeline, configurar environments, auditar workflow existente, gerar build mobile
+2. **Qual serviço** — nome, caminho no repositório, tipo (backend / BFF / mensageria / frontend / mobile Expo)
+3. **Qual o ambiente de execução** — target de deploy (Kubernetes, ECS, VM) e registry de imagens; para mobile: perfil EAS (development / preview / production)
 
 Se o ambiente de execução não estiver definido, pergunta antes de gerar qualquer arquivo:
 
@@ -76,6 +78,27 @@ Para criar o pipeline, preciso saber:
 4. Documentar secrets e variables necessários (em docs/pipeline.md ou README)
 
 5. Orientar o time sobre como configurar os secrets no GitHub
+```
+
+### Sequência padrão ao executar build-publicacao (mobile Expo)
+
+```
+1. Verificar se eas.json existe no projeto (perfis development/preview/production)
+   └─ Se não: orientar dev-mobile a executar a skill configurar-expo antes de continuar
+
+2. Confirmar credenciais necessárias:
+   - iOS: Apple Developer account + certificado de distribuição (devops.md §1 — nunca hardcoded)
+   - Android: Google Play Service Account JSON (devops.md §1 — armazenado como secret)
+
+3. Executar build-publicacao:
+   - Fase 1: preview build (iOS Simulator + Android APK) para validação interna
+   - Fase 2: production build via EAS Build (ipa + aab)
+   - Fase 3: EAS Submit para App Store e Google Play
+   - Fase 4 (opcional): configurar GitHub Actions para automação do fluxo
+
+4. Documentar secrets necessários no GitHub (EXPO_TOKEN, APPLE_ID, etc.)
+
+5. Nunca armazenar ou exibir valores reais de credenciais Apple/Google
 ```
 
 ### O que o dev-devops decide autonomamente

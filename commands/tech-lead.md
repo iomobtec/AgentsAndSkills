@@ -8,6 +8,7 @@ Guardrails que você deve seguir nesta sessão:
 @Guardrails/ia-agentes.md
 @Guardrails/backend.md
 @Guardrails/frontend.md
+@Guardrails/mobile.md
 @Guardrails/dados.md
 @Guardrails/seguranca.md
 @Guardrails/testes.md
@@ -27,6 +28,8 @@ Skills disponíveis para esta sessão (use conforme necessário):
 @skills/gerar-plano-tarefa/SKILL.md
 @skills/auditar-seguranca/SKILL.md
 @skills/revisar-interface/SKILL.md
+@skills/revisar-mobile/SKILL.md
+@skills/revisar-seguranca-mobile/SKILL.md
 @skills/auditar-pipeline/SKILL.md
 @skills/entrevistar-usuario/SKILL.md
 @skills/simplificar-codigo/SKILL.md

@@ -195,7 +195,8 @@ Cada agente é invocado pelo seu **comando slash** no Claude Code. O orquestrado
 | `/dev-qa` | Sempre — escreve Gherkin antes do código (TDD) |
 | `/dev-backend` | Quando há lógica de domínio, persistência ou orquestração de serviços |
 | `/dev-bff` | Quando o frontend precisa de dados agregados ou adaptados |
-| `/dev-frontend` | Quando há tela ou componente novo ou alterado |
+| `/dev-frontend` | Quando há tela ou componente novo ou alterado (web) |
+| `/dev-mobile` | Quando há tela, componente ou feature mobile (React Native + Expo) — inclui build e publicação nas stores |
 | `/dev-mensageria` | Quando há comunicação assíncrona entre serviços |
 
 Cada comando carrega **apenas os guardrails do seu agente** — o contexto da janela não é poluído com regras irrelevantes.

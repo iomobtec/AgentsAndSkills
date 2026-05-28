@@ -12,6 +12,7 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 - [Backend](#backend)
 - [BFF](#bff)
 - [Frontend](#frontend)
+- [Mobile](#mobile)
 - [UI/UX](#uiux)
 - [Segurança](#segurança)
 - [QA](#qa)
@@ -55,10 +56,10 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 | [`configurar-prisma`](configurar-prisma/SKILL.md) | Configura Prisma ORM com schema, migrations e geração de client | `dev-backend` |
 | [`criar-teste-unitario`](criar-teste-unitario/SKILL.md) | Escreve testes unitários Jest com mocking e testes de componente isolados | `dev-backend` |
 | [`criar-teste-integracao`](criar-teste-integracao/SKILL.md) | Escreve testes de integração NestJS com banco de dados e mocking de serviços | `dev-backend` |
-| [`auditar-cobertura`](auditar-cobertura/SKILL.md) | Analisa relatórios de cobertura Jest e identifica lacunas na suíte de testes | `dev-backend`, `tech-lead` |
+| [`auditar-cobertura`](auditar-cobertura/SKILL.md) | Analisa relatórios de cobertura Jest e identifica lacunas na suíte de testes | `dev-backend`, `dev-frontend`, `dev-mobile`, `tech-lead` |
 | [`revisar-backend`](revisar-backend/SKILL.md) | Revisa código backend quanto a arquitetura, testes e conformidade de segurança | `dev-backend` |
-| [`implementar-incremental`](implementar-incremental/SKILL.md) | Thin vertical slices: uma fatia funcional por vez, ciclo TDD por fatia, limite de ~100 linhas antes de testar, feature flags para trabalho incompleto | `dev-backend`, `dev-bff`, `dev-frontend` |
-| [`simplificar-codigo`](simplificar-codigo/SKILL.md) | Refactoring com preservação de comportamento: Chesterton's Fence, complexidade essencial vs acidental, clareza sobre esperteza | `dev-backend`, `dev-bff`, `dev-frontend`, `tech-lead` |
+| [`implementar-incremental`](implementar-incremental/SKILL.md) | Thin vertical slices: uma fatia funcional por vez, ciclo TDD por fatia, limite de ~100 linhas antes de testar, feature flags para trabalho incompleto | `dev-backend`, `dev-bff`, `dev-frontend`, `dev-mobile` |
+| [`simplificar-codigo`](simplificar-codigo/SKILL.md) | Refactoring com preservação de comportamento: Chesterton's Fence, complexidade essencial vs acidental, clareza sobre esperteza | `dev-backend`, `dev-bff`, `dev-frontend`, `dev-mobile`, `tech-lead` |
 
 ---
 
@@ -81,6 +82,23 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 | [`organizar-estado`](organizar-estado/SKILL.md) | Define estratégia de gerenciamento de estado React (Context API, Zustand ou Redux) | `dev-frontend` |
 | [`gerar-teste-componente`](gerar-teste-componente/SKILL.md) | Escreve testes de componente com React Testing Library | `dev-frontend` |
 | [`revisar-frontend`](revisar-frontend/SKILL.md) | Revisa código React/TypeScript quanto a padrões, performance e acessibilidade | `dev-frontend` |
+
+---
+
+## Mobile
+
+| Skill | O que faz | Quem chama |
+|---|---|---|
+| [`configurar-expo`](configurar-expo/SKILL.md) | Inicializa projeto React Native + Expo com toda a stack padrão: Expo Router, NativeWind, TanStack Query, Zustand, Jest e RNTL | `dev-mobile` |
+| [`configurar-navegacao`](configurar-navegacao/SKILL.md) | Implementa estrutura de rotas Expo Router: tabs, stack, modais, autenticação com redirect e deep linking | `dev-mobile` |
+| [`criar-tela`](criar-tela/SKILL.md) | Cria tela (Screen) com layout, hook de dados, todos os estados e testes | `dev-mobile` |
+| [`criar-componente-nativo`](criar-componente-nativo/SKILL.md) | Cria componente React Native reutilizável com props tipadas, StyleSheet/NativeWind e acessibilidade | `dev-mobile` |
+| [`criar-hook-mobile`](criar-hook-mobile/SKILL.md) | Extrai lógica em hook customizado: dados (TanStack Query), UI, APIs nativas e persistência | `dev-mobile` |
+| [`organizar-estado-mobile`](organizar-estado-mobile/SKILL.md) | Decide e implementa estratégia de estado: local → Zustand → TanStack Query | `dev-mobile` |
+| [`gerar-teste-componente-nativo`](gerar-teste-componente-nativo/SKILL.md) | Escreve testes com Jest + React Native Testing Library para componentes, telas e hooks | `dev-mobile` |
+| [`revisar-mobile`](revisar-mobile/SKILL.md) | Revisa código React Native antes do PR: performance, acessibilidade, padrões, cross-platform | `dev-mobile`, `tech-lead` |
+| [`revisar-seguranca-mobile`](revisar-seguranca-mobile/SKILL.md) | Checklist "shift left" de segurança mobile: SecureStore, logs, deep link, WebView, permissões — parte do DoD | `dev-mobile`, `dev-security`, `tech-lead` |
+| [`build-publicacao`](build-publicacao/SKILL.md) | Gera builds iOS e Android via EAS Build e publica nas stores via EAS Submit; configura OTA updates | `dev-mobile`, `dev-devops` |
 
 ---
 
@@ -167,9 +185,10 @@ Biblioteca de skills disponíveis para os agentes. Cada skill é um conjunto de 
 | `dev-backend` | criar-system-api, criar-process-api, implementar-endpoint, configurar-auth, configurar-prisma, criar-teste-unitario, criar-teste-integracao, auditar-cobertura, revisar-backend, validar-idempotencia, revisar-seguranca-backend, criar-pipeline-servico, implementar-incremental, simplificar-codigo, migrar-supabase, **handoff** |
 | `dev-bff` | criar-bff, implementar-endpoint, configurar-auth, otimizar-performance, revisar-bff, criar-teste-unitario, criar-teste-integracao, auditar-cobertura, mapear-contrato, revisar-seguranca-backend, criar-pipeline-servico, implementar-incremental, simplificar-codigo, **handoff** |
 | `dev-frontend` | criar-componente, criar-hook, organizar-estado, gerar-teste-componente, revisar-frontend, auditar-cobertura, revisar-seguranca-frontend, criar-pipeline-frontend, implementar-incremental, simplificar-codigo, **handoff** |
+| `dev-mobile` | configurar-expo, configurar-navegacao, criar-tela, criar-componente-nativo, criar-hook-mobile, organizar-estado-mobile, gerar-teste-componente-nativo, revisar-mobile, revisar-seguranca-mobile, build-publicacao, implementar-incremental, simplificar-codigo, auditar-cobertura, **handoff** |
 | `dev-ui-ux` | criar-design-system, especificar-componente, revisar-interface, **handoff** |
-| `dev-security` | modelar-ameacas, auditar-seguranca, revisar-dependencias-cve, **handoff** |
+| `dev-security` | modelar-ameacas, auditar-seguranca, revisar-dependencias-cve, revisar-seguranca-mobile, **handoff** |
 | `dev-qa` | escrever-gherkin, planejar-regressao, criar-teste-e2e, **handoff** |
-| `tech-lead` | refinar-historia, validar-dor, revisar-pr, gerar-plano-tarefa, avaliar-impacto, mapear-contrato, auditar-cobertura, revisar-interface, auditar-seguranca, auditar-pipeline, entrevistar-usuario, simplificar-codigo, migrar-deprecar, documentar-decisoes, questionar-decisao, **handoff** |
-| `dev-devops` | configurar-environments-github, auditar-pipeline, criar-pipeline-servico, criar-pipeline-frontend, revisar-dependencias-cve, **handoff** |
+| `tech-lead` | refinar-historia, validar-dor, revisar-pr, gerar-plano-tarefa, avaliar-impacto, mapear-contrato, auditar-cobertura, revisar-interface, revisar-mobile, revisar-seguranca-mobile, auditar-seguranca, auditar-pipeline, entrevistar-usuario, simplificar-codigo, migrar-deprecar, documentar-decisoes, questionar-decisao, **handoff** |
+| `dev-devops` | configurar-environments-github, auditar-pipeline, criar-pipeline-servico, criar-pipeline-frontend, build-publicacao, revisar-dependencias-cve, **handoff** |
 | `dev-mensageria` | *(usa skills de arquiteto e dev-backend)*, **handoff** |

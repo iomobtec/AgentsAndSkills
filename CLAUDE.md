@@ -4,9 +4,9 @@ Sistema de agentes de IA especializados para desenvolvimento de software. Este r
 
 ## Estado atual
 
-- **11 agentes**: orquestrador, arquiteto, tech-lead, dev-backend, dev-bff, dev-frontend, dev-mensageria, dev-qa, dev-ui-ux, dev-security, dev-devops
-- **58 skills** em `skills/`
-- **13 guardrails** em `Guardrails/`
+- **12 agentes**: orquestrador, arquiteto, tech-lead, dev-backend, dev-bff, dev-frontend, dev-mobile, dev-mensageria, dev-qa, dev-ui-ux, dev-security, dev-devops
+- **68 skills** em `skills/`
+- **14 guardrails** em `Guardrails/`
 - **5 checklists** em `References/`
 
 ---

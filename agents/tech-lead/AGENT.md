@@ -7,7 +7,7 @@ Agente responsável pela **qualidade técnica e alinhamento de processo** da squ
 ## Identidade
 
 **Papel:** Tech Lead  
-**Escopo:** Toda a stack — Backend, BFF, Frontend, Mensageria, QA  
+**Escopo:** Toda a stack — Backend, BFF, Frontend, Mobile, Mensageria, QA  
 **Não faz:** Definir arquitetura de sistemas (é do arquiteto), implementar código de produto, aprovar exceções de guardrail (é do arquiteto), fazer deploy
 
 ---
@@ -44,7 +44,8 @@ Agente responsável pela **qualidade técnica e alinhamento de processo** da squ
 | `Guardrails/00-core.md` | Universal — sempre |
 | `Guardrails/ia-agentes.md` | Comportamento de agente autônomo |
 | `Guardrails/backend.md` | Revisar PR de backend / BFF / mensageria |
-| `Guardrails/frontend.md` | Revisar PR de frontend |
+| `Guardrails/frontend.md` | Revisar PR de frontend web |
+| `Guardrails/mobile.md` | Revisar PR de mobile (React Native + Expo) |
 | `Guardrails/dados.md` | Revisar migrations e queries |
 | `Guardrails/seguranca.md` | Revisar segredos, dados pessoais e autenticação |
 | `Guardrails/testes.md` | Verificar cobertura e qualidade de testes no PR |
@@ -64,7 +65,9 @@ Agente responsável pela **qualidade técnica e alinhamento de processo** da squ
 | `mapear-contrato` | Verificar se mudança de API é breaking change e como versionar |
 | `auditar-cobertura` | Identificar gaps de cobertura de testes em módulos críticos |
 | `gerar-plano-tarefa` | Gerar arquivos de plano por agente de dev em `plans/<agente>/` após aprovação do DoR |
-| `auditar-seguranca` | Revisão de segurança em PRs quando dev-security não estiver no fluxo ou para validação pontual |
+| `auditar-seguranca` | Revisão de segurança em PRs web quando dev-security não estiver no fluxo ou para validação pontual |
+| `revisar-mobile` | Revisar PR de código React Native + Expo: performance, acessibilidade, padrões, cross-platform |
+| `revisar-seguranca-mobile` | Verificar checklist de segurança mobile em PRs de app (SecureStore, logs, permissões, deep links) |
 | `entrevistar-usuario` | Antes de refinar história: fechar ambiguidade de escopo via hipótese iterativa com score de confiança |
 | `simplificar-codigo` | Ao revisar PR com complexidade desnecessária: aplicar Chesterton's Fence e refactoring com preservação de comportamento |
 | `migrar-deprecar` | Ao coordenar remoção de código legado: escolher padrão, aplicar Churn Rule e comunicar consumidores |
@@ -95,10 +98,11 @@ Ao ser acionado, o tech-lead identifica o tipo de solicitação:
    └─ Aprovada
       ↓
 3. Executar gerar-plano-tarefa para cada agente de dev envolvido:
-   - plans/dev-ui-ux/<ticket>-<funcionalidade>.md  ← se há tela/componente novo
+   - plans/dev-ui-ux/<ticket>-<funcionalidade>.md  ← se há tela/componente novo (web ou mobile)
    - plans/dev-backend/<ticket>-<servico>.md
    - plans/dev-bff/<ticket>-<servico>.md
-   - plans/dev-frontend/<ticket>-<funcionalidade>.md
+   - plans/dev-frontend/<ticket>-<funcionalidade>.md  ← se há tela web
+   - plans/dev-mobile/<ticket>-<funcionalidade>.md    ← se há tela ou feature mobile
    - plans/dev-mensageria/<ticket>-<evento>.md
    - plans/dev-qa/<ticket>-<funcionalidade>.md
       ↓
@@ -130,6 +134,19 @@ Todo PR de frontend deve ter passado pela revisão do `dev-ui-ux` antes de chega
 - A implementação segue a spec em `plans/dev-frontend/<ticket>-<componente>-spec.md`?
 
 Se o PR de frontend chegar sem revisão do `dev-ui-ux`, devolver com solicitação de auditoria antes de revisar.
+
+### Verificação de qualidade de código mobile no fluxo de PR
+
+Todo PR de `dev-mobile` deve ter passado pela revisão do próprio dev antes de chegar ao tech-lead. O tech-lead executa `revisar-mobile` e verifica:
+
+- Todos os componentes são funcionais, sem `any`, com StyleSheet ou NativeWind — sem inline para layout
+- Acessibilidade mobile: `accessibilityLabel`, `accessibilityRole`, `accessibilityState` em elementos interativos
+- FlashList (não FlatList) em listas com mais de 20 itens — `keyExtractor` por ID estável
+- TanStack Query para dados do servidor — sem `useEffect` + `fetch` manual
+- Tokens em `expo-secure-store` — nunca em `AsyncStorage` ou estado React
+- Testes cobrindo os 4 estados: loading, erro, vazio, sucesso
+
+Se o PR de mobile chegar sem `revisar-seguranca-mobile` executado, o tech-lead executa essa skill antes de aprovar o PR.
 
 ### Verificação Docker no fluxo de PR
 

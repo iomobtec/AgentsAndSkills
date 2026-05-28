@@ -32,7 +32,8 @@ Quando precisar acionar um agente especializado, instrua o usuário a abrir uma 
 | Implementar System API, Process API ou lógica de domínio | `/IomobAgents:dev-backend` |
 | Implementar camada BFF | `/IomobAgents:dev-bff` |
 | Implementar producers, consumers ou sagas de mensageria | `/IomobAgents:dev-mensageria` |
-| Implementar componentes, hooks ou testes React | `/IomobAgents:dev-frontend` |
+| Implementar componentes, hooks ou testes React (web) | `/IomobAgents:dev-frontend` |
+| Implementar telas, componentes ou features mobile (React Native + Expo) | `/IomobAgents:dev-mobile` |
 | Criar pipelines CI/CD, configurar environments ou auditar workflows | `/IomobAgents:dev-devops` |
 
 Forneça ao usuário o contexto completo que o próximo agente precisará (especificação consolidada, contratos definidos, artefatos produzidos) para que ele possa colar na nova conversa.

@@ -2,7 +2,7 @@
 
 Implementar features em fatias verticais completas e funcionais — uma de cada vez, testada, verificada e commitada antes de iniciar a próxima. Nunca implementar tudo de uma vez e testar no final.
 
-**Agente:** `dev-backend`, `dev-bff`, `dev-frontend`  
+**Agente:** `dev-backend`, `dev-bff`, `dev-frontend`, `dev-mobile`  
 **Quando usar:** Ao iniciar implementação de qualquer feature; quando a tarefa envolve mais de 3 arquivos; sempre que houver risco de "implementação em bloco com testes no final"
 
 ---

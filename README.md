@@ -15,18 +15,21 @@ IomobAgents/
 │   ├── dev-backend/           # System API e Process API (NestJS + Prisma)
 │   ├── dev-bff/               # BFF — adapter entre frontend e backend
 │   ├── dev-frontend/          # React 18+, hooks, estado, testes RTL
+│   ├── dev-mobile/            # React Native + Expo, publicação iOS e Android
 │   ├── dev-mensageria/        # Producers, consumers, sagas (NestJS microservices)
 │   ├── dev-qa/                # Gherkin, E2E com Playwright, regressão
 │   ├── dev-ui-ux/             # Design system, especificação de componentes, auditoria de interface
 │   ├── dev-security/          # Modelagem de ameaças, auditoria OWASP Top 10, revisão de dependências CVE
 │   └── dev-devops/            # Pipelines CI/CD GitHub Actions *(fora do fluxo do orquestrador)*
 │
-├── skills/                    # 58 skills reutilizáveis entre agentes (SKILL.md)
+├── skills/                    # 68 skills reutilizáveis entre agentes (SKILL.md)
 │   ├── handoff/               # Protocolo de conclusão de sessão e passagem de contexto entre agentes
 │   ├── criar-system-api/
 │   ├── criar-design-system/
 │   ├── especificar-componente/
 │   ├── revisar-interface/
+│   ├── configurar-expo/
+│   ├── criar-tela/
 │   └── ...
 │
 ├── commands/                  # Slash commands Claude Code — um por agente
@@ -60,7 +63,8 @@ IomobAgents/
 │   ├── operacional.md         # PR quality, testes antes do PR, Docker obrigatório
 │   ├── processo.md            # Git flow, DoR/DoD, conventional commits
 │   ├── ia-agentes.md          # Comportamento de agentes em cadeia
-│   └── devops.md              # Secrets em CI, rastreabilidade de imagens, gate de produção
+│   ├── devops.md              # Secrets em CI, rastreabilidade de imagens, gate de produção
+│   └── mobile.md              # React Native/Expo: componentes, estilos, navegação, storage, permissões
 │
 ├── References/                # Checklists leves para consulta rápida durante execução de skills
 │   ├── accessibility-checklist.md  # WCAG 2.1 AA por componente
@@ -73,6 +77,7 @@ IomobAgents/
     ├── arquitetura/
     ├── backend/
     ├── frontend/
+    ├── mobile/                # React Native + Expo: config, navegação, estado, EAS Build/Submit
     ├── ux/                    # Design system, tokens, acessibilidade, especificação de componentes
     ├── testes/
     ├── security/              # OWASP Top 10, STRIDE, autenticação, headers, CVEs, checklist por camada
@@ -179,6 +184,7 @@ Após a instalação, todos os agentes ficam disponíveis como comandos namespac
 | `/IomobAgents:dev-backend` | Implementar lógica de domínio, endpoints, persistência (NestJS + Prisma) |
 | `/IomobAgents:dev-bff` | Implementar camada BFF — agregar e adaptar dados do backend para o frontend |
 | `/IomobAgents:dev-frontend` | Implementar componentes React, hooks, estado e testes RTL |
+| `/IomobAgents:dev-mobile` | Implementar telas e componentes React Native + Expo, gerar builds iOS e Android via EAS |
 | `/IomobAgents:dev-mensageria` | Implementar producers, consumers e sagas (@nestjs/microservices) |
 | `/IomobAgents:dev-ui-ux` | Criar design system, especificar componentes antes da implementação, auditar qualidade de interface |
 | `/IomobAgents:dev-security` | Modelar ameaças (STRIDE), auditar segurança OWASP pré-merge, revisar dependências CVE |
@@ -270,6 +276,7 @@ Os guardrails e agentes foram escritos para **Node.js + React**. Para adaptar:
 | `dev-bff` | BFF — adapter entre frontend e serviços | criar-bff, revisar-bff, otimizar-performance |
 | `dev-ui-ux` | Design system, especificação de componentes, auditoria de interface | criar-design-system, especificar-componente, revisar-interface |
 | `dev-frontend` | React, hooks, estado, testes RTL | criar-componente, criar-hook, organizar-estado, revisar-frontend |
+| `dev-mobile` | React Native + Expo, publicação iOS e Android | configurar-expo, configurar-navegacao, criar-tela, criar-componente-nativo, criar-hook-mobile, organizar-estado-mobile, gerar-teste-componente-nativo, revisar-mobile, revisar-seguranca-mobile, build-publicacao |
 | `dev-mensageria` | Producers, consumers, sagas, idempotência | — (usa skills de arquiteto e dev-backend) |
 | `dev-qa` | Gherkin, E2E Playwright, regressão | criar-teste-e2e, escrever-gherkin, planejar-regressao |
 | `dev-devops` | Pipelines CI/CD GitHub Actions, environments, secrets *(fora do fluxo do orquestrador)* | criar-pipeline-servico, criar-pipeline-frontend, configurar-environments-github, auditar-pipeline |
